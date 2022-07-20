@@ -25,7 +25,7 @@ if (USE_FULL_QT_FEATURES)
 endif()
 
 
-option(HAS_USER_INTERFACE    "Include GUI"  FALSE)
+option(HAS_USER_INTERFACE    "Include GUI"  TRUE)
 if (HAS_USER_INTERFACE)
   add_definitions(-DHAS_USER_INTERFACE)
 endif()

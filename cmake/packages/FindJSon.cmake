@@ -9,7 +9,7 @@ if (USE_NONE_STL_JSON)
 endif()
 
 find_package(PkgConfig QUIET)
-pkg_search_module(${DOCTEST_NAME} doctest)
+pkg_search_module(${NONE_STL_JSON_NAME} json)
 #Package data repository.
 if(USE_NONE_STL_JSON)
     set(FETCHCONTENT_QUIET off)
