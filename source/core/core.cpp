@@ -275,14 +275,6 @@ std::optional<SystemStatus> EngineInterface::getSystemStatus()
     }
 }
 
-SystemStatus EngineInterface::getStatus()
-{
-    if(!isset(m_bootParameter->systemStatus))
-    {
-
-    }
-}
-
 bool Engine::initialize()
 {
   //ToDo...
