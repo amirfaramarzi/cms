@@ -22,12 +22,15 @@
  */
 
 #include "common.hpp"
-#include "core/output.hpp"
+#include "core/logger.hpp"
+
 TEGRA_USING_NAMESPACE Tegra;
 TEGRA_USING_NAMESPACE Tegra::CMS;
+TEGRA_USING_NAMESPACE Tegra::eLogger;
 
 int main() {
 
+    Log("Hello, World!", LoggerType::Info);
 
     return 0;
 }
