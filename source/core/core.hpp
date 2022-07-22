@@ -48,7 +48,7 @@ template <typename T>
  * @returns true if var exists and has any value other than null. false otherwise.
  */
 __tegra_no_discard_message("Checks if the variable has no value.")
-static auto isset(T t) __tegra_noexcept_expr(true)
+    static auto isset(T t) __tegra_noexcept_expr(true)
 {
     if (const auto it = t; it != T {})
         // on success
@@ -65,6 +65,19 @@ template <typename T1, typename T2>
 __tegra_no_discard constexpr bool equals(T1 const& first, T2 const& second) __tegra_noexcept
 {
     return first == second;
+}
+
+template<typename ... Args>
+std::string stringFormat(const std::string& format, Args ... args)
+{
+    s8 size = snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
+    if (size <= 0)
+    {
+        throw std::runtime_error("Error during formatting.");
+    }
+    std::unique_ptr<char[]> buf(new char[size]);
+    snprintf(buf.get(), size, format.c_str(), args ...);
+    return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
 }
 
 /*!
