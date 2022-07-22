@@ -43,14 +43,15 @@ TEGRA_USING LanguageSheet         =   Map<std::string, MForLanguageTemplate>;
 TEGRA_USING LanguagePair          =   Pair<std::string, LanguageTemplate>;
 TEGRA_USING LanguageTemp          =   Map<std::string, LanguageTemplate>;
 
+
 class LanguageTemplate;
 
 struct TranslatorStruct final
 {
+    bool           isRtl            {};
     LanguageFile   file             {};
     std::string    parseMessage     {};
     LanguageList   language         {};
-    bool           isRtl            {};
     std::string    symbol           {};
     std::string    currency         {};
     std::string    callingCode      {};

@@ -6,16 +6,6 @@ TEGRA_USING_NAMESPACE Tegra::CMS;
 
 TEGRA_NAMESPACE_BEGIN(Tegra::Multilangual)
 
-LanguagePath::LanguagePath()
-{
-
-}
-
-LanguagePath::~LanguagePath()
-{
-
-}
-
 std::string LanguagePath::getExecutablePath() {
 #if defined(PLATFORM_MOBILE) && defined(PLATFORM_ANDROID)
     std::string res = {"assets:/"};

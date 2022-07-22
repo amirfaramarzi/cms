@@ -38,7 +38,7 @@ using DictonaryType = MultiMap<std::string, DicTypePair>;
 /*!
  * \brief The LanguageStruct struct
  */
-struct LanguageStruct
+struct LanguageStruct final
 {
     std::string m_wordKey       {};         //Key
     std::string m_module        {};         //Module

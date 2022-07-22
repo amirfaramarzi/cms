@@ -11,6 +11,7 @@ LanguageTemplate::LanguageTemplate(const LanguageStruct& rhs)
 {
     m_languageStruct = new LanguageStruct(rhs);
 }
+
 LanguageTemplate::~LanguageTemplate()
 {
     __tegra_safe_delete(m_languageStruct);

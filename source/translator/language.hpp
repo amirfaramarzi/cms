@@ -31,8 +31,8 @@ TEGRA_NAMESPACE_BEGIN(Tegra::Multilangual)
 class LanguagePath
 {
 public:
-    LanguagePath();
-    ~LanguagePath();
+    LanguagePath() = default;
+    ~LanguagePath() = default;
 
     /*!
      * \brief getExecutablePath
