@@ -24,20 +24,7 @@
 #ifndef SEO_HPP
 #define SEO_HPP
 
-#include <iostream>
-#include <map>
-#include <vector>
-#include <cerrno>
-#include <string>
-#include <optional>
-#include <filesystem>
-#include <string>
-#include <vector>
-#include <map>
-
 #include "common.hpp"
-
-#include "utilities/types.hpp"
 
 TEGRA_USING_NAMESPACE Tegra::Types;
 
