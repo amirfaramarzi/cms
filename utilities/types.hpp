@@ -15,19 +15,10 @@ using llong        = long long;
 
 //! Fixed width integer types (since C++11)
 //! Signed integer type
-using u8  = std::uint8_t;
-using u16 = std::uint16_t;
-using u32 = std::uint32_t;
-using u64 = std::uint64_t;
-
-using imax = std::intmax_t; //! maximum-width signed integer type.
-using iptr = std::intptr_t; //! signed integer type capable of holding a pointer to void.
-
-//! UnSigned integer type
-using u8  = std::uint8_t;
-using u16 = std::uint16_t;
-using u32 = std::uint32_t;
-using u64 = std::uint64_t;
+using s8  = std::uint8_t;
+using s16 = std::uint16_t;
+using s32 = std::uint32_t;
+using s64 = std::uint64_t;
 
 //! Fastest Signed integer type
 using sf8  = std::int_fast8_t;
@@ -40,6 +31,15 @@ using slf8  = std::int_least8_t;
 using slf16 = std::int_least16_t;
 using slf32 = std::int_least32_t;
 using slf64 = std::int_least64_t;
+
+using imax = std::intmax_t; //! maximum-width signed integer type.
+using iptr = std::intptr_t; //! signed integer type capable of holding a pointer to void.
+
+//! UnSigned integer type
+using u8  = std::uint8_t;
+using u16 = std::uint16_t;
+using u32 = std::uint32_t;
+using u64 = std::uint64_t;
 
 //! Fastest UnSigned integer type
 using uf8  = std::uint_fast8_t;
@@ -60,11 +60,12 @@ using VariantTypes      = std::map<std::string, std::variant<std::string, std::s
 using MapList           = std::pair<std::string, std::map<std::string, std::string>>;
 using MapVector         = std::pair<std::string, std::vector<std::string>>;
 using IteratorConfig    = std::map<std::string, std::string>::iterator;
-using MapString         = std::pair<std::string, std::string>;
 using LanguageType      = std::map<std::string, std::string>;
 using MetaList          = std::map<std::string, std::string>;
 using ResourceType      = std::map<std::string, std::string>;
 using ConfigType        = std::map<std::string, std::string>;
+using MapString         = std::map<std::string, std::string>;
+using PairString        = std::pair<std::string, std::string>;
 using SettingType       = std::map<int, std::string>;
 using VectorString      = std::vector<std::string>;
 using SectionType       = std::vector<std::string>;
