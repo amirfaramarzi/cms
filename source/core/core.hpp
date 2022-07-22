@@ -247,7 +247,7 @@ public:
      * @brief Getting current system state.
      * @returns returns string of system state, for example version and etc.
      */
-    virtual std::string                     getSaveState        () final;
+    virtual std::optional<std::string>      getSaveState        () final;
 
     /*!
      * @brief Getting current loaded page size.

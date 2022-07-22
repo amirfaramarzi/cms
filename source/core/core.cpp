@@ -155,7 +155,7 @@ EngineInterface::EngineInterface()
 #ifdef PLATFORM_WINDOWS
         m_bootParameter->hostType = HostType::Windows;
 #elif defined(PLATFORM_LINUX)
-        m_bootParameter->hostType = HostType::Lunux;
+        m_bootParameter->hostType = HostType::Linux;
 #elif defined(PLATFORM_MAC)
         m_bootParameter->hostType = HostType::MacOS;
 #else
@@ -195,7 +195,7 @@ std::optional<u32> EngineInterface::getPageSize()
 
 std::time_t EngineInterface::getPageInitTime()
 {
-
+  //ToDo...
 }
 
 std::optional<u32> EngineInterface::getPageSpeed()
@@ -272,14 +272,6 @@ std::optional<SystemStatus> EngineInterface::getSystemStatus()
         return m_bootParameter->systemStatus;
     } else {
         return std::nullopt;
-    }
-}
-
-SystemStatus EngineInterface::getStatus()
-{
-    if(!isset(m_bootParameter->systemStatus))
-    {
-
     }
 }
 
@@ -431,7 +423,8 @@ std::string Engine::reducePath(const std::string& path)
   //ToDo...
 }
 
-std::string Engine::removeDashes(const std::string& src) __tegra_const_noexcept {
+std::string Engine::removeDashes(const std::string& src) __tegra_const_noexcept
+{
     std::string command = src;
     command.erase(std::remove(command.begin(), command.end(), '/'), command.end());
     return command;
