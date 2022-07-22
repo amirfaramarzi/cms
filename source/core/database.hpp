@@ -56,7 +56,6 @@ TEGRA_NAMESPACE_BEGIN(Tegra::Database)
 #define MERGE                   "MERGE"
 #define SELECT                  "SELECT"
 #define SEQUENCE                "SEQUENCE"
-#define SEQUENCE                "SEQUENCE"
 #define TRUNCATE_TABLE          "TRUNCATE"
 #define IS_NULL                 "IS NULL"
 
