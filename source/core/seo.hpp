@@ -43,13 +43,19 @@ TEGRA_USING_NAMESPACE Tegra::Types;
 
 TEGRA_NAMESPACE_BEGIN(Tegra::SEO)
 
+/*!
+ * \brief The MetaType enum
+ */
 enum MetaType : u8
 {
-  Name      = 0x1,
-  Property  = 0x2,
-  Extra     = 0x3
+  Name      = 0x1,  ///< This attribute is basically used to explain the name of the property.
+  Property  = 0x2,  ///< This attribute is used to explain more properties if a tag.
+  Extra     = 0x3   ///< This attribute is used to add other and extra.
 };
 
+/*!
+ * \brief The MetaStruct class
+ */
 struct MetaStruct final
 {
     MetaType type;
@@ -58,6 +64,9 @@ struct MetaStruct final
     std::string stream;
 };
 
+/*!
+ * \brief The MetaTag class
+ */
 class MetaTag
 {
 public:
@@ -75,12 +84,15 @@ public:
    * @param type gets meta types as [Name, Property].
    * @param item gets meta data key and value.
    */
-  void registerTags(const MetaType& type, const std::map<std::string, std::string>& item);
+  void registerTags(const MetaType& type, const MapString& item);
 
 private:
   MetaStruct* m_metaStruct;
 };
 
+/*!
+ * \brief The StaticStruct class
+ */
 struct StaticStruct final
 {
     std::vector<std::string> data;
@@ -95,18 +107,40 @@ public:
   StaticMeta(const std::string& module);
   ~StaticMeta();
 
+  /*!
+   * \brief setDefault
+   * \param lng
+   */
   void setDefault(const std::string& lng);
 
+  /*!
+   * \brief metaData
+   * \return
+   */
   std::vector<std::string> metaData();
 
-  void setData(const MetaType& type, const std::map<std::string, std::string>& data, const std::string& lng);
+  /*!
+   * \brief setData
+   * \param type
+   * \param data
+   * \param lng
+   */
+  void setData(const MetaType& type, const MapString & data, const std::string& lng);
 
+  /*!
+   * \brief registerModule
+   * \param module
+   */
   void registerModule(const std::string& module);
 
+  /*!
+   * \brief module
+   * \return
+   */
   std::string module() const;
 
 private:
-  StaticStruct* m_staticStruct;;
+  StaticStruct* m_staticStruct;
 };
 
 TEGRA_NAMESPACE_END

@@ -25,7 +25,7 @@ std::vector<std::string> MetaTag::tags() const
     return m_metaStruct->tags;
 }
 
-void MetaTag::registerTags(const MetaType& type, const std::map<std::string, std::string>& item)
+void MetaTag::registerTags(const MetaType& type, const MapString& item)
 {
     std::stringstream stream;
     switch (type) {
@@ -82,7 +82,7 @@ void StaticMeta::setDefault(const std::string& lng)
   //ToDo...
 }
 
-void StaticMeta::setData(const MetaType& type, const std::map<std::string, std::string> &data, const std::string& lng)
+void StaticMeta::setData(const MetaType& type, const MapString& data, const std::string& lng)
 {
   //ToDo...
 }
