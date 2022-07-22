@@ -1,10 +1,10 @@
 # -------------------- PROJECT INFO --------------------
-#   Title   :                       Tegra CMS
-#   Version :                       0.2.43.0
+#   Title   :                       Project Template
+#   Version :                       0.9.988.0
 #   Author  :                       Kambiz Asadzadeh
 # ------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.18)
 cmake_policy(SET CMP0048 NEW)
 
 # Add include path for cmake modules
@@ -17,12 +17,12 @@ include(FetchContent)
 
 # ------ PROJECT INFO ------
 # Options
-set(PROJECT_NAME "Tegra" CACHE STRING "Project Name.") #You can change "ProjectTemplate" with your project name.
+set(PROJECT_NAME "ProjectTemplate" CACHE STRING "Project Name.") #You can change "ProjectTemplate" with your project name.
 set(PROJECT_TARGET ${PROJECT_NAME} CACHE STRING "Project Target Name.")
 
 set(PROJECT_VERSION_MAJOR 0)
-set(PROJECT_VERSION_MINOR 2)
-set(PROJECT_VERSION_PATCH 43)
+set(PROJECT_VERSION_MINOR 9)
+set(PROJECT_VERSION_PATCH 988)
 set(PROJECT_VERSION_TWEAK 0)
 
 # ---- Project settings ----
@@ -31,12 +31,10 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
     set(CMAKE_CXX_EXTENSIONS ON)
 endif()
-
-#set(CMAKE_CXX_FLAGS "-std=c++20 -lstdc++fs")
 
 set(PROJECT_CREATOR "Kambiz Asadzadeh" CACHE STRING "Creator of your project.") #Your project creator.
 
@@ -64,13 +62,13 @@ set(PROJECT_VERSION_STRING ${PROJECT_VERSION})
 set(PROJECT_LANGUAGES CXX)
 
 #Use these keys [stl, qt, qtwidget, qtquick]
-set(PROJECT_MAIN_TYPE "web" CACHE STRING "Library System.")
+set(PROJECT_MAIN_TYPE "stl" CACHE STRING "Library System.")
 
 #Use these keys [macOS, Windows, Linux, iOS, Android]
 set(PLATFORM_OS "macOS" CACHE STRING "OS Type.")
 
 #You can replace your project description with this string.
-set(PROJECT_DESCRIPTION "Tegra CMS is free open source multi-language Content Management System." CACHE STRING "Project Description")
+set(PROJECT_DESCRIPTION "A template for modern C++ projects with useful features for developing cross-platform projects." CACHE STRING "Project Description")
 
 #Your project website address.
 set(PROJECT_HOMEPAGE_URL "https://kambizasadzadeh.com" CACHE STRING "Project URL.")
@@ -119,13 +117,14 @@ endif()
 set(compiler-options ON)
 
 # ------ PACKAGES CONFIG ------
-#include(packages)
-#if(packages)
-#  return()
-#endif()
-#set(packages ON)
+include(packages)
+if(packages)
+  return()
+endif()
+set(packages ON)
 
-if(USE_QT AND NOT PROJECT_MAIN_TYPE STREQUAL "web")
+
+if(USE_QT AND NOT PROJECT_MAIN_TYPE STREQUAL "stl")
     set(CMAKE_AUTOUIC ON)
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_AUTORCC ON)
@@ -133,50 +132,19 @@ endif()
 
 set(SUFFIX_EXTRA *.in)
 set(SUFFIX_HPPHEADER *.hpp)
-set(SUFFIX_CSP *.csp)
-set(SUFFIX_CSS *.css)
-set(SUFFIX_JS *.js)
 set(SUFFIX_SOURCE *.cpp)
 set(SUFFIX_CONFIG *.json)
-set(SUFFIX_TRANSLATIONS *.json)
 
 if(PROJECT_MAIN_TYPE STREQUAL "qtwidget")
      set(SUFFIX_WIDGET *.ui)
 elseif(PROJECT_MAIN_TYPE STREQUAL "qtquick")
      set(SUFFIX_QML *.qml)
      set(SUFFIX_QRC *.qrc)
-elseif(PROJECT_MAIN_TYPE STREQUAL "web")
-     set(SUFFIX_CSP *.csp)
-     set(SUFFIX_HTML *.html)
-     set(SUFFIX_CSS *.css)
-     set(SUFFIX_JS *.js)
-     set(SUFFIX_TRANSLATIONS *.json)
 endif()
 
 file(GLOB PRECOMPILED precompiled/pch.hpp)
-file(
-    GLOB HEADERS
-    source/${SUFFIX_HPPHEADER}
-    source/framework/${SUFFIX_HPPHEADER}
-    source/core/${SUFFIX_HPPHEADER}
-    source/database/${SUFFIX_HPPHEADER}
-    source/interface/${SUFFIX_HPPHEADER}
-    source/translator/${SUFFIX_HPPHEADER}
-    source/install/${SUFFIX_HPPHEADER}
-    source/statics/${SUFFIX_HPPHEADER}
-)
-file(
-    GLOB SOURCES
-    source/${SUFFIX_SOURCE}
-    source/framework/${SUFFIX_SOURCE}
-    source/core/${SUFFIX_SOURCE}
-    source/interface/${SUFFIX_SOURCE}
-    source/database/${SUFFIX_SOURCE}
-    source/translator/${SUFFIX_SOURCE}
-    source/install/${SUFFIX_SOURCE}
-    source/statics/${SUFFIX_SOURCE}
-)
-
+file(GLOB HEADERS source/${SUFFIX_HPPHEADER})
+file(GLOB SOURCES source/${SUFFIX_SOURCE})
 
 file(GLOB EXAMPLES
      source/examples/${SUFFIX_HPPHEADER}
@@ -185,11 +153,6 @@ file(GLOB EXAMPLES
 file(GLOB UTILS
      utilities/${SUFFIX_HPPHEADER}
      utilities/${SUFFIX_SOURCE}
-)
-
-
-file(GLOB TRANSLATIONS
-    translations/${SUFFIX_TRANSLATIONS}
 )
 
 if(${PROJECT_MAIN_TYPE} STREQUAL "stl")
@@ -215,36 +178,16 @@ elseif(${PROJECT_MAIN_TYPE} STREQUAL "qtquick")
          source/entrypoint/qt/qtquick/${SUFFIX_HPPHEADER}
          source/entrypoint/qt/qtquick/${SUFFIX_SOURCE}
     )
-elseif(${PROJECT_MAIN_TYPE} STREQUAL "web")
-    file(GLOB MAIN_ENTRY_POINT
-        source/entrypoint/stl/${SUFFIX_HPPHEADER}
-        source/entrypoint/stl/${SUFFIX_SOURCE}
-    )
 endif()
+
 
 if(${PROJECT_MAIN_TYPE} STREQUAL "qtwidget")
    file(GLOB UI_SOURCE ui/widgets/${SUFFIX_WIDGET})
-elseif(${PROJECT_MAIN_TYPE} STREQUAL "web")
-  file(
-      GLOB TEMPLATE_SOURCE templates/user/${SUFFIX_CSP}
-      GLOB TEMPLATE_SOURCE templates/user/${SUFFIX_HTML}
-      GLOB TEMPLATE_SOURCE templates/user/${SUFFIX_CSS}
-      GLOB TEMPLATE_SOURCE templates/user/${SUFFIX_JS}
-
-      GLOB TEMPLATE_SOURCE templates/admin/${SUFFIX_CSP}
-      GLOB TEMPLATE_SOURCE templates/admin/statics/${SUFFIX_CSP}
-      GLOB TEMPLATE_SOURCE templates/admin/${SUFFIX_HTML}
-      GLOB TEMPLATE_SOURCE templates/admin/${SUFFIX_CSS}
-      GLOB TEMPLATE_SOURCE templates/admin/${SUFFIX_JS}
-  )
 else()
    file(GLOB UI_SOURCE ui/qtquick/${SUFFIX_QRC})
 endif()
 
-file(
-    GLOB CONFIGFILE config/${SUFFIX_CONFIG}
-    GLOB CONFIGFILE ${SUFFIX_CONFIG}
-)
+file(GLOB CONFIGFILE config/${SUFFIX_CONFIG})
 
 file(GLOB SOURCESFILE
     #---C++---
@@ -252,8 +195,6 @@ file(GLOB SOURCESFILE
     ${HEADERS}
     ${SOURCES}
     ${UI_SOURCE}
-    ${TEMPLATE_SOURCE}
-    ${TRANSLATIONS}
     ${UTILS}
     ${CONFIGFILE}
     ${PRECOMPILED}
@@ -265,8 +206,6 @@ source_group("Utilities"  FILES ${UTILS})
 source_group("Entry Point (Main)"   FILES ${MAIN_ENTRY_POINT})
 source_group("Base"   FILES ${HEADERS} ${SOURCES})
 source_group("UI"     FILES ${UI_SOURCE})
-source_group("Templates"     FILES ${TEMPLATE_SOURCE})
-source_group("Translations"     FILES ${TRANSLATIONS})
 source_group("Config" FILES ${CONFIGFILE})
 source_group("Examples"  FILES ${EXAMPLES})
 
@@ -416,7 +355,7 @@ if(USE_QT)
 endif()
 
 #Extra Modules
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LIB_MODULES} ${OS_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LIB_MODULES})
 target_include_directories(${PROJECT_NAME}
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/source PRIVATE source
@@ -429,69 +368,14 @@ target_link_directories(${PROJECT_NAME}
     ${LIB_TARGET_LINK_DIRECTORIES}
     )
 
-#Package Info.
-#set(FMT_NAME "fmt")
-#set(FMT_DESCRIPTION "A modern formatting library.")
-
-
-find_package(fmt REQUIRED)
-#include_directories(/usr/bin/fmt)
-#include_directories(third-party/fmt/include/)
-
-#Pakcage option.
-#option(USE_FMT ${FMT_DESCRIPTION} TRUE)
-#if (USE_FMT)
-#    add_definitions(-DUSE_FMT)
-#endif()
-
-if(!ENABLE_DROGON_MODULE)
-    find_package(Drogon CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PRIVATE Drogon::Drogon fmt::fmt)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC ${LIB_TARGET_COMPILER_DEFINATION})
-endif()
-
-#Package Info.
-set(NONE_STL_JSON_NAME "JSon")
-set(NONE_STL_JSON_DESCRIPTION "JSON for Modern C++.")
-
-#Pakcage option.
-option(USE_NONE_STL_JSON ${NONE_STL_JSON_DESCRIPTION} FALSE)
-if (USE_NONE_STL_JSON)
-    add_definitions(-DUSE_NONE_STL_JSON)
-endif()
-
-file(GLOB_RECURSE SCP_LIST ${CMAKE_CURRENT_SOURCE_DIR}/templates/user/*.csp)
-file(GLOB_RECURSE SCP_LIST ${CMAKE_CURRENT_SOURCE_DIR}/templates/admin/*.csp)
-
-if(!ENABLE_DROGON_MODULE)
-foreach(cspFile ${SCP_LIST})
-    message(STATUS "cspFile:" ${cspFile})
-    get_filename_component(classname ${cspFile} NAME_WE)
-    message(STATUS "view classname:" ${classname})
-    ADD_CUSTOM_COMMAND(OUTPUT ${classname}.h ${classname}.cc
-            COMMAND drogon_ctl
-            ARGS create view ${cspFile}
-            DEPENDS ${cspFile}
-            VERBATIM )
-    set(VIEWSRC ${VIEWSRC} ${classname}.cc)
-endforeach()
-
-drogon_create_views(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/templates
-                     ${CMAKE_CURRENT_BINARY_DIR}/templates/ TRUE)
-endif()
+target_compile_definitions(${PROJECT_NAME} PUBLIC ${LIB_TARGET_COMPILER_DEFINATION})
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS ${LIB_TARGET_PROPERTIES})
 #This command generates installation rules for a project.
 #Install rules specified by calls to the install() command within a source directory. are executed in order during installation.
 install(TARGETS ${PROJECT_NAME} DESTINATION build/bin)
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config.json DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/translations DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/templates DESTINATION ${CMAKE_BINARY_DIR})
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/server-log)
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
-install(DIRECTORY DESTINATION ${CMAKE_BINARY_DIR}/server-log)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config/system-config.json DESTINATION ${CMAKE_BINARY_DIR}/config/)
 
 #Ignore unused files.
 list(APPEND CPACK_SOURCE_IGNORE_FILES /.git/ /build/ .gitignore .DS_Store)

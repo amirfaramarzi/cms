@@ -39,11 +39,6 @@ if (USE_FEATURE_TEST)
   add_definitions(-DUSE_FEATURE_TEST)
 endif()
 
-option(USE_DYNAMIC_TECHNIQUE "Use Dynamic Technique" ON)
-if (USE_DYNAMIC_TECHNIQUE)
-  add_definitions(-DUSE_DYNAMIC_TECHNIQUE)
-endif()
-
 option(USE_SSL_METHOD	    "Use Https/SSL system"      OFF)
 if (USE_SSL_METHOD)
   add_definitions(-DUSE_SSL_METHOD)
@@ -149,11 +144,6 @@ endif()
 option(ENABLE_HEADER_ONLY_BUILD "Header Only Version" OFF)
 if (ENABLE_HEADER_ONLY_BUILD)
   add_definitions(-DENABLE_HEADER_ONLY_BUILD)
-endif()
-
-option(ENABLE_DROGON_MODULE "Enable drogon framework" ON)
-if (ENABLE_DROGON_MODULE)
-  add_definitions(-DENABLE_DROGON_MODULE)
 endif()
 
 option(FORCE_LATEST_STANDARD_FEATURE "Forcing to enable updated programming language." FALSE)

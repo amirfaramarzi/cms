@@ -776,28 +776,24 @@ required. For example, an array dimension.
 /* iOS in Xcode simulator */
 #define PLATFORM_OS "Apple iOS"
 #define PLATFORM_ARCH "x86 (32-Bit)"
-#define PLATFORM_MOBILE
 #define PLATFORM_IOS_SIMULATOR "iOS Simulator"
 #define PLATFORM_TYPE "iOS-Emulator"
 #elif TARGET_OS_WATCH == 1
 /* iOS on iWatch. */
 #define PLATFORM_OS "Apple iOS"
 #define PLATFORM_ARCH "x86 (32-Bit)"
-#define PLATFORM_MOBILE
 #define PLATFORM_IWATCH "iOS (iWatch)"
 #define PLATFORM_TYPE "iWatch"
 #elif TARGET_OS_TV == 1
 /* Apple TV. */
 #define PLATFORM_OS "Apple iOS"
 #define PLATFORM_ARCH "x86 (32-Bit)"
-#define PLATFORM_MOBILE
 #define PLATFORM_APPLE_TV "Apple (TV)"
 #define PLATFORM_TYPE "Apple TV"
 #elif TARGET_OS_IPHONE == 1
 /* iOS on iPhone, iPad, etc. */
 #define PLATFORM_OS "Apple iOS"
 #define PLATFORM_ARCH "ARM (32-Bit)"
-#define PLATFORM_MOBILE
 #define PLATFORM_IOS "iOS"
 #define PLATFORM_DEVICE "Mobile"
 #define PLATFORM_TYPE "iPhone, iPad"
@@ -805,7 +801,6 @@ required. For example, an array dimension.
 /* macOS */
 #define PLATFORM_OS "macOS"
 #define PLATFORM_ARCH ARCHITECTURE
-#define PLATFORM_DESKTOP
 #define PLATFORM_MAC "Unix(Darwin)-macOS (X11)"
 #define PLATFORM_DEVICE "Unix(Darwin)-macOS (X11)"
 #define PLATFORM_TYPE "Macintosh"
@@ -818,7 +813,6 @@ required. For example, an array dimension.
 /* iOS in Xcode simulator */
 #define PLATFORM_OS "Apple iOS"
 #define PLATFORM_ARCH "x86_64"
-#define PLATFORM_MOBILE
 #define PLATFORM_IOS_SIMULATOR "iOS Simulator"
 #define PLATFORM_DEVICE "Simulator"
 #define PLATFORM_TYPE "iOS-Emulator"
@@ -827,7 +821,6 @@ required. For example, an array dimension.
 #define PLATFORM_OS "Apple iOS"
 #define PLATFORM_ARCH "x64 (64-Bit)"
 #define PLATFORM_IWATCH "x64 (64-Bit)"
-#define PLATFORM_MOBILE
 #define PLATFORM_DEVICE "iOS (iWatch)"
 #define PLATFORM_TYPE "iWatch"
 #elif TARGET_OS_TV == 1
@@ -835,14 +828,12 @@ required. For example, an array dimension.
 #define PLATFORM_OS "Apple iOS"
 #define PLATFORM_ARCH "x64 (64-Bit)"
 #define PLATFORM_APPLE_TV "Apple (TV)"
-#define PLATFORM_MOBILE
 #define PLATFORM_DEVICE "Apple (TV)"
 #define PLATFORM_TYPE "Apple TV"
 #elif TARGET_OS_IPHONE == 1
 /* iOS on iPhone, iPad, etc. */
 #define PLATFORM_OS "Apple iOS"
 #define PLATFORM_ARCH "ARM (64-Bit)"
-#define PLATFORM_MOBILE
 #define PLATFORM_IOS "iOS"
 #define PLATFORM_DEVICE "Mobile"
 #define PLATFORM_TYPE "iPhone, iPad"
@@ -851,7 +842,6 @@ required. For example, an array dimension.
 #define PLATFORM_OS "macOS"
 #define PLATFORM_ARCH "x64 (64-Bit)"
 #define PLATFORM_DEVICE "Desktop"
-#define PLATFORM_DESKTOP
 #define PLATFORM_MAC "Unix-macOS (X11)"
 #define PLATFORM_TYPE "Macintosh"
 #endif
@@ -1108,16 +1098,14 @@ required. For example, an array dimension.
 #define PLATFORM_WINDOWS_X86 "Microsoft Windows (32-Bit)"
 #define PLATFORM_WINDOWS "Microsoft Windows (32-Bit)"
 #define PLATFORM_DEVICE "Desktop"
-#define PLATFORM_DESKTOP
 #define PLATFORM_TYPE "PC"
-#elif defined(_WIN64) && defined(_WIN32) && !defined(_M_ARM64) && !defined (WINAPI_FAMILY_PHONE_APP) && (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
+#elif defined(_WIN64) && defined(_WIN32) && !defined(_M_ARM64) !defined (WINAPI_FAMILY_PHONE_APP) && (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
 /* Microsoft Windows (64-bit). ------------------------------ */
 #define PLATFORM_OS "Windows"
 #define PLATFORM_ARCH "x64 (64-Bit)"
 #define PLATFORM_WINDOWS_X64 "Microsoft Windows (64-Bit)"
 #define PLATFORM_WINDOWS "Microsoft Windows (64-Bit)"
 #define PLATFORM_DEVICE "Desktop"
-#define PLATFORM_DESKTOP
 #define PLATFORM_TYPE "PC"
 #elif defined(_M_ARM64) && defined(_WIN32) && !defined (WINAPI_FAMILY_PHONE_APP) && (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
 /* Microsoft Windows (64-bit). ------------------------------ */
@@ -1126,7 +1114,6 @@ required. For example, an array dimension.
 #define PLATFORM_WINDOWS_ARM64 "Microsoft Windows (64-Bit)"
 #define PLATFORM_WINDOWS "Microsoft Windows (64-Bit)"
 #define PLATFORM_DEVICE "Desktop"
-#define PLATFORM_DESKTOP
 #define PLATFORM_TYPE "PC"
 /* Microsoft Phone ------------------------------ */
 #elif defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
@@ -1137,7 +1124,6 @@ required. For example, an array dimension.
 #define PLATFORM_WINDOWS_X86 "Microsoft Windows (32-Bit)"
 #define PLATFORM_WINDOWS_UWP "Microsoft Windows UWP (32-Bit)"
 #define PLATFORM_DEVICE "Desktop"
-#define PLATFORM_DESKTOP
 #define PLATFORM_TYPE "PC"
 #elif defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP) &&        \
     defined(_WIN64) && !defined(_WIN32) && !defined(_WIN32_WINNT)
@@ -1147,7 +1133,6 @@ required. For example, an array dimension.
 #define PLATFORM_WINDOWS_X64 "Microsoft Windows x64"
 #define PLATFORM_WINDOWS_UWP "Microsoft Windows UWP"
 #define PLATFORM_DEVICE "Desktop"
-#define PLATFORM_DESKTOP
 #define PLATFORM_WINDOWS "Microsoft Windows"
 #define PLATFORM_TYPE "PC"
 /* Microsoft Phone ------------------------------ */
@@ -1157,7 +1142,6 @@ required. For example, an array dimension.
 #define PLATFORM_ARCH "x86 (32-Bit)"
 #define PLATFORM_WINDOWS_PHONE "Windows Phone"
 #define PLATFORM_DEVICE "Mobile"
-#define PLATFORM_MOBILE
 #define PLATFORM_TYPE "Mobile (Windows Phone)"
 #elif defined(_WIN64) && defined(WINAPI_FAMILY_PHONE_APP)
 /* Microsoft Windows (Phone). ------------------------------ */

@@ -3,7 +3,33 @@
 
 #include "precompiled/pch.hpp" //get some header.
 
-namespace Tegra::Types {
+namespace Types {
+
+using MapString = std::pair<std::string, std::string>;
+using MapVector = std::pair<std::string, std::vector<std::string>>;
+using MapList   = std::pair<std::string, std::map<std::string, std::string>>;
+
+template<typename T1, typename T2>
+using Map = std::map<T1, T2>;
+
+template<typename T>
+using Vector = std::vector<T>;
+
+template<typename T>
+using Optional = std::optional<T>;
+
+template<typename T>
+using Variant = std::variant<T>;
+
+template<typename T1, typename T2>
+using Pair = std::pair<T1, T2>;
+
+using Function = std::function<void(void)>;
+using PackagedTask = std::packaged_task<void(void)>;
+
+using MultiThreadVector = std::vector<std::thread>;
+
+using StringStream   =  std::basic_stringstream<char>;
 
 using schar        = signed char;
 using uchar        = unsigned char;
@@ -30,40 +56,8 @@ using uptr = std::uintptr_t;
 #endif
 
 
-using VariantTypes      = std::map<std::string, std::variant<std::string, std::string_view, int, double, bool>>;
-using MapList           = std::pair<std::string, std::map<std::string, std::string>>;
-using MapVector         = std::pair<std::string, std::vector<std::string>>;
-using IteratorConfig    = std::map<std::string, std::string>::iterator;
-using MapString         = std::pair<std::string, std::string>;
-using LanguageType      = std::map<std::string, std::string>;
-using MetaList          = std::map<std::string, std::string>;
-using ResourceType      = std::map<std::string, std::string>;
-using ConfigType        = std::map<std::string, std::string>;
-using SettingType       = std::map<int, std::string>;
-using VectorString      = std::vector<std::string>;
-using SectionType       = std::vector<std::string>;
-using CodeType          = std::vector<std::string>;
-using OptionalString    = std::optional<std::string>;
-using TableNames        = std::vector<std::string>;
-using SheetType         = std::vector<std::string>;
-using TranslateType     = std::string;
-
-
-template<typename T1, typename T2> using Map      = std::map<T1, T2>;
-template<typename T1, typename T2> using MultiMap = std::multimap<T1, T2>;
-template<typename T1, typename T2> using Pair     = std::pair<T1, T2>;
-
-template<typename T> using Vector        = std::vector<T>;
-template<typename T> using Optional      = std::optional<T>;
-template<typename T> using Variant       = std::variant<T>;
-
-using Function          = std::function<void(void)>;
-using PackagedTask      = std::packaged_task<void(void)>;
-using MultiThreadVector = std::vector<std::thread>;
-using StringStream      = std::basic_stringstream<char>;
-using String            = std::string;
-using if_streamer       = std::ifstream;
-using string_stream     = std::stringstream;
+using if_streamer    = std::ifstream;
+using string_stream  = std::stringstream;
 
 }
 

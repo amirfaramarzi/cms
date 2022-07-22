@@ -310,4 +310,13 @@
 #include <intrin.h>
 #endif
 
+//!JSON Config
+//#if defined(USE_NONE_STL_JSON)
+//#include <nlohmann/json.hpp>
+//using JSon = nlohmann::json;
+//using JSonException = nlohmann::detail::exception;
+//#else
+//#endif
+
+
 #endif // PCH_HPP

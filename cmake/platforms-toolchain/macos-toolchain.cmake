@@ -45,7 +45,7 @@ set (CMAKE_OSX_DEPLOYMENT_TARGET "" CACHE STRING "Force unset of the deployment 
 find_program (CMAKE_UNAME uname /bin /usr/bin /usr/local/bin)
 if (CMAKE_UNAME)
         exec_program(uname ARGS -r OUTPUT_VARIABLE CMAKE_HOST_SYSTEM_VERSION)
-        string (REGEX REPLACE "^([0-9]+)\\.([0-9]+).*$" "\\1" DARWIN_MAJOR_VERSION "${CMAKE_HOST_SYSTEM_VERSION}")
+	string (REGEX REPLACE "^([0-9]+)\\.([0-9]+).*$" "\\1" DARWIN_MAJOR_VERSION "${CMAKE_HOST_SYSTEM_VERSION}")
 endif (CMAKE_UNAME)
 
 set(CMAKE_AR ar CACHE FILEPATH "" FORCE)
@@ -54,8 +54,3 @@ set(CMAKE_RANLIB ranlib CACHE FILEPATH "" FORCE)
 # Skip the platform compiler checks for cross compiling
 set (CMAKE_CXX_COMPILER_WORKS TRUE)
 set (CMAKE_C_COMPILER_WORKS TRUE)
-
-message("Apple CMake Device SDK : " ${CMAKE_OSX_SYSROOT})
-message("Apple CMake System Name : " ${CMAKE_SYSTEM_NAME})
-
-set(OS_LIBS "-framework IOKit -framework ApplicationServices -framework CoreServices")
