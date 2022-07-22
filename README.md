@@ -11,6 +11,8 @@ Tegra is an open source super-high end performance, user-friendly, multi-lingual
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com)
 
+***WARNING:*** Tegra's code is not ready for final use at the moment, but you can see its development stages in this repository.
+
 ## Technical Features
 - Written by C++
 - Cross-Platform base structure
@@ -56,8 +58,8 @@ _Features that will be added in the future_
 - Digital currency payment gateway for BTC, ETH & USDT
 
 ## Default Modules
-- [x] Index
-- [x] Error Page
+- [ ] Index
+- [ ] Error Page
 - [ ] Menu 
 - [ ] Langing Page
 - [ ] Static Page
@@ -85,7 +87,7 @@ _Features that will be added in the future_
 - [ ] Wasm
 
 ## Requirements
-- C++17 or above (1z recommended).
+- C++20 or above (2a recommended).
 - Drogon Webserver 1.7.5 or above.
 - OpenSSL 3.x
 - MySQL(MariaDB) or PostgreSQL
