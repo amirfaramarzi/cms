@@ -310,47 +310,4 @@
 #include <intrin.h>
 #endif
 
-#if defined(PLATFORM_MAC) && !defined(PLATFORM_MOBILE)
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string>
-#include <fstream>
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
-#include <mach-o/dyld.h>
-#include <IOKit/IOKitLib.h>
-#include <ApplicationServices/ApplicationServices.h>
-#include <ImageIO/ImageIO.h>
-#elif defined(PLATFORM_MAC) && defined(PLATFORM_MOBILE)
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
-#include <mach-o/dyld.h>
-#include <IOKit/IOKitLib.h>
-#include <ApplicationServices/ApplicationServices.h>
-#include <ImageIO/ImageIO.h>
-#elif defined(PLATFORM_LINUX)
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
-#elif defined(PLATFORM_FREEBSD)
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
-#elif defined(PLATFORM_WINDOWS)
-#include <Windows.h>
-#include <Iphlpapi.h>
-#pragma comment(lib, "iphlpapi.lib")
-#elif defined (PLATFORM_ANDROID)
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string>
-#include <fstream>
-#endif
-
 #endif // PCH_HPP
