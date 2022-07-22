@@ -36,10 +36,7 @@ Exception::Exception(const Reason& reason, const std::string& message)
 
 Exception::~Exception()
 {
-    if(m_exceptionData != nullptr) {
-        delete m_exceptionData;
-    }
-    m_exceptionData = nullptr;
+    __tegra_safe_delete(m_exceptionData);
 };
 
 const char* Exception::what() const throw()
@@ -51,24 +48,246 @@ void Termination::terminate(TerminateType terminateType)
 {
     switch (terminateType) {
     case TerminateType::Unknown:
-        std::abort();
+        std::exit(EXIT_FAILURE);
         Log("The system has been terminated for [Unknown] reason!", LoggerType::Info);
         ///ToDo for more details...
         break;
     case TerminateType::UnexpectedError:
         Log("The system has been terminated for [UnexpectedError] reason!", LoggerType::Info);
-        std::abort();
+        std::exit(EXIT_FAILURE);
         ///ToDo for more details...
         break;
     case TerminateType::Violation:
         Log("The system has been terminated for [Violation] reason!", LoggerType::Info);
-        std::abort();
+        std::exit(EXIT_FAILURE);
         ///ToDo for more details...
         break;
     default:
         break;
     }
 }
+
+EngineInterface::EngineInterface()
+{
+    m_bootParameter = new BootParameter();
+
+         //! Fast Boot
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->fastBoot)) { m_bootParameter->fastBoot = true; }
+    }
+
+         //! System Type
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->systemType)) { m_bootParameter->systemType = SystemType::Default; }
+    }
+
+         //! Page Init Time
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->pageInitTime)) { m_bootParameter->pageInitTime = 1316615272; }
+    }
+
+         //! Page Size
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->pageSize)) { m_bootParameter->pageSize = 0; }
+    }
+
+         //! Page Speed
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->pageSpeed)) { m_bootParameter->pageSpeed = 0; }
+    }
+
+         //! Init Time
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->initTime)) { m_bootParameter->initTime = 1316615272; }
+    }
+
+         //! User Mode
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->userMode)) { m_bootParameter->userMode = UserMode::Guest; }
+    }
+
+         //! System License
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->systemLicense)) { m_bootParameter->systemLicense = SystemLicense::Free; }
+    }
+
+         //! System Status
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->systemStatus)) { m_bootParameter->systemStatus = SystemStatus::Unknown; }
+    }
+
+
+         //! Sync Device
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->syncDevice)) { m_bootParameter->syncDevice = SyncDevice::WebOnly; }
+    }
+
+         //! Storage Type
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->storageType)) { m_bootParameter->storageType = StorageType::Empty; }
+    }
+
+         //! State Index
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->stateIndex)) { m_bootParameter->stateIndex = 0x1; }
+    }
+
+         //! Save State
+         //! ToDo...
+    {
+        if(!isset(m_bootParameter->saveState)) { m_bootParameter->saveState = "0x9ax0000000"; }
+    }
+
+         //! Host Type
+    {
+#ifdef PLATFORM_WINDOWS
+        m_bootParameter->hostType = HostType::Windows;
+#elif defined(PLATFORM_LINUX)
+        m_bootParameter->hostType = HostType::Lunux;
+#elif defined(PLATFORM_MAC)
+        m_bootParameter->hostType = HostType::MacOS;
+#else
+        m_bootParameter->hostType = HostType::Unknown;
+#endif
+    }
+
+}
+
+EngineInterface::~EngineInterface()
+{
+    __tegra_safe_delete(m_bootParameter);
+}
+
+std::time_t EngineInterface::getInitTime()
+{
+
+}
+
+std::optional<std::string> EngineInterface::getSaveState()
+{
+    if (isset(m_bootParameter->saveState)) {
+        return m_bootParameter->saveState;
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<u32> EngineInterface::getPageSize()
+{
+    if (isset(m_bootParameter->pageSize)) {
+        return m_bootParameter->pageSize;
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::time_t EngineInterface::getPageInitTime()
+{
+
+}
+
+std::optional<u32> EngineInterface::getPageSpeed()
+{
+    if (isset(m_bootParameter->pageSpeed)) {
+        return m_bootParameter->pageSpeed;
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<s32> EngineInterface::getStateIndex()
+{
+    if (isset(m_bootParameter->stateIndex)) {
+        return m_bootParameter->stateIndex;
+    } else {
+        return std::nullopt;
+    }
+}
+
+bool EngineInterface::getFastBoot()
+{
+    return m_bootParameter->fastBoot;
+}
+
+std::optional<HostType> EngineInterface::getHostType()
+{
+    if (isset(m_bootParameter->hostType)) {
+        return m_bootParameter->hostType;
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<UserMode> EngineInterface::getUserMode()
+{
+    if (isset(m_bootParameter->userMode)) {
+        return m_bootParameter->userMode;
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<SyncDevice> EngineInterface::getSyncMode()
+{
+    if (isset(m_bootParameter->syncDevice)) {
+        return m_bootParameter->syncDevice;
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<SystemType> EngineInterface::getSystemType()
+{
+    if (isset(m_bootParameter->systemType)) {
+        return m_bootParameter->systemType;
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<SystemLicense> EngineInterface::getSystemLicense()
+{
+    if (isset(m_bootParameter->systemLicense)) {
+        return m_bootParameter->systemLicense;
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<SystemStatus> EngineInterface::getSystemStatus()
+{
+    if (isset(m_bootParameter->systemStatus)) {
+        return m_bootParameter->systemStatus;
+    } else {
+        return std::nullopt;
+    }
+}
+
+SystemStatus EngineInterface::getStatus()
+{
+    if(!isset(m_bootParameter->systemStatus))
+    {
+
+    }
+}
+
+bool Engine::initialize()
+{
+  //ToDo...
+}
+
 
 std::string Engine::copyright() __tegra_noexcept
 {
@@ -216,11 +435,6 @@ std::string Engine::removeDashes(const std::string& src) __tegra_const_noexcept 
     std::string command = src;
     command.erase(std::remove(command.begin(), command.end(), '/'), command.end());
     return command;
-}
-
-bool Engine::initialize() __tegra_const_noexcept
-{
-  //ToDo...
 }
 
 std::string Engine::defaultLanguage()

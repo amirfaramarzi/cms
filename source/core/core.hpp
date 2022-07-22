@@ -25,6 +25,7 @@
 #define TEGRA_CORE_HPP
 
 #include "common.hpp"
+#include "prestructure.hpp"
 
 TEGRA_USING_NAMESPACE Tegra::Types;
 
@@ -43,11 +44,12 @@ struct DeveloperMode {
 
 template <typename T>
 /*!
- * @brief isset checks if the variable has no value.
- * @returns true if it has value
+ * @brief isset — Determine if a variable is declared and is different than null
+ * @returns true if var exists and has any value other than null. false otherwise.
  */
-[[nodiscard("Checks if the variable has no value.")]]
-static auto isset(T t) noexcept(true) {
+__tegra_no_discard_message("Checks if the variable has no value.")
+static auto isset(T t) __tegra_noexcept_expr(true)
+{
     if (const auto it = t; it != T {})
         // on success
         return true;
@@ -129,16 +131,6 @@ enum class HostType : u8
     Linux       =   0x3
 };
 
-enum class SystemStatus : u8
-{
-    Unknown     =   0x0,
-    Installed   =   0x1,
-    Open        =   0x2,
-    Closed      =   0x3,
-    Running     =   0x4,
-    Suspend     =   0x5
-};
-
 enum class Service : u8
 {
     Local       =   0x0,
@@ -176,6 +168,9 @@ struct Termination
  */
 enum class ExceptionMode : u8 { Default, StlException, TegraException };
 
+/*!
+ * @brief The ExceptionData class
+ */
 struct ExceptionData
 {
     std::string message {}; //default message
@@ -205,23 +200,126 @@ private:
     ExceptionData* m_exceptionData;
 };
 
-struct BootParameter
+struct BootParameter final
 {
-    std::time_t initTime;
-    std::string saveState;
-    std::optional<s32> stateIndex;
-    std::optional<bool> fastBoot;
-    std::optional<HostType> hostType;
-    std::optional<StorageType> storageType;
-    std::optional<UserMode> userMode;
-    std::optional<SyncDevice> syncDevice;
-    std::optional<SystemStatus> systemStatus;
+    bool                            fastBoot       {};      ///<This property is set to true when the system is booted with the highest possible state.
+    std::time_t                     initTime       {};      ///<The time spent on execution.
+    std::optional<std::string>      saveState      {};      ///<The system save state applied during a save operation after execution or completion of the operation..
+    std::optional<u32>              pageSize       {};      ///<The size of the requested page.
+    std::time_t                     pageInitTime   {};      ///<The loading time of the requested page.
+    std::optional<u32>              pageSpeed      {};      ///<The loading speed of the requested page.
+    std::optional<s32>              stateIndex     {};      ///<The state of index for any page.
+    std::optional<HostType>         hostType       {};      ///<This attribute specifies the type of site hosting. for example: Linux
+    std::optional<StorageType>      storageType    {};      ///<This attribute specifies the type of storage to use.
+    std::optional<UserMode>         userMode       {};      ///<This attribute specifies the type of user who uses the system.
+    std::optional<SyncDevice>       syncDevice     {};      ///<This attribute specifies the type of devices that are integrated with the system.
+    std::optional<SystemType>       systemType     {};      ///<This attribute determines the type of system consumption.
+    std::optional<SystemLicense>    systemLicense  {};      ///<The type of license to use the system.
+    std::optional<SystemStatus>     systemStatus   {};      ///<This attribute specifies the state the system is in.
+};
+
+class EngineInterface
+{
+public:
+    EngineInterface();
+    EngineInterface(const BootParameter& bootParameter);
+    virtual ~EngineInterface();
+
+    /*!
+     * @brief initialize starter!
+     * @returns true if the system starts successfully.
+     */
+    virtual bool initialize() = __tegra_zero;
+
+    /*!
+     * @brief Getting current fast boot status.
+     * @returns true if system has been booted as fast as possible.
+     */
+    virtual bool                            getFastBoot         () final;
+
+    /*!
+     * @brief Getting current system init time duration.
+     * @returns returns as time.
+     */
+    virtual std::time_t                     getInitTime         () final;
+
+    /*!
+     * @brief Getting current system state.
+     * @returns returns string of system state, for example version and etc.
+     */
+    virtual std::string                     getSaveState        () final;
+
+    /*!
+     * @brief Getting current loaded page size.
+     * @returns returns as unsigned int 32 for page size.
+     */
+    virtual std::optional<u32>              getPageSize         () final;
+
+    /*!
+     * @brief Getting current system current page init time duration.
+     * @returns returns as time.
+     */
+    virtual std::time_t                     getPageInitTime     () final;
+
+    /*!
+     * @brief Getting current page speed load.
+     * @returns returns as counter of page speed.
+     */
+    virtual std::optional<u32>              getPageSpeed        () final;
+
+    /*!
+     * @brief Getting current system state index.
+     * @returns returns as signed integer for state index.
+     */
+    virtual std::optional<s32>              getStateIndex       () final;
+
+    /*!
+     * @brief Getting current installed host type.
+     * @returns returns as HostType enum.
+     */
+    virtual std::optional<HostType>         getHostType         () final;
+
+    /*!
+     * @brief Getting current system user mode.
+     * @returns returns as UserMode enum.
+     */
+    virtual std::optional<UserMode>         getUserMode         () final;
+
+    /*!
+     * @brief Getting current system sync mode.
+     * @returns returns as SyncDevice enum.
+     */
+    virtual std::optional<SyncDevice>       getSyncMode         () final;
+
+    /*!
+     * @brief Getting current system type.
+     * @returns returns as SystemType enum.
+     */
+    virtual std::optional<SystemType>       getSystemType       () final;
+
+    /*!
+     * @brief Getting current system license.
+     * @returns returns as SystemLicense enum.
+     */
+    virtual std::optional<SystemLicense>    getSystemLicense    () final;
+
+    /*!
+     * @brief Getting current state of the system.
+     * @returns returns as SystemStatus enum.
+     */
+    virtual std::optional<SystemStatus>     getSystemStatus     () final;
+
+
+private:
+    BootParameter* m_bootParameter{nullptr};
+    bool m_status{false};
 };
 
 /*!
  * @brief The Engine class
  */
-class Engine {
+class Engine : public EngineInterface
+{
 public:
     Engine() = default;
     Engine(const Engine& rhsEngine) = delete;
@@ -229,6 +327,12 @@ public:
     Engine& operator=(const Engine& rhsEngine) = delete;
     Engine& operator=(Engine&& rhsEngine) noexcept = delete;
     ~Engine()=default;
+
+    /*!
+     * @brief initialize starter!
+     * @returns true if the system starts successfully.
+     */
+    __tegra_no_discard bool initialize() override;
 
     /*!
      * System copyrights.
@@ -326,12 +430,6 @@ public:
     enum class SepratorStyle : u8 { WithSpace, Mixed };
 
     /*!
-     * @brief initialize starter!
-     * @returns returns true if the system starts successfully.
-     */
-    __tegra_no_discard bool initialize() __tegra_const_noexcept;
-
-    /*!
      * @brief join function will implode a vector of strings into a comma-separated.
      * @param strings are list of strings.
      * @param sep is character of seprator.
@@ -360,7 +458,7 @@ public:
      */
     __tegra_no_discard std::string whiteSpaceLeading(std::string& input) __tegra_noexcept;
 
-    // Declared and defined in database section.
+         // Declared and defined in database section.
     enum class TableType : u8;
 
     /*!

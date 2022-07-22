@@ -204,6 +204,11 @@ constexpr Ref<T> CreateRef(Args&& ... args)
   return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
+#define __tegra_safe_delete(object) \
+if(object!=nullptr)                 \
+{ delete object;}                   \
+object = nullptr;                   \
+
 #define __tegra_abort abort();
 
 #define TEGRA_BRACE_BEGIN {
