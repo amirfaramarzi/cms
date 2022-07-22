@@ -10,12 +10,12 @@ TEGRA_USING_NAMESPACE Tegra::Types;
  */
 enum struct SystemStatus : u8
 {
-    Off             = 0x1, //The system is off.
-    On              = 0x2, //The system is on.
-    Suspened        = 0x3, //The system is on suspended mode.
-    Ready           = 0x4, //The system is ready.
-    Maintainance    = 0x5, //The system is under maintainance.
-    Unknown         = 0x6  //It is not clear what state the system is in.
+    Off             = 0x1, /*!< The system is off. */
+    On              = 0x2, /*!< The system is on.  */
+    Suspened        = 0x3, /*!< The system is on suspended mode. */
+    Ready           = 0x4, /*!< The system is ready. */
+    Maintainance    = 0x5, /*!< The system is under maintainance. */
+    Unknown         = 0x6  /*!< It is not clear what state the system is in. */
 };
 
 /*!
@@ -43,7 +43,7 @@ enum struct SystemLicense: u8
 /*!
  * \brief The CompatibilityLevel struct
  */
-struct CompatibilityLevel
+struct CompatibilityLevel final
 {
     u8 NoneCompatibility;
     u8 SimpleCompatibility;
@@ -52,14 +52,38 @@ struct CompatibilityLevel
 };
 
 /*!
+ * @title The SemanticVersion class
+ * @brief Given a version number MAJOR.MINOR.PATCH, increment the:
+ * ---------------------------------------------------------------
+ * ---- MAJOR version when you make incompatible API changes.
+ * ---- MINOR version when you add functionality in a backwards compatible manner.
+ * ---- PATCH version when you make backwards compatible bug fixes.
+ * Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
+ * @version Semantic Versioning 2.0.0
+ */
+struct SemanticVersion final
+{
+    uint Major      {};
+    uint Minor      {};
+    uint Patch      {};
+    uint PreRelease {};
+};
+
+/*!
  * \brief The SystemInfo struct
  */
-struct SystemInfo
+struct SystemInfo final
 {
-    std::string     name    {};
-    std::string     model   {};
-    SystemType      type    {};
-    SystemLicense   license {};
+    //Basic Information
+    std::optional<u8>              codeName        {};
+    std::optional<std::string>     name            {};
+    std::optional<SemanticVersion> version         {};
+    std::optional<std::string>     model           {};
+    std::optional<std::string>     compiledDate    {};
+
+    //Extra
+    std::optional<SystemType>      type            {};
+    std::optional<SystemLicense>   license         {};
 };
 
 #endif // PRESTRUCTURE_HPP

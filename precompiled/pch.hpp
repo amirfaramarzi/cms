@@ -39,7 +39,7 @@
 #if defined(CXX_STANDARD_20)
 //!Concepts
 #ifdef __has_include
-# if __has_include(<concepts>)
+#if __has_include(<concepts>)
 #   include <concepts>
 # endif
 #endif
