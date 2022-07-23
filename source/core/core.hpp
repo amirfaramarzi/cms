@@ -71,7 +71,7 @@ __tegra_no_discard constexpr bool equals(T1 const& first, T2 const& second) __te
  * \brief Replaces the value of obj with new_value and returns the old value of obj. like (std::exchange)
  * \param oldValue
  * \param newValue
- * \returns as replcaed value.
+ * \returns as replaced value.
  */
 template <typename T, typename U = T>
 __tegra_constexpr T exchange(T& t, U&& newValue)
