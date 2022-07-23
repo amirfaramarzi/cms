@@ -44,7 +44,8 @@ __tegra_enum_class FileType : u8
 __tegra_enum_class ConfigType : u8
 {
     File,       ///<Config based on file such as json.
-    Database    ///<Config based on database.
+    Database,   ///<Config based on database.
+    Network     ///<Config based on network I/O.
 };
 
 __tegra_enum_class SectionType : u8
@@ -52,7 +53,7 @@ __tegra_enum_class SectionType : u8
     SystemCore, ///<Configuration for system core.
     Database,   ///<Configuration for database.
     Framework,  ///<Configuration for framework.
-    Network,    ///<Configuration for network I/O.
+    Interface,  ///<Configuration for User Interface.
     Custom      ///<Configuration for our custom sections.
 };
 
@@ -70,7 +71,9 @@ struct AbstractConfigMember __tegra_final
     bool                     status     {};
 };
 
-///<In this section we will cover three data types, String, Boolean, and Integer.
+/*!
+ * \brief In this section we will cover three data types, String, Boolean, and Integer.
+ */
 struct VariableType final
 {
     union Type
@@ -81,7 +84,9 @@ struct VariableType final
     };
 };
 
-///<We need to have key as string and it's value as multi type as VariableType.
+/*!
+ * \brief We need to have key as string and it's value as VariableType.
+ */
 struct KeyValueType final
 {
     union Type
@@ -90,9 +95,11 @@ struct KeyValueType final
         VariableType value;
     };
 };
-
 #endif
 
+/*!
+ * \brief The AbstractConfiguration class
+ */
 class __tegra_export AbstractConfiguration
 {
 public:
