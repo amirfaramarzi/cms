@@ -86,6 +86,7 @@ template<typename T> using Vector        = std::vector<T>;
 template<typename T> using Optional      = std::optional<T>;
 template<typename T> using Variant       = std::variant<T>;
 
+
 using Function          = std::function<void(void)>;
 using PackagedTask      = std::packaged_task<void(void)>;
 using MultiThreadVector = std::vector<std::thread>;

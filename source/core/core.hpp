@@ -67,6 +67,20 @@ __tegra_no_discard constexpr bool equals(T1 const& first, T2 const& second) __te
     return first == second;
 }
 
+/*!
+ * \brief Replaces the value of obj with new_value and returns the old value of obj. like (std::exchange)
+ * \param oldValue
+ * \param newValue
+ * \returns as replcaed value.
+ */
+template <typename T, typename U = T>
+__tegra_constexpr T exchange(T& t, U&& newValue)
+{
+    T old = std::move(t);
+    t = std::forward<U>(newValue);
+    return old;
+}
+
 template<typename ... Args>
 std::string stringFormat(const std::string& format, Args ... args)
 {

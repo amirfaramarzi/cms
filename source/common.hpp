@@ -235,6 +235,7 @@ object = nullptr;                   \
 # define __tegra_override override
 # define __tegra_final final
 
+# define __tegra_const const
 # define __tegra_const_noexcept const noexcept
 # define __tegra_noexcept noexcept
 # define __tegra_noexcept_expr(x) noexcept(x)
