@@ -15,8 +15,8 @@
                 {"code":"turkish", "direction": "ltr", "name": "Turkish", "uri":"tr-tr", "d":"tur", "l":"tr_TR.utf-8"}
         ],
         "database":[
-                {"rdbms":"postgresql", "host": "127.0.0.1", "name": "root", "username":"postgres", "password":"", "port": 5432, "status": true},
-                {"rdbms":"mysql", "host": "127.0.0.1", "name": "root", "username":"mysql", "password":"", "port": , "status": false}
+                {"rdbms":"postgresql", "host": "127.0.0.1", "name": "tegradb", "username":"root", "password":"", "port": 5432, "status": true},
+                {"rdbms":"mysql", "host": "127.0.0.1", "name": "tegradb", "username":"root", "password":"", "port": 3306, "status": false}
         ],
         "system":{
                 "codename":"tegra",
