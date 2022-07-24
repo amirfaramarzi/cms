@@ -138,39 +138,39 @@ public:
 
     /*!
      * \brief SetTitle inserts data for the option's title.
-     * \param opt is a string type for inserting values into the function.
+     * \param title is a string type for inserting values into the function.
      */
-    __tegra_virtual void setTitle(const std::string& opt) = __tegra_zero;
+    __tegra_virtual void setTitle(const std::string& title) = __tegra_zero;
 
     /*!
      * \brief setDescr inserts data for the option's description.
-     * \param opt is a string type for inserting values into the function.
+     * \param descr is a string type for inserting values into the function.
      */
-    __tegra_virtual void setDescr(const std::string& opt) = __tegra_zero;
+    __tegra_virtual void setDescr(const std::string& descr) = __tegra_zero;
 
     /*!
      * \brief setValue inserts data for the option's value.
-     * \param opt is a ValueType for inserting values into the function.
+     * \param value is a ValueType for inserting values into the function.
      */
-    __tegra_virtual void setValue(const ValueType& opt) = __tegra_zero;
+    __tegra_virtual void setValue(const ValueType& value) = __tegra_zero;
 
     /*!
      * \brief setJson inserts data for the option's json.
-     * \param opt is a json type for inserting values into the function.
+     * \param json is a json type for inserting values into the function.
      */
-    __tegra_virtual void setJson(const JSon& opt) = __tegra_zero;
+    __tegra_virtual void setJson(const JSon& json) = __tegra_zero;
 
     /*!
      * \brief setDefaultValue inserts data for the option's default value.
-     * \param opt is a string type for inserting values into the function.
+     * \param deval is a string type for inserting values into the function.
      */
-    __tegra_virtual void setDefaultValue(const std::string& opt) = __tegra_zero;
+    __tegra_virtual void setDefaultValue(const std::string& deval) = __tegra_zero;
 
     /*!
      * \brief setStatus will change option's status.
-     * \param opt is a Status type for change the option status.
+     * \param status is a Status type for change the option status.
      */
-    __tegra_virtual void setStatus(const Optional<Status> opt) = __tegra_zero;
+    __tegra_virtual void setStatus(const Optional<Status> status) = __tegra_zero;
 
     /*!
      * \brief setStartGroup will sets option's group index.

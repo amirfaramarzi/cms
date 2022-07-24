@@ -186,15 +186,15 @@ public:
 
     /*!
      * \brief SetTitle inserts data for the option's title.
-     * \param opt is a string type for inserting values into the function.
+     * \param title is a string type for inserting values into the function.
      */
-    __tegra_virtual void setTitle(const std::string& opt) = __tegra_zero;
+    __tegra_virtual void setTitle(const std::string& title) = __tegra_zero;
 
     /*!
      * \brief setDescr inserts data for the option's description.
-     * \param opt is a string type for inserting values into the function.
+     * \param descr is a string type for inserting values into the function.
      */
-    __tegra_virtual void setDescr(const std::string& opt) = __tegra_zero;
+    __tegra_virtual void setDescr(const std::string& descr) = __tegra_zero;
 
     /*!
      * \brief setService sets service type for service.
@@ -210,9 +210,9 @@ public:
 
     /*!
      * \brief setStatus will change option's status.
-     * \param opt is a Status type for change the option status.
+     * \param status is a Status type for change the option status.
      */
-    __tegra_virtual void setStatus(const Optional<Status> opt) = __tegra_zero;
+    __tegra_virtual void setStatus(const Optional<Status> status) = __tegra_zero;
 
     /*!
      * \brief setStatus will sets service's version.
