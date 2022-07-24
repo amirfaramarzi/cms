@@ -71,8 +71,10 @@ using VectorString      = std::vector<std::string>;
 using SectionType       = std::vector<std::string>;
 using CodeType          = std::vector<std::string>;
 using OptionalString    = std::optional<std::string>;
+
 using OptionalNumeric   = std::optional<int>;
 using OptionalBool      = std::optional<bool>;
+using OptionalJson      = std::optional<JSon>;
 using TableNames        = std::vector<std::string>;
 using QueryType         = std::vector<std::string>;
 using SheetType         = std::vector<std::string>;
@@ -85,6 +87,7 @@ template<typename T1, typename T2> using Pair     = std::pair<T1, T2>;
 template<typename T> using Vector        = std::vector<T>;
 template<typename T> using Optional      = std::optional<T>;
 template<typename T> using Variant       = std::variant<T>;
+
 
 using Function          = std::function<void(void)>;
 using PackagedTask      = std::packaged_task<void(void)>;

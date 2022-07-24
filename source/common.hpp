@@ -67,36 +67,6 @@
 # include "precompiled/pch.hpp"
 #endif
 
-#ifdef ENABLE_DROGON_MODULE
-    #include <drogon/drogon.h>
-    #include <drogon/HttpController.h>
-    #include <drogon/HttpSimpleController.h>
-    #include <drogon/HttpAppFramework.h>
-    #include <drogon/orm/DbClient.h>
-    #include <drogon/orm/Exception.h>
-    #include <trantor/utils/Date.h>
-
-    namespace Framework = drogon;
-    namespace Orm = drogon::orm;
-
-    //!jsoncpp for framework
-    using JSonData = Json::Value;
-
-#endif
-
-#ifdef USE_NONE_STL_JSON
-#include <nlohmann/json.hpp>
-//!nlohmann for CMS
-using JSon = nlohmann::json;
-using JSonException = nlohmann::detail::exception;
-
-#endif
-
-#ifdef USE_FMT
-#include <fmt/format.h>
-using namespace fmt::literals;
-#endif
-
 namespace Tegra {
 
 namespace CMS {
@@ -204,6 +174,9 @@ constexpr Ref<T> CreateRef(Args&& ... args)
   return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
+#define __tegra_safe_instance(object, Class) \
+object = new Class();\
+
 #define __tegra_safe_delete(object) \
 if(object!=nullptr)                 \
 { delete object;}                   \
@@ -232,10 +205,12 @@ object = nullptr;                   \
 # define __tegra_override override
 # define __tegra_final final
 
+# define __tegra_const const
 # define __tegra_const_noexcept const noexcept
 # define __tegra_noexcept noexcept
 # define __tegra_noexcept_expr(x) noexcept(x)
-# define __tegra_constexpr static constexpr
+# define __tegra_constexpr constexpr
+# define __tegra_static_constexpr static constexpr
 # define __tegra_static_constexpr static constexpr
 # define __tegra_inline_static_constexpr inline static constexpr
 # define __tegra_inline_static_const inline static const
@@ -338,10 +313,13 @@ defined(_WIN32) || defined(__WIN32) || defined(__WIN32__) ||    \
     {\
     }\
 
-#define __tegra_enum enum class
+#define __tegra_enum_class enum class
 
 #define __tegra_shared_ptr(Class) \
 std::shared_ptr<Class>
+
+#define __tegra_classic_ptr(Class, object) \
+Class* object;\
 
 /**
  * @brief This class represents a non-copyable object.

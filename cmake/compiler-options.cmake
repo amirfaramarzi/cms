@@ -71,6 +71,11 @@ if (SIMPLE_BUILD)
   add_definitions(-DSIMPLE_BUILD)
 endif()
 
+option(ENABLE_DROGON_MODULE	    "Enable Drogon framework"  TRUE)
+if (ENABLE_DROGON_MODULE)
+  add_definitions(-DENABLE_DROGON_MODULE)
+endif()
+
 option(ENABLE_ASAN	    "Enable address sanitizer"  FALSE)
 if (ENABLE_ASAN)
   add_definitions(-DENABLE_ASAN)
@@ -149,11 +154,6 @@ endif()
 option(ENABLE_HEADER_ONLY_BUILD "Header Only Version" OFF)
 if (ENABLE_HEADER_ONLY_BUILD)
   add_definitions(-DENABLE_HEADER_ONLY_BUILD)
-endif()
-
-option(ENABLE_DROGON_MODULE "Enable drogon framework" ON)
-if (ENABLE_DROGON_MODULE)
-  add_definitions(-DENABLE_DROGON_MODULE)
 endif()
 
 option(FORCE_LATEST_STANDARD_FEATURE "Forcing to enable updated programming language." FALSE)

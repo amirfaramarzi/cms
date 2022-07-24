@@ -119,11 +119,11 @@ endif()
 set(compiler-options ON)
 
 # ------ PACKAGES CONFIG ------
-#include(packages)
-#if(packages)
-#  return()
-#endif()
-#set(packages ON)
+include(packages)
+if(packages)
+  return()
+endif()
+set(packages ON)
 
 if(USE_QT AND NOT PROJECT_MAIN_TYPE STREQUAL "web")
     set(CMAKE_AUTOUIC ON)
@@ -159,6 +159,7 @@ file(
     source/${SUFFIX_HPPHEADER}
     source/framework/${SUFFIX_HPPHEADER}
     source/core/${SUFFIX_HPPHEADER}
+    source/abstracts/${SUFFIX_HPPHEADER}
     source/database/${SUFFIX_HPPHEADER}
     source/interface/${SUFFIX_HPPHEADER}
     source/translator/${SUFFIX_HPPHEADER}
@@ -170,6 +171,7 @@ file(
     source/${SUFFIX_SOURCE}
     source/framework/${SUFFIX_SOURCE}
     source/core/${SUFFIX_SOURCE}
+    source/abstracts/${SUFFIX_SOURCE}
     source/interface/${SUFFIX_SOURCE}
     source/database/${SUFFIX_SOURCE}
     source/translator/${SUFFIX_SOURCE}
@@ -429,35 +431,10 @@ target_link_directories(${PROJECT_NAME}
     ${LIB_TARGET_LINK_DIRECTORIES}
     )
 
-#Package Info.
-#set(FMT_NAME "fmt")
-#set(FMT_DESCRIPTION "A modern formatting library.")
-
-
-find_package(fmt REQUIRED)
-#include_directories(/usr/bin/fmt)
-#include_directories(third-party/fmt/include/)
-
-#Pakcage option.
-#option(USE_FMT ${FMT_DESCRIPTION} TRUE)
-#if (USE_FMT)
-#    add_definitions(-DUSE_FMT)
-#endif()
-
-if(!ENABLE_DROGON_MODULE)
+if(ENABLE_DROGON_MODULE)
     find_package(Drogon CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME} PRIVATE Drogon::Drogon fmt::fmt)
     target_compile_definitions(${PROJECT_NAME} PUBLIC ${LIB_TARGET_COMPILER_DEFINATION})
-endif()
-
-#Package Info.
-set(NONE_STL_JSON_NAME "JSon")
-set(NONE_STL_JSON_DESCRIPTION "JSON for Modern C++.")
-
-#Pakcage option.
-option(USE_NONE_STL_JSON ${NONE_STL_JSON_DESCRIPTION} FALSE)
-if (USE_NONE_STL_JSON)
-    add_definitions(-DUSE_NONE_STL_JSON)
 endif()
 
 file(GLOB_RECURSE SCP_LIST ${CMAKE_CURRENT_SOURCE_DIR}/templates/user/*.csp)
