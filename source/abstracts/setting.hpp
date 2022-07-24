@@ -77,8 +77,6 @@ struct OptionData __tegra_final
     ServiceType         service    {};   ///< Service type for option.
 };
 
-__tegra_static_constexpr auto maxSize = 12;
-
 class __tegra_export AbstractSetting
 {
 public:
