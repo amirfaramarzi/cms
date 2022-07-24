@@ -124,7 +124,7 @@ CodeType Language::languageSupport()
     return m_languageSupport;
 }
 
-void Language::registerSections(const Types::SectionType& sec)
+void Language::registerSections(const Types::VectorSection& sec)
 {
     m_sections = sec;
 }

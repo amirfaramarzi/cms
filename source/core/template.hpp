@@ -86,7 +86,7 @@ public:
      */
     struct Requirments
     {
-        Tegra::Types::ConfigType config;
+        Tegra::Types::MapConfig config;
         Tegra::SEO::StaticMeta staticMeta;
     };
 
