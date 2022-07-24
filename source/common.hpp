@@ -67,36 +67,6 @@
 # include "precompiled/pch.hpp"
 #endif
 
-#ifdef ENABLE_DROGON_MODULE
-    #include <drogon/drogon.h>
-    #include <drogon/HttpController.h>
-    #include <drogon/HttpSimpleController.h>
-    #include <drogon/HttpAppFramework.h>
-    #include <drogon/orm/DbClient.h>
-    #include <drogon/orm/Exception.h>
-    #include <trantor/utils/Date.h>
-
-    namespace Framework = drogon;
-    namespace Orm = drogon::orm;
-
-    //!jsoncpp for framework
-    using JSonData = Json::Value;
-
-#endif
-
-#ifdef USE_NONE_STL_JSON
-#include <nlohmann/json.hpp>
-//!nlohmann for CMS
-using JSon = nlohmann::json;
-using JSonException = nlohmann::detail::exception;
-
-#endif
-
-#ifdef USE_FMT
-#include <fmt/format.h>
-using namespace fmt::literals;
-#endif
-
 namespace Tegra {
 
 namespace CMS {

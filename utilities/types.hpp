@@ -71,8 +71,10 @@ using VectorString      = std::vector<std::string>;
 using SectionType       = std::vector<std::string>;
 using CodeType          = std::vector<std::string>;
 using OptionalString    = std::optional<std::string>;
+
 using OptionalNumeric   = std::optional<int>;
 using OptionalBool      = std::optional<bool>;
+using OptionalJson      = std::optional<JSon>;
 using TableNames        = std::vector<std::string>;
 using QueryType         = std::vector<std::string>;
 using SheetType         = std::vector<std::string>;
