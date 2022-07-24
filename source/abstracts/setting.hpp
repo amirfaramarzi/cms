@@ -49,7 +49,7 @@ __tegra_enum_class Status : u8
 };
 
 #if defined(ENABLE_SAFE_ONLY)
-TEGRA_USING ValueType = std::variant<std::string, bool, slf8, ulf8>;   ///<In this section we will cover data types for value of options.
+TEGRA_USING ValueType = std::variant<std::string, bool, s64, u64>;   ///<In this section we will cover data types for value of options.
 #else
 struct ValueType __tegra_final
 {
