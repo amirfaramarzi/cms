@@ -180,7 +180,6 @@ public:
 
 private:
     TEGRA_DISABLE_COPY(AbstractSetting)
-    OptionData* m_optionData;
 };
 
 TEGRA_NAMESPACE_END

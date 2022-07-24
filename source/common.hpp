@@ -358,4 +358,6 @@ struct NonMovableOrCopyable : private NonCopyable, NonMovable
     TEGRA_DISABLE_MOVE(Class)
 }
 
+#include "prestructure.hpp"
+
 #endif // COMMON_HPP

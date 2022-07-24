@@ -173,7 +173,6 @@ public:
 
 private:
     TEGRA_DISABLE_COPY(AbstractConfiguration)
-    AbstractConfigMember* m_abstractConfigMember;
 };
 
 TEGRA_NAMESPACE_END
