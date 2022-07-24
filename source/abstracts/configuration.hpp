@@ -74,7 +74,7 @@ struct AbstractConfigMember __tegra_final
 /*!
  * \brief In this section we will cover three data types, String, Boolean, and Integer.
  */
-struct VariableType final
+struct VariableType __tegra_final
 {
     union Type
     {
@@ -87,7 +87,7 @@ struct VariableType final
 /*!
  * \brief We need to have key as string and it's value as VariableType.
  */
-struct KeyValueType final
+struct KeyValueType __tegra_final
 {
     union Type
     {
@@ -108,14 +108,14 @@ public:
     /*!
      * \brief Checks and initializations are required from the abstract class before configuration.
      */
-    __tegra_virtual void init() = __tegra_zero;
+    __tegra_constexpr __tegra_virtual void init() = __tegra_zero;
 
     /*!
      * \brief Creating and implementing the content of a tree in configuration files requires this function.
      * \param fileType as types of configuration file.
      * \returns true if the creating and implementing was successful.
      */
-    __tegra_virtual bool create(const FileType& fileType) = __tegra_zero;
+    __tegra_constexpr __tegra_virtual bool create(const FileType& fileType) = __tegra_zero;
 
     /*!
      * \brief We need to register files inside the project to read and write.

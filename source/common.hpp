@@ -209,6 +209,7 @@ object = nullptr;                   \
 # define __tegra_const_noexcept const noexcept
 # define __tegra_noexcept noexcept
 # define __tegra_noexcept_expr(x) noexcept(x)
+# define __tegra_constexpr_virtual virtual constexpr
 # define __tegra_constexpr constexpr
 # define __tegra_static_constexpr static constexpr
 # define __tegra_static_constexpr static constexpr

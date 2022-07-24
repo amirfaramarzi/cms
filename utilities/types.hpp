@@ -15,46 +15,46 @@ using llong        = long long;
 
 //! Fixed width integer types (since C++11)
 //! Signed integer type
-using s8  = std::uint8_t;
-using s16 = std::uint16_t;
-using s32 = std::uint32_t;
-using s64 = std::uint64_t;
+using s8  = std::int8_t;
+using s16 = std::int16_t;
+using s32 = std::int32_t;
+using s64 = std::int64_t;
 
-//! Fastest Signed integer type
-using sf8  = std::int_fast8_t;
-using sf16 = std::int_fast16_t;
-using sf32 = std::int_fast32_t;
-using sf64 = std::int_fast64_t;
+//! Fastest signed integer type with width of at least 8, 16, 32 and 64 bits respectively.
+using fs8  = std::int_fast8_t;
+using fs16 = std::int_fast16_t;
+using fs32 = std::int_fast32_t;
+using fs64 = std::int_fast64_t;
 
-//! Smallest Signed integer type
-using slf8  = std::int_least8_t;
-using slf16 = std::int_least16_t;
-using slf32 = std::int_least32_t;
-using slf64 = std::int_least64_t;
+//! Smallest signed integer type with width of at least 8, 16, 32 and 64 bits respectively.
+using ss8  = std::int_least8_t;
+using ss16 = std::int_least16_t;
+using ss32 = std::int_least32_t;
+using ss64 = std::int_least64_t;
 
-using imax = std::intmax_t; //! maximum-width signed integer type.
-using iptr = std::intptr_t; //! signed integer type capable of holding a pointer to void.
+using smax = std::intmax_t; //! Maximum-width signed integer type.
+using sptr = std::intptr_t; //! Signed integer type capable of holding a pointer to void.
 
-//! UnSigned integer type
+//! Unsigned integer type with width of exactly 8, 16, 32 and 64 bits respectively.
 using u8  = std::uint8_t;
 using u16 = std::uint16_t;
 using u32 = std::uint32_t;
 using u64 = std::uint64_t;
 
-//! Fastest UnSigned integer type
-using uf8  = std::uint_fast8_t;
-using uf16 = std::uint_fast16_t;
-using uf32 = std::uint_fast32_t;
-using uf64 = std::uint_fast64_t;
+//! Fastest unsigned integer type with width of at least 8, 16, 32 and 64 bits respectively.
+using fu8  = std::uint_fast8_t;
+using fu16 = std::uint_fast16_t;
+using fu32 = std::uint_fast32_t;
+using fu64 = std::uint_fast64_t;
 
-//! Smallest UnSigned integer type
-using ulf8  = std::uint_least8_t;
-using ulf16 = std::uint_least16_t;
-using ulf32 = std::uint_least32_t;
-using ulf64 = std::uint_least64_t;
+//! Smallest unsigned integer type with width of at least 8, 16, 32 and 64 bits respectively.
+using su8  = std::uint_least8_t;
+using su16 = std::uint_least16_t;
+using su32 = std::uint_least32_t;
+using su64 = std::uint_least64_t;
 
-using umax = std::uintmax_t; //! maximum-width unsigned integer type
-using uptr = std::uintptr_t; //! unsigned integer type capable of holding a pointer to void.
+using umax = std::uintmax_t; //! Maximum-width unsigned integer type
+using uptr = std::uintptr_t; //! Unsigned integer type capable of holding a pointer to void.
 
 using VariantTypes      = std::map<std::string, std::variant<std::string, std::string_view, int, double, bool>>;
 using MapList           = std::pair<std::string, std::map<std::string, std::string>>;
