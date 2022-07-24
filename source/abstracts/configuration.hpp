@@ -28,7 +28,7 @@
 
 TEGRA_USING_NAMESPACE Tegra::Types;
 
-TEGRA_NAMESPACE_BEGIN(Tegra)
+TEGRA_NAMESPACE_BEGIN(Tegra::Abstracts)
 
 __tegra_enum_class FileType : u8
 {

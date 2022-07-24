@@ -71,7 +71,7 @@ public:
      * \brief registerSections
      * \param sec
      */
-    void registerSections(const Types::SectionType& sec);
+    void registerSections(const Types::VectorSection& sec);
 
     /*!
      * \brief languageSupport
@@ -83,7 +83,7 @@ public:
      * \brief sections
      * \returns
      */
-    Types::SectionType sections();
+    Types::VectorSection sections();
 
     /*!
      * \brief getLanguageCode
@@ -106,7 +106,7 @@ public:
 private:
     Types::LanguageType       m_get;
     Types::CodeType           m_languageSupport;
-    Types::SectionType        m_sections;
+    Types::VectorSection        m_sections;
 };
 
 TEGRA_NAMESPACE_END

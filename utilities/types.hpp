@@ -63,12 +63,12 @@ using IteratorConfig    = std::map<std::string, std::string>::iterator;
 using LanguageType      = std::map<std::string, std::string>;
 using MetaList          = std::map<std::string, std::string>;
 using ResourceType      = std::map<std::string, std::string>;
-using ConfigType        = std::map<std::string, std::string>;
+using MapConfig         = std::map<std::string, std::string>;
 using MapString         = std::map<std::string, std::string>;
 using PairString        = std::pair<std::string, std::string>;
 using SettingType       = std::map<int, std::string>;
 using VectorString      = std::vector<std::string>;
-using SectionType       = std::vector<std::string>;
+using VectorSection     = std::vector<std::string>;
 using CodeType          = std::vector<std::string>;
 using OptionalString    = std::optional<std::string>;
 
