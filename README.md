@@ -11,7 +11,7 @@ Tegra is an open source super-high end performance, user-friendly, multi-lingual
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com)
 
-***WARNING:*** Tegra's code is not ready for final use at the moment, but you can see its development stages in this repository.
+$$\textcolor{red}{\text{***WARNING:*** Tegra's code is not ready for final use at the moment, but you can see development stages in dev repository.}}$$
 
 ## Technical Features
 - Written by C++
