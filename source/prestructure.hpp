@@ -63,10 +63,10 @@ struct CompatibilityLevel final
  */
 struct SemanticVersion final
 {
-    uint Major      {};
-    uint Minor      {};
-    uint Patch      {};
-    uint PreRelease {};
+    u8 Major      {};
+    u8 Minor      {};
+    u8 Patch      {};
+    u8 PreRelease {};
 };
 
 /*!

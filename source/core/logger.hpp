@@ -70,7 +70,7 @@ Logger::echo(__tegra_compiler_counter,                                          
              __tegra_compiler_file,                                                         \
              message, type)
 
-    class Logger;
+class Logger;
 /*!
  * \brief The Logger class
  */

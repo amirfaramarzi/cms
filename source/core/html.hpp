@@ -53,7 +53,7 @@ public:
      * \param string ch => Encoding
      * \return string
      */
-    __tegra_no_discard static std::string ParamValue(const std::string& s, slf8 mode,
+    __tegra_no_discard static std::string ParamValue(const std::string& s, ss8 mode,
                                                      const std::string& ch) __tegra_noexcept_expr(true);
 
     /*!
@@ -83,28 +83,28 @@ public:
     /*!
      * \brief Generation <input> type defaults to text
      * \param string name => Name
-     * \param string | slf8 | null value => Value.
+     * \param string | ss8 | null value => Value.
      * \param std::vector extra => Collection array of additional parameters
-     * \param slf8 mode => Value output method, details are described in the
+     * \param ss8 mode => Value output method, details are described in the
      * ParamValue method \return string
      */
     __tegra_no_discard static std::string Input(const std::string& name,
                                                 const std::string& title,
                                                 const std::string& description,
                                                 const std::string& value,
-                                                const std::vector<std::string>& extra, slf8 mode) __tegra_noexcept_expr(true);
+                                                const std::vector<std::string>& extra, ss8 mode) __tegra_noexcept_expr(true);
 
     /*!
      * \brief Generation <textarea> type defaults to rich text
      * \param string name => Name
-     * \param string | slf8 | null value => Value.
+     * \param string | ss8 | null value => Value.
      * \param std::vector extra => Collection array of additional parameters
-     * \param slf8 mode => Value output method, details are described in the
+     * \param ss8 mode => Value output method, details are described in the
      * ParamValue method \return string
      */
     __tegra_no_discard static std::string TextArea(const std::string& name,
                                                    const std::string& value,
-                                                   const std::vector<std::string>& extra, slf8 mode) __tegra_noexcept_expr(true);
+                                                   const std::vector<std::string>& extra, ss8 mode) __tegra_noexcept_expr(true);
 
     /*!
      * \brief Generation <checkbox> type for select status.
@@ -122,7 +122,7 @@ public:
      * \param string value The inscription on the button (value)
      * \param string type Button type: submit, button, reset
      * \param std::vector extra => Collection array of additional parameters
-     * \param slf8 mode Value output method, details are described in the
+     * \param ss8 mode Value output method, details are described in the
      * ParamValue method. \return string
      */
     __tegra_no_discard static std::string Button(const std::string& name,
@@ -133,10 +133,10 @@ public:
     /*!
      * \brief Generation of <input type = "radio"/>
      * \param string | false name => Name
-     * \param string value | slf8 value
+     * \param string value | ss8 value
      * \param bool checked | flag
      * \param std::vector extra => Collection array of additional parameters
-     * \param slf8 mode Value output method, details are described in the
+     * \param ss8 mode Value output method, details are described in the
      * ParamValue method. \return string
      */
     __tegra_no_discard static std::string Radio(const std::string& name,
@@ -150,13 +150,13 @@ public:
      * \param string options List of options
      * \param bool selected Checked Flag
      * \param std::vector extra => Collection array of additional parameters
-     * \param slf8 mode Value output method , details are described in the ParamValue method
+     * \param ss8 mode Value output method , details are described in the ParamValue method
      * \return string
      */
     __tegra_no_discard static std::string Option(const std::string& view,
                                                  const std::string& value, bool selected,
                                                  const std::string& name,
-                                                 const std::vector<std::string>&  extra, slf8 mode) __tegra_noexcept_expr(true);
+                                                 const std::vector<std::string>&  extra, ss8 mode) __tegra_noexcept_expr(true);
 
     /*!
      * \brief Single select <select> generation

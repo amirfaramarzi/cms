@@ -103,7 +103,6 @@ private:
     TEGRA_DISABLE_COPY(AbstractActivity)
 };
 
-
 /*!
  * \brief The SettingData class
  */
@@ -125,7 +124,9 @@ struct ServiceInfo __tegra_final
     Optional<LicenseType>   license    {};   ///< Type of license.
 };
 
-
+/*!
+ * \brief The AbstractService class
+ */
 class __tegra_export AbstractService : protected AbstractActivity
 {
 public:
