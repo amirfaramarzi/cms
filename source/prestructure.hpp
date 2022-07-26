@@ -25,10 +25,9 @@ enum struct SystemType: u8
 {
     Private      = 0x1,
     General      = 0x2,
-    Commercial   = 0x3,
-    Professional = 0x4,
-    Premium      = 0x5,
-    Default      = 0x6
+    Professional = 0x3,
+    Premium      = 0x4,
+    Default      = 0x5
 };
 
 /*!
@@ -36,8 +35,8 @@ enum struct SystemType: u8
  */
 enum struct SystemLicense: u8
 {
-    Free            = 0x1,
-    Commercial      = 0x2
+    Free            = 0x1,  ///< This flag marks the system as the free version.
+    Commercial      = 0x2   ///< This flag marks the system as the commercial version.
 };
 
 /*!
@@ -74,16 +73,16 @@ struct SemanticVersion final
  */
 struct SystemInfo final
 {
-    //Basic Information
-    std::optional<u8>              codeName        {};
-    std::optional<std::string>     name            {};
-    std::optional<SemanticVersion> version         {};
-    std::optional<std::string>     model           {};
-    std::optional<std::string>     compiledDate    {};
+    //!Basic Information
+    Optional<u8>                codeName        {};
+    OptionalString              name            {};
+    Optional<SemanticVersion>   version         {};
+    OptionalString              model           {};
+    OptionalString              compiledDate    {};
 
-    //Extra
-    std::optional<SystemType>      type            {};
-    std::optional<SystemLicense>   license         {};
+    //!Extra
+    Optional<SystemType>        type            {};
+    Optional<SystemLicense>     license         {};
 };
 
 #endif // PRESTRUCTURE_HPP
