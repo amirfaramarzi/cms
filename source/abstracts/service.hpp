@@ -108,10 +108,10 @@ private:
  */
 struct ServiceData __tegra_final
 {
-    OptionalNumeric         uid        {};   ///< Unique id of service.
-    OptionalString          title      {};   ///< Title of service.
-    OptionalString          descr      {};   ///< Description of service.
-    Optional<ServiceType>   type       {};   ///< Type of service.
+    OptionalNumeric         uid        {};   ///< Unique identifier.
+    OptionalString          title      {};   ///< Title.
+    OptionalString          descr      {};   ///< Description.
+    Optional<ServiceType>   type       {};   ///< Type based on optional ServiceType.
     Optional<Status>        status     {};   ///< Status of service.
 };
 
@@ -120,7 +120,7 @@ struct ServiceData __tegra_final
  */
 struct ServiceInfo __tegra_final
 {
-    SemanticVersion         version    {};   ///< Version of service.
+    SemanticVersion         version    {};   ///< Version number.
     Optional<LicenseType>   license    {};   ///< Type of license.
 };
 
@@ -220,7 +220,6 @@ public:
      * \param version is a SemanticVersion type.
      */
     __tegra_virtual void setVersion(const SemanticVersion& version) = __tegra_zero;
-
 
 private:
     TEGRA_DISABLE_COPY(AbstractService)
