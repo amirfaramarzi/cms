@@ -46,7 +46,7 @@ struct TransferData __tegra_final
     TransferMethodState method   {};  ///< Transfer method for api service.
     AuthenticationType  auth     {};  ///< Authentication type for api service.
     OptionalString      path     {};  ///< Path for api service.
-    OptionalString      output   {};  ///< Outpur from api service.
+    OptionalString      output   {};  ///< Output from api service.
 };
 
 /*!
