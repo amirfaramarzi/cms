@@ -148,6 +148,7 @@ struct STATICS final {
 
 #define __tegra_has_include __has_include
 #define __tegra_charset "utf-8"
+#define __tegra_unknown "unknown"
 
 template<typename T>
 using Function = std::function<T>;
@@ -305,6 +306,7 @@ Class();\
 Class::Class() {}\
     Class::~Class(){}\
 
+#define __tegra_enum enum
 #define __tegra_enum_class enum class
 
 #define __tegra_shared_ptr(Class) \

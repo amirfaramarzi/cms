@@ -62,10 +62,10 @@ struct CompatibilityLevel final
  */
 struct SemanticVersion final
 {
-    u8 Major      {};
-    u8 Minor      {};
-    u8 Patch      {};
-    u8 PreRelease {};
+    uint Major                  {};
+    uint Minor                  {};
+    uint Patch                  {};
+    OptionalString  PreRelease  {}; ///< Software release life cycle. https://en.wikipedia.org/wiki/Software_release_life_cycle
 };
 
 /*!
