@@ -175,6 +175,12 @@ constexpr Ref<T> CreateRef(Args&& ... args)
   return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
+
+#define TEGRA_POINTER_TO_AN_OBJECT(object, name)\
+typedef object* (*name)();
+
+#define TEGRA_POINTER_TO_A_FUNCTION void(*)()
+
 #define __tegra_safe_instance(object, Class) \
 object = new Class();\
 
