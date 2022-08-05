@@ -223,6 +223,7 @@ object = nullptr;                   \
 #define __tegra_no_return [[noreturn]]
 
 #define __tegra_no_discard [[nodiscard]]
+#define __tegra_no_discard_virtual [[nodiscard]] virtual
 #define __tegra_no_discard_message(x) [[nodiscard(x)]]
 
 #define __tegra_maybe_unused [[maybe_unused]]
