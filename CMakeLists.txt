@@ -161,6 +161,7 @@ file(
     source/core/${SUFFIX_HPPHEADER}
     source/abstracts/${SUFFIX_HPPHEADER}
     source/abstracts/apis/${SUFFIX_HPPHEADER}
+    source/abstracts/dynamics/${SUFFIX_HPPHEADER}
     source/database/${SUFFIX_HPPHEADER}
     source/interface/${SUFFIX_HPPHEADER}
     source/translator/${SUFFIX_HPPHEADER}
@@ -174,6 +175,7 @@ file(
     source/core/${SUFFIX_SOURCE}
     source/abstracts/${SUFFIX_SOURCE}
     source/abstracts/apis/${SUFFIX_SOURCE}
+    source/abstracts/dynamics/${SUFFIX_SOURCE}
     source/interface/${SUFFIX_SOURCE}
     source/database/${SUFFIX_SOURCE}
     source/translator/${SUFFIX_SOURCE}
