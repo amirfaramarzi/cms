@@ -48,19 +48,19 @@ void Termination::terminate(TerminateType terminateType)
 {
     switch (terminateType) {
     case TerminateType::Unknown:
-        std::exit(EXIT_FAILURE);
         Log("The system has been terminated for [Unknown] reason!", LoggerType::Info);
-        ///ToDo for more details...
+        std::exit(EXIT_FAILURE);
+        ///ToDo for more handling...
         break;
     case TerminateType::UnexpectedError:
         Log("The system has been terminated for [UnexpectedError] reason!", LoggerType::Info);
         std::exit(EXIT_FAILURE);
-        ///ToDo for more details...
+        ///ToDo for more handling...
         break;
     case TerminateType::Violation:
         Log("The system has been terminated for [Violation] reason!", LoggerType::Info);
         std::exit(EXIT_FAILURE);
-        ///ToDo for more details...
+        ///ToDo for more handling...
         break;
     default:
         break;
@@ -157,7 +157,7 @@ EngineInterface::EngineInterface()
 #elif defined(PLATFORM_LINUX)
         m_bootParameter->hostType = HostType::Linux;
 #elif defined(PLATFORM_MAC)
-        m_bootParameter->hostType = HostType::MacOS;
+        m_bootParameter->hostType = HostType::macOS;
 #else
         m_bootParameter->hostType = HostType::Unknown;
 #endif
