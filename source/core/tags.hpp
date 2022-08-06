@@ -89,8 +89,8 @@ protected:
 
 private:
     TEGRA_DISABLE_COPY(Tags)
-    TagsData* m_TagsData;
-    TagList* m_TagList;
+    TagsData* m_tagsData;
+    TagList* m_tagList;
 };
 
 TEGRA_NAMESPACE_END

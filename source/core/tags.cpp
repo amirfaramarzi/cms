@@ -9,8 +9,8 @@ TEGRA_NAMESPACE_BEGIN(Tegra)
  */
 Tags::Tags()
 {
-    __tegra_safe_instance(m_TagsData, TagsData);
-    __tegra_safe_instance(m_TagList, TagList);
+    __tegra_safe_instance(m_tagsData, TagsData);
+    __tegra_safe_instance(m_tagList, TagList);
 }
 
 /*!
@@ -18,30 +18,30 @@ Tags::Tags()
  */
 Tags::~Tags()
 {
-    __tegra_safe_delete(m_TagsData);
-    __tegra_safe_delete(m_TagList);
+    __tegra_safe_delete(m_tagsData);
+    __tegra_safe_delete(m_tagList);
 }
 
 void Tags::registerTag(const TagsData& tag) __tegra_const_noexcept
 {
     {
-        m_TagsData->id = tag.id;
-        m_TagsData->title = tag.title;
+        m_tagsData->id = tag.id;
+        m_tagsData->title = tag.title;
     }
     //For tag list
     if(insertIntoDb(tag))
-        m_TagList->push_back(tag);
+        m_tagList->push_back(tag);
     ///ToDo...
 }
 
 TagsData Tags::getTags() __tegra_const_noexcept
 {
-    return *m_TagsData;
+    return *m_tagsData;
 }
 
 TagList Tags::getList() __tegra_const_noexcept
 {
-    return *m_TagList;
+    return *m_tagList;
 }
 
 bool Tags::removeTag(const u32 id) __tegra_const_noexcept
