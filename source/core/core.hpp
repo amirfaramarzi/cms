@@ -154,7 +154,7 @@ enum class HostType : u8
 {
     Unknown     =   0x0,
     Windows     =   0x1,
-    MacOS       =   0x2,
+    macOS       =   0x2,
     Linux       =   0x3
 };
 
@@ -166,12 +166,26 @@ enum class Service : u8
     Running     =   0x3
 };
 
+enum class IconType : u8
+{
+    Png,
+    Svg,
+    FontIcon
+};
+
+enum class MediaType : u8
+{
+    Image,
+    Video,
+    Canvas
+};
+
 enum class ApiModel : u8
 {
     Unknown,
-    JSON,
-    XML,
-    GRAPHQL
+    Json,
+    Xml,
+    GraphQl
 };
 
 enum class TerminateType : u8

@@ -3,7 +3,7 @@
 
 TEGRA_NAMESPACE_BEGIN(Tegra::CMS)
 
-std::string Html::ParamValue(const std::string& s, slf8 mode,
+std::string Html::ParamValue(const std::string& s, ss8 mode,
                              const std::string& ch) __tegra_noexcept_expr(true)
 {
     std::string str = s;
@@ -48,7 +48,7 @@ std::string Html::Input(const std::string& name,
                         const std::string& title,
                         const std::string& description,
                         const std::string& value,
-                        const std::vector<std::string>& extra, slf8 mode = 1) __tegra_noexcept_expr(true)
+                        const std::vector<std::string>& extra, ss8 mode = 1) __tegra_noexcept_expr(true)
 {
     return "<div class=\"form-group\">"
            "<!-- Label --><label class=\"mb-1\">"+title+"</label>"
@@ -59,7 +59,7 @@ std::string Html::Input(const std::string& name,
 
 std::string Html::TextArea(const std::string& name,
                            const std::string& value,
-                           const std::vector<std::string>& extra, slf8 mode = 1) __tegra_noexcept_expr(true)
+                           const std::vector<std::string>& extra, ss8 mode = 1) __tegra_noexcept_expr(true)
 {
     return "<textarea " + TagParams(extra) +
            "name=" + name +">" + ParamValue(value, mode, "") +"</textarea>";
@@ -99,7 +99,7 @@ std::string Html::Radio(const std::string& name,
 std::string Html::Option(const std::string& view,
                          const std::string& value, bool selected,
                          const std::string& name,
-                         const std::vector<std::string>& extra, slf8 mode) __tegra_noexcept_expr(true)
+                         const std::vector<std::string>& extra, ss8 mode) __tegra_noexcept_expr(true)
 {
     std::string selectedStr {};
     if (!selected == true) {

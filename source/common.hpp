@@ -148,6 +148,7 @@ struct STATICS final {
 
 #define __tegra_has_include __has_include
 #define __tegra_charset "utf-8"
+#define __tegra_unknown "unknown"
 
 template<typename T>
 using Function = std::function<T>;
@@ -173,6 +174,12 @@ constexpr Ref<T> CreateRef(Args&& ... args)
 {
   return std::make_shared<T>(std::forward<Args>(args)...);
 }
+
+
+#define TEGRA_POINTER_TO_AN_OBJECT(object, name)\
+typedef object* (*name)();
+
+#define TEGRA_POINTER_TO_A_FUNCTION void(*)()
 
 #define __tegra_safe_instance(object, Class) \
 object = new Class();\
@@ -222,6 +229,7 @@ object = nullptr;                   \
 #define __tegra_no_return [[noreturn]]
 
 #define __tegra_no_discard [[nodiscard]]
+#define __tegra_no_discard_virtual [[nodiscard]] virtual
 #define __tegra_no_discard_message(x) [[nodiscard(x)]]
 
 #define __tegra_maybe_unused [[maybe_unused]]
@@ -281,39 +289,31 @@ defined(_WIN32) || defined(__WIN32) || defined(__WIN32__) ||    \
 
 #define TEGRA_QUERY(...) #__VA_ARGS__
 
+#define TEGRA_DEFAULT_OCTORS_WITHOUT_IMPL(Class) \
+    Class() = default;\
+    ~Class() = default;
+
+#define TEGRA_DEFAULT_INTERFACE_OCTORS_WITHOUT_IMPL(Class) \
+Class() = default;\
+    virtual ~Class() = default;
+
 #define TEGRA_DEFAULT_OCTORS(Class) \
-    Class();\
+Class();\
     ~Class();
 
+#define TEGRA_DEFAULT_OCTORS_IMPL(Class)\
+Class::Class(){}\
+    Class::~Class(){}\
+
 #define TEGRA_DEFAULT_INTERFACE_OCTORS(Class) \
-    Class();\
+Class();\
     virtual ~Class();
 
-#define TEGRA_DEFAULT_INTERFACE_OCTORS_IMPL(Class) \
-    Class::Class()\
-    {\
-    }\
-    Class::~Class()\
-    {\
-    }\
+#define TEGRA_DEFAULT_INTERFACE_OCTORS_IMPL(Class)\
+Class::Class() {}\
+    Class::~Class(){}\
 
-
-#define TEGRA_DEFAULT_OCTORS_IMPL(Class) \
-    Class::Class()\
-    {\
-    }\
-    Class::~Class()\
-    {\
-    }\
-
-#define TEGRA_INTERFACE(Class) \
-    Class::Class()\
-    {\
-    }\
-    virtual Class::~Class()\
-    {\
-    }\
-
+#define __tegra_enum enum
 #define __tegra_enum_class enum class
 
 #define __tegra_shared_ptr(Class) \
@@ -322,9 +322,8 @@ std::shared_ptr<Class>
 #define __tegra_classic_ptr(Class, object) \
 Class* object;\
 
-/**
- * @brief This class represents a non-copyable object.
- *
+/*!
+ * \brief This struct represents a non-copyable object.
  */
 struct NonCopyable
 {
@@ -333,6 +332,9 @@ struct NonCopyable
     NonCopyable& operator=(NonCopyable const&) = delete;
 };
 
+/*!
+ * \brief This struct represents a non-movable object.
+ */
 struct NonMovable
 {
     NonMovable() = default;
@@ -340,19 +342,26 @@ struct NonMovable
     NonMovable& operator=(NonMovable&&) = delete;
 };
 
+/*!
+ * \brief This struct represents a non-copyable or non-movable object.
+ */
 struct NonMovableOrCopyable : private NonCopyable, NonMovable
 {
     NonMovableOrCopyable() = default;
 };
 
+//!Macro version of non-copyable.
 #define TEGRA_DISABLE_COPY(Class) \
     Class(const Class &) = delete;\
     Class &operator=(const Class &) = delete;
+
+//!Macro version of non-movable.
 
 #define TEGRA_DISABLE_MOVE(Class) \
     Class(Class &&) = delete; \
     Class &operator=(Class &&) = delete;
 
+//!Macro version of non-copyable and non-movable.
 #define TEGRA_DISABLE_COPY_MOVE(Class) \
     TEGRA_DISABLE_COPY(Class) \
     TEGRA_DISABLE_MOVE(Class)
