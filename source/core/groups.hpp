@@ -45,52 +45,52 @@ __tegra_enum_class SpecialType : u8
  */
 struct GroupData __tegra_final
 {
-    u32             id              {};     ///< Id for group.
-    OptionalString  title           {};     ///< Title for group.
-    OptionalString  description     {};     ///< Description for group.
-    u32             parentId        {};     ///< Parent's id.
-    OptionalBool    protection      {};     ///< Group's protection mode.
-    OptionalString  icon            {};     ///< Icon for group.
-    u32             stars           {};     ///< Total of stars.
-    OptionalString  stylePrefix     {};     ///< Custom style for prefix.
-    OptionalString  styleSuffix     {};     ///< Custom style for suffix.
-    OptionalString  doHtml          {};     ///< Can insert html tag inside posts.
-    OptionalString  service         {};     ///< Service for group.
-    OptionalString  module          {};     ///< Module for group.
-    OptionalString  plugin          {};     ///< Plugin for group.
-    OptionalBool    root            {};     ///< Group can be access as root permission.
-    OptionalBool    master          {};     ///< Group can be access as master permission.
-    OptionalNumeric maxUpload       {};     ///< Maximum upload size.
-    OptionalNumeric maxDownload     {};     ///< Maximum download size.
-    OptionalNumeric maxPayment      {};     ///< Maximum payment count.
-    OptionalBool    captcha         {};     ///< Enable captcha for group or not.
-    OptionalBool    moderate        {};     ///< Group can access to site as moderator.
-    OptionalString  platforms       {};     ///< Usable platforms.
-    OptionalBool    hasSign         {};     ///< Group can has sign under the posts.
-    u32             report          {};     ///< Total of reports.
-    u32             rate            {};     ///< Total of rates.
-    OptionalBool    createOwnUser   {};     ///< Can create own user [sub user].
-    OptionalBool    createOwnPost   {};     ///< Can create own post.
-    OptionalBool    editOwnPost     {};     ///< Can edit own posts.
-    OptionalBool    editAllPost     {};     ///< Can edit all posts.
-    OptionalBool    hideOwnPost     {};     ///< Can hide own posts.
-    OptionalBool    hideAllPost     {};     ///< Can hide all posts.
-    OptionalBool    removeOwnPost   {};     ///< Can remove own posts.
-    OptionalBool    removeAllPost   {};     ///< Can remove all posts.
-    OptionalBool    changeOwnPost   {};     ///< Can change own posts.
-    OptionalBool    canPromote      {};     ///< Can promote own posts.
-    OptionalBool    canCoverChange  {};     ///< Can change own cover.
-    OptionalBool    canAvatarChange {};     ///< Can change own avatar.
-    OptionalBool    editProfile     {};     ///< Can edit profile details.
-    OptionalBool    useAnimation    {};     ///< Can use animation file like gif or lotties.
-    OptionalNumeric maxCoverSize    {};     ///< Maximum cover size.
-    OptionalNumeric maxAvatarSize   {};     ///< Maximum avatar size.
-    OptionalBool    banned          {};     ///< Banned mode.
-    OptionalNumeric floodLimit      {};     ///< Flood limitation.
-    OptionalNumeric searchLimit     {};     ///< Search limitation.
-    OptionalBool    accessClosed    {};     ///< Can access to closed site.
-    SpecialType     special         {};     ///< Is special group.
-    OptionalBool    apiAccess       {};     ///< Can access to api as developer.
+    u32                 id              {};     ///< Id for group.
+    OptionalString      title           {};     ///< Title for group.
+    OptionalString      description     {};     ///< Description for group.
+    u32                 parentId        {};     ///< Parent's id.
+    OptionalBool        protection      {};     ///< Group's protection mode.
+    OptionalString      icon            {};     ///< Icon for group.
+    u32                 stars           {};     ///< Total of stars.
+    OptionalString      stylePrefix     {};     ///< Custom style for prefix.
+    OptionalString      styleSuffix     {};     ///< Custom style for suffix.
+    OptionalString      doHtml          {};     ///< Can insert html tag inside posts.
+    OptionalString      service         {};     ///< Service for group.
+    OptionalString      module          {};     ///< Module for group.
+    OptionalString      plugin          {};     ///< Plugin for group.
+    OptionalBool        root            {};     ///< Group can be access as root permission.
+    OptionalBool        master          {};     ///< Group can be access as master permission.
+    OptionalNumeric     maxUpload       {};     ///< Maximum upload size.
+    OptionalNumeric     maxDownload     {};     ///< Maximum download size.
+    OptionalNumeric     maxPayment      {};     ///< Maximum payment count.
+    OptionalBool        captcha         {};     ///< Enable captcha for group or not.
+    OptionalBool        moderate        {};     ///< Group can access to site as moderator.
+    OptionalString      platforms       {};     ///< Usable platforms.
+    OptionalBool        hasSign         {};     ///< Group can has sign under the posts.
+    u32                 report          {};     ///< Total of reports.
+    u32                 rate            {};     ///< Total of rates.
+    OptionalBool        createOwnUser   {};     ///< Can create own user [sub user].
+    OptionalBool        createOwnPost   {};     ///< Can create own post.
+    OptionalBool        editOwnPost     {};     ///< Can edit own posts.
+    OptionalBool        editAllPost     {};     ///< Can edit all posts.
+    OptionalBool        hideOwnPost     {};     ///< Can hide own posts.
+    OptionalBool        hideAllPost     {};     ///< Can hide all posts.
+    OptionalBool        removeOwnPost   {};     ///< Can remove own posts.
+    OptionalBool        removeAllPost   {};     ///< Can remove all posts.
+    OptionalBool        changeOwnPost   {};     ///< Can change own posts.
+    OptionalBool        canPromote      {};     ///< Can promote own posts.
+    OptionalBool        canCoverChange  {};     ///< Can change own cover.
+    OptionalBool        canAvatarChange {};     ///< Can change own avatar.
+    OptionalBool        editProfile     {};     ///< Can edit profile details.
+    OptionalBool        useAnimation    {};     ///< Can use animation file like gif or lotties.
+    OptionalNumeric     maxCoverSize    {};     ///< Maximum cover size.
+    OptionalNumeric     maxAvatarSize   {};     ///< Maximum avatar size.
+    OptionalBool        banned          {};     ///< Banned mode.
+    OptionalNumeric     floodLimit      {};     ///< Flood limitation.
+    OptionalNumeric     searchLimit     {};     ///< Search limitation.
+    OptionalBool        accessClosed    {};     ///< Can access to closed site.
+    SpecialType         special         {};     ///< Is special group.
+    OptionalBool        apiAccess       {};     ///< Can access to api as developer.
 };
 
 /*!
