@@ -1,7 +1,9 @@
 /*!
  * MIT License
  *
- * Copyright (c) 2022 Kambiz Asadzadeh
+ * Copyright (c) 2022 The Genyleap. All rights reserved.
+ * Copyright (c) 2022 Kambiz Asadzadeh.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -77,7 +79,7 @@ struct Constants final
 {
     __tegra_inline_static_const VectorString defaultTables {
         "config", "config_l","apikey","resource","resource_l",
-        "drafts", "templates","templates_l", "services","services_l"
+        "drafts", "templates","templates_l", "services","services_l", "social","social_l"
         ,"groups", "groups_l","menu","menu_l","modules","modules_l","plugins", "plugins_l",
         "config_groups","config_groups_l", "tasks","cache", "provinces", "cities",
         "tags", "globalization","translation", "members", "members_account",
@@ -142,13 +144,14 @@ struct TEGRA_TABLES final
     static constexpr std::string_view   MODULES_L               = "modules_l";
     static constexpr std::string_view   PLUGINS                 = "plugins";
     static constexpr std::string_view   PLUGINS_L               = "plugins_l";
+    static constexpr std::string_view   TAGS                    = "tags";
+    static constexpr std::string_view   TAGS_L                  = "tags_l";
     static constexpr std::string_view   CONFIG_GROUPS           = "config_groups";
     static constexpr std::string_view   CONFIG_GROUPS_L         = "config_groups_l";
     static constexpr std::string_view   TASKS                   = "tasks";
     static constexpr std::string_view   CACHE                   = "cache";
     static constexpr std::string_view   PROVINCES               = "provinces";
     static constexpr std::string_view   CITIES                  = "cities";
-    static constexpr std::string_view   TAGS                    = "tags";
     static constexpr std::string_view   GLOBALIZATION           = "globalization";
     static constexpr std::string_view   TRANSLATION             = "translation";
     static constexpr std::string_view   MEMBERS                 = "members";

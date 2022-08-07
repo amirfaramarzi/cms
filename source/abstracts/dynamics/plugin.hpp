@@ -1,7 +1,9 @@
 /*!
  * MIT License
  *
- * Copyright (c) 2022 Kambiz Asadzadeh
+ * Copyright (c) 2022 The Genyleap. All rights reserved.
+ * Copyright (c) 2022 Kambiz Asadzadeh.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -65,7 +67,7 @@ struct PluginInfo __tegra_final
 {
     Optional<u32>               codeName        {}; ///< A unique code for plugin.
     OptionalString              name            {}; ///< A name for plugin.
-    OptionalString              description     {}; ///< A description for explanation plugin
+    OptionalString              description     {}; ///< A description for explanation plugin.
     OptionalString              compiledDate    {}; ///< Compiled date for plugin.
     Optional<SystemLicense>     license         {}; ///< License type for plugin.
     PluginType                  pluginType      {}; ///< The type of plugin.
