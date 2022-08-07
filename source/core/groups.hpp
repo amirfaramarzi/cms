@@ -1,0 +1,142 @@
+/*!
+ * MIT License
+ *
+ * Copyright (c) 2022 The Genyleap. All rights reserved.
+ * Copyright (c) 2022 Kambiz Asadzadeh.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+#ifndef GROUPS_HPP
+#define GROUPS_HPP
+
+#include "common.hpp"
+
+TEGRA_USING_NAMESPACE Tegra::Types;
+
+TEGRA_NAMESPACE_BEGIN(Tegra)
+
+__tegra_enum_class SpecialType : u8
+{
+    AsDefaultUsers      =   0x1,    ///< As a Simple user [Limited].
+    AsDevelopers        =   0x2,    ///< As a Developer/Programmer.
+    AsDesigners         =   0x3,    ///< As a Designer.
+    AsManagers          =   0x4,    ///< As a Manager.
+    AsRobots            =   0x5,    ///< As a Robot.
+    AsFullAccess        =   0x6     ///< As a master with all privileges.
+};
+
+/*!
+ * \brief The GroupData class
+ */
+struct GroupData __tegra_final
+{
+    u32                 id              {};     ///< Id for group.
+    OptionalString      title           {};     ///< Title for group.
+    OptionalString      description     {};     ///< Description for group.
+    u32                 parentId        {};     ///< Parent's id.
+    OptionalBool        protection      {};     ///< Group's protection mode.
+    OptionalString      icon            {};     ///< Icon for group.
+    u32                 stars           {};     ///< Total of stars.
+    OptionalString      stylePrefix     {};     ///< Custom style for prefix.
+    OptionalString      styleSuffix     {};     ///< Custom style for suffix.
+    OptionalString      doHtml          {};     ///< Can insert html tag inside posts.
+    OptionalString      service         {};     ///< Service for group.
+    OptionalString      module          {};     ///< Module for group.
+    OptionalString      plugin          {};     ///< Plugin for group.
+    OptionalBool        root            {};     ///< Group can be access as root permission.
+    OptionalBool        master          {};     ///< Group can be access as master permission.
+    OptionalNumeric     maxUpload       {};     ///< Maximum upload size.
+    OptionalNumeric     maxDownload     {};     ///< Maximum download size.
+    OptionalNumeric     maxPayment      {};     ///< Maximum payment count.
+    OptionalBool        captcha         {};     ///< Enable captcha for group or not.
+    OptionalBool        moderate        {};     ///< Group can access to site as moderator.
+    OptionalString      platforms       {};     ///< Usable platforms.
+    OptionalBool        hasSign         {};     ///< Group can has sign under the posts.
+    u32                 report          {};     ///< Total of reports.
+    u32                 rate            {};     ///< Total of rates.
+    OptionalBool        createOwnUser   {};     ///< Can create own user [sub user].
+    OptionalBool        createOwnPost   {};     ///< Can create own post.
+    OptionalBool        editOwnPost     {};     ///< Can edit own posts.
+    OptionalBool        editAllPost     {};     ///< Can edit all posts.
+    OptionalBool        hideOwnPost     {};     ///< Can hide own posts.
+    OptionalBool        hideAllPost     {};     ///< Can hide all posts.
+    OptionalBool        removeOwnPost   {};     ///< Can remove own posts.
+    OptionalBool        removeAllPost   {};     ///< Can remove all posts.
+    OptionalBool        changeOwnPost   {};     ///< Can change own posts.
+    OptionalBool        canPromote      {};     ///< Can promote own posts.
+    OptionalBool        canCoverChange  {};     ///< Can change own cover.
+    OptionalBool        canAvatarChange {};     ///< Can change own avatar.
+    OptionalBool        editProfile     {};     ///< Can edit profile details.
+    OptionalBool        useAnimation    {};     ///< Can use animation file like gif or lotties.
+    OptionalNumeric     maxCoverSize    {};     ///< Maximum cover size.
+    OptionalNumeric     maxAvatarSize   {};     ///< Maximum avatar size.
+    OptionalBool        banned          {};     ///< Banned mode.
+    OptionalNumeric     floodLimit      {};     ///< Flood limitation.
+    OptionalNumeric     searchLimit     {};     ///< Search limitation.
+    OptionalBool        accessClosed    {};     ///< Can access to closed site.
+    SpecialType         special         {};     ///< Is special group.
+    OptionalBool        apiAccess       {};     ///< Can access to api as developer.
+};
+
+/*!
+ * \brief The Groups class
+ */
+class __tegra_export Groups
+{
+public:
+    TEGRA_DEFAULT_INTERFACE_OCTORS(Groups)
+
+    /*!
+     * \brief add function will add new group.
+     * \param groupData is contains all data of permissions.
+     * \returns boolean.
+     */
+    __tegra_no_discard bool add(const GroupData& groupData) __tegra_noexcept;
+
+    /*!
+     * \brief edit function will update group.
+     * \param id is unique id for group.
+     * \param groupData is all data for group.
+     * \returns boolean.
+     */
+    __tegra_no_discard bool edit(const u32 id, const GroupData& groupData) __tegra_noexcept;
+
+    /*!
+     * \brief remove function will remove group by own id.
+     * \param id is unique id for group.
+     * \returns boolean.
+     */
+    __tegra_no_discard bool remove(const u32 id) __tegra_noexcept;
+
+    /*!
+     * \brief get function will returns all data from group.
+     * \param id is unique id for group.
+     * \returns GroupData as own data.
+     */
+    __tegra_no_discard GroupData get(const u32 id) __tegra_noexcept;
+
+private:
+    TEGRA_DISABLE_COPY(Groups)
+    GroupData* m_groupData;
+};
+
+TEGRA_NAMESPACE_END
+
+#endif  // GROUPS_HPP
