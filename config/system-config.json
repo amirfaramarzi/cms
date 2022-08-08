@@ -100,7 +100,7 @@
                                    "type":"cdn",
                                    "version":"0.6-alpha",
                                    "license":"mit",
-                                   "url":"https://kambizasadzadeh.com/",
+                                   "url":"https://genyleap.com",
                                    "value":"",
                                    "status":true
                                 },
@@ -110,7 +110,7 @@
                                    "type":"local",
                                    "version":"0.6-alpha",
                                    "license":"mit",
-                                   "url":"https://kambizasadzadeh.com/",
+                                   "url":"https://genyleap.com",
                                    "value":"assets/core/js/core.min.js",
                                    "status":true
                                 }
@@ -145,7 +145,7 @@
                                    "direction":"ltr",
                                    "version":"0.5-alpha",
                                    "license":"mit",
-                                   "url":"https://kambizasadzadeh.com/",
+                                   "url":"https://genyleap.com",
                                    "value":"assets/core/css/core.min.css",
                                    "status":true
                                 },
@@ -156,7 +156,7 @@
                                    "direction":"rtl",
                                    "version":"0.5-alpha",
                                    "license":"mit",
-                                   "url":"https://kambizasadzadeh.com/",
+                                   "url":"https://genyleap.com",
                                    "value":"assets/core/css/core.min.rtl.css",
                                    "status":true
                                 }
