@@ -60,7 +60,7 @@ __tegra_enum_class SectionType : u8
 };
 
 
-#if defined(ENABLE_SAFE_ONLY)
+#if !defined(ENABLE_SAFE_ONLY)
 TEGRA_USING AbstractConfigMember = std::variant<FileType, std::string, std::vector<std::string>, bool>;
 TEGRA_USING VariableType = std::variant<std::string, bool, uint>;   ///<In this section we will cover three data types, String, Boolean, and Integer.
 TEGRA_USING KeyValueType = std::variant<std::string, VariableType>; ///<We need to have key as string and it's value as multi type as VariableType.
@@ -110,7 +110,7 @@ public:
     /*!
      * \brief Checks and initializations are required from the abstract class before configuration.
      */
-    __tegra_constexpr __tegra_virtual void init() = __tegra_zero;
+    __tegra_constexpr __tegra_virtual void init(const SectionType sectionType) = __tegra_zero;
 
     /*!
      * \brief Creating and implementing the content of a tree in configuration files requires this function.

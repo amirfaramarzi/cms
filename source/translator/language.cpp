@@ -1,6 +1,4 @@
 #include "language.hpp"
-#include "core/core.hpp"
-
 #if defined(PLATFORM_MAC) && !defined(PLATFORM_MOBILE)
 #include <sys/stat.h>
 #include <unistd.h>
@@ -94,13 +92,20 @@ bool LanguagePath::exists(const std::string& file) {
 /*! Implementation of language support */
 Language::Language()
 {
-    ///TODO... this section is under development :) this is a simple concept.
-    ///Everything must be dynamic from db and configs file.
+  ///TODO... this section is under development :) this is a simple concept.
+  ///Everything must be dynamic from db and configs file.
+    __tegra_safe_instance(m_url, Url);
+}
+
+Language::Language(const std::string& uri)
+{
+    __tegra_safe_instance(m_url, Url);
+    m_url->setLanguageUri(uri);
 }
 
 Language::~Language()
 {
-    
+    __tegra_safe_delete(m_url);
 }
 
 
@@ -109,7 +114,7 @@ void Language::registerAll(const LanguageType& data)
     m_get = data;
 }
 
-LanguageType Language::get() const noexcept
+LanguageType Language::get() __tegra_const_noexcept
 {
     return m_get;
 }
@@ -119,7 +124,7 @@ void Language::registerLanguage(const Types::CodeType& code)
     m_languageSupport = code;
 }
 
-CodeType Language::languageSupport()
+CodeType Language::languageSupport() __tegra_const_noexcept
 {
     return m_languageSupport;
 }
@@ -129,19 +134,43 @@ void Language::registerSections(const Types::VectorSection& sec)
     m_sections = sec;
 }
 
-CodeType Language::sections()
+CodeType Language::sections() __tegra_const_noexcept
 {
     return m_sections;
 }
 
-std::string Language::getLanguageCode()
+std::string Language::getLanguageCode() __tegra_const_noexcept
 {
-
+    String path = { m_url->getLanguageUri().value() }; //!->/{language}/uri/
+    std::string lcode{};
+    for(auto c : Configuration::GET["langs"]) {
+        if(c["uri"] == path.substr(1, 5)) {
+            lcode = c["l"].asString().substr(0,5);
+        } else {
+            if(c["code"].asString() == Configuration::GET["default_lang"]) {
+                lcode = c["l"].asString().substr(0,5);
+            }
+        }
+    }
+    return lcode;
 }
 
-std::string Language::getLanguage()
+std::string Language::getLanguage() __tegra_const_noexcept
 {
-
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+    config->init(SectionType::SystemCore);
+    String path = { m_url->getLanguageUri().value() }; //!->/{language}/uri/
+    std::string lcode{};
+    for(auto c : Configuration::GET["langs"]) {
+        if(c["uri"] == path.substr(1, 5)) {
+            lcode = c["code"].asString();
+        } else {
+            if(c["code"].asString() == Configuration::GET["default_lang"]) {
+                lcode = c["code"].asString();
+            }
+        }
+    }
+    return lcode;
 }
 
 TEGRA_NAMESPACE_END

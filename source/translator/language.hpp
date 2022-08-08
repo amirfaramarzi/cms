@@ -27,6 +27,9 @@
 #define LANGUAGE_HPP
 
 #include "common.hpp"
+#include "core/core.hpp"
+#include "core/config.hpp"
+#include "core/url.hpp"
 
 TEGRA_NAMESPACE_BEGIN(Tegra::Multilangual)
 
@@ -52,9 +55,11 @@ public:
 
 /*! Declaration of language support */
 
-class Language {
+class Language
+{
 public:
     Language();
+    Language(const std::string& uri);
     ~Language();
 
     /*!
@@ -79,25 +84,25 @@ public:
      * \brief languageSupport
      * \returns
      */
-    Types::CodeType languageSupport();
+    Types::CodeType languageSupport() __tegra_const_noexcept;
 
     /*!
      * \brief sections
      * \returns
      */
-    Types::VectorSection sections();
+    Types::VectorSection sections() __tegra_const_noexcept;
 
     /*!
      * \brief getLanguageCode
      * \returns
      */
-    static std::string getLanguageCode();
+    std::string getLanguageCode() __tegra_const_noexcept;
 
     /*!
      * \brief getLanguage
      * \returns
      */
-    static std::string getLanguage();
+    std::string getLanguage() __tegra_const_noexcept;
 
     /*!
      * \brief get function will returns all data.
@@ -108,7 +113,8 @@ public:
 private:
     Types::LanguageType       m_get;
     Types::CodeType           m_languageSupport;
-    Types::VectorSection        m_sections;
+    Types::VectorSection      m_sections;
+    Url*                      m_url;
 };
 
 TEGRA_NAMESPACE_END
