@@ -1,6 +1,6 @@
 #include "translator.hpp"
-#include "language.hpp"
 #include "core/logger.hpp"
+#include "core/filesystem.hpp"
 
 #include <stdio.h>
 #ifdef PLATFORM_WINDOWS
@@ -15,21 +15,21 @@ TEGRA_USING_NAMESPACE Tegra::eLogger;
 
 TEGRA_NAMESPACE_BEGIN(Tegra::Translation)
 
+namespace fs = FileSystem;
+
 Translator::Translator()
 {
-    m_translatorStruct = new TranslatorStruct();
+    __tegra_safe_instance(m_translatorData, TranslatorData);
     jsonParser = std::make_unique<JSon>(); // jsonParser is a unique_ptr that owns a JSon
-    m_defaultLanguage = basicLang;
+    m_default_language = basic_lang;
 }
-
 Translator::~Translator()
 {
-    __tegra_safe_delete(m_translatorStruct);
+    __tegra_safe_delete(m_translatorData);
 }
 
 //!TODO for better init by external devices.
-bool Translator::initExternal(const std::vector<std::string>& file) __tegra_noexcept
-{
+bool Translator::initExternal(const std::vector<std::string>& file) __tegra_noexcept {
     bool res = false;
     try {
         for(const auto& f : file) {
@@ -51,8 +51,10 @@ bool Translator::init() __tegra_noexcept
     bool res = false;
     for(const auto& f : getFile()) {
         try {
-            std::string file = { std::string(Multilangual::LanguagePath::getExecutablePath()) + translations + "/" + std::string(f) + ".json"};
-            if(Multilangual::LanguagePath::exists(file)) {
+            std::string file = {
+            std::string(fs::Path::getExecutablePath()) +
+                translations + "/" + std::string(f) + ".json"};
+            if(fs::Path::exists(file)) {
                 std::ifstream i(file);
                 jsonParser->push_back(JSon::parse(i));
                 m_hasError = false;
@@ -72,7 +74,7 @@ bool Translator::init() __tegra_noexcept
 
 bool Translator::existFile(const std::string& file) __tegra_const_noexcept
 {
-    return Multilangual::LanguagePath::exists(file) ? true : false;
+    return fs::Path::exists(file) ? true : false;
 }
 
 bool Translator::isMultiLanguage() __tegra_const_noexcept
@@ -157,8 +159,7 @@ LanguageList Translator::list() noexcept
 {
     auto items = *jsonParser;
     for(const auto& root : items) {
-        for(const auto& l : root["language-spec"]["name"])
-        {
+        for(const auto& l : root["language-spec"]["name"]) {
             m_list.push_back(l.get<std::string>());
         }
     }
@@ -170,12 +171,11 @@ bool Translator::isRtl(const std::string& code) __tegra_noexcept
     auto items = *jsonParser;
     for(const auto& root : items) {
         if(root["language-spec"]["code"] == code)
-            for(const auto& l : root["language-spec"]["rtl"])
-            {
-                m_translatorStruct->isRtl = l.get<bool>();
+            for(const auto& l : root["language-spec"]["rtl"]) {
+                m_translatorData->isRtl = l.get<bool>();
             }
     }
-    return m_translatorStruct->isRtl;
+    return m_translatorData->isRtl;
 }
 
 std::string Translator::symbol(const std::string& code) __tegra_noexcept
@@ -183,12 +183,11 @@ std::string Translator::symbol(const std::string& code) __tegra_noexcept
     auto items = *jsonParser;
     for(const auto& root : items) {
         if(root["language-spec"]["code"] == code)
-            for(const auto& l : root["language-spec"]["code"])
-            {
-                m_translatorStruct->symbol = l.get<std::string>();
+            for(const auto& l : root["language-spec"]["code"]) {
+                m_translatorData->symbol = l.get<std::string>();
             }
     }
-    return m_translatorStruct->symbol;
+    return m_translatorData->symbol;
 }
 
 std::string Translator::currency(const std::string& code) __tegra_noexcept
@@ -196,12 +195,11 @@ std::string Translator::currency(const std::string& code) __tegra_noexcept
     auto items = *jsonParser;
     for(const auto& root : items) {
         if(root["language-spec"]["code"] == code)
-            for(const auto& l : root["language-spec"]["currency"])
-            {
-                m_translatorStruct->currency = l.get<std::string>();
+            for(const auto& l : root["language-spec"]["currency"]) {
+                m_translatorData->currency = l.get<std::string>();
             }
     }
-    return m_translatorStruct->currency;
+    return m_translatorData->currency;
 }
 
 std::string Translator::callingCode(const std::string& code) __tegra_noexcept
@@ -209,12 +207,11 @@ std::string Translator::callingCode(const std::string& code) __tegra_noexcept
     auto items = *jsonParser;
     for(const auto& root : items) {
         if(root["language-spec"]["code"] == code)
-            for(const auto& l : root["language-spec"]["calling_code"])
-            {
-                m_translatorStruct->callingCode = l.get<std::string>();
+            for(const auto& l : root["language-spec"]["calling_code"]) {
+                m_translatorData->callingCode = l.get<std::string>();
             }
     }
-    return m_translatorStruct->callingCode;
+    return m_translatorData->callingCode;
 }
 
 std::string Translator::callingCodeByUri(const std::string& code) __tegra_noexcept
@@ -223,10 +220,10 @@ std::string Translator::callingCodeByUri(const std::string& code) __tegra_noexce
     for(const auto& root : items) {
         if(root["language-spec"]["uri"] == code)
             for(const auto& l : root["language-spec"]["code"]) {
-                m_translatorStruct->callingCode = l.get<std::string>();
+                m_translatorData->callingCodeByUri = l.get<std::string>();
             }
     }
-    return m_translatorStruct->callingCode;
+    return m_translatorData->callingCodeByUri;
 }
 
 std::string Translator::drivingSide(const std::string& code) __tegra_noexcept
@@ -234,12 +231,11 @@ std::string Translator::drivingSide(const std::string& code) __tegra_noexcept
     auto items = *jsonParser;
     for(const auto& root : items) {
         if(root["language-spec"]["code"] == code)
-            for(const auto& l : root["language-spec"]["driving_side"])
-            {
-                m_translatorStruct->drivingSide = l.get<std::string>();
+            for(const auto& l : root["language-spec"]["driving_side"]) {
+                m_translatorData->drivingSide = l.get<std::string>();
             }
     }
-    return m_translatorStruct->drivingSide;
+    return m_translatorData->drivingSide;
 }
 
 std::string Translator::iso3166Code(const std::string& code) __tegra_noexcept
@@ -247,12 +243,11 @@ std::string Translator::iso3166Code(const std::string& code) __tegra_noexcept
     auto items = *jsonParser;
     for(const auto& root : items) {
         if(root["language-spec"]["code"] == code)
-            for(const auto& l : root["language-spec"]["iso_3166_code"])
-            {
-                m_translatorStruct->iso3166Code = l.get<std::string>();
+            for(const auto& l : root["language-spec"]["iso_3166_code"]) {
+                m_translatorData->iso3166Code = l.get<std::string>();
             }
     }
-    return m_translatorStruct->iso3166Code;
+    return m_translatorData->iso3166Code;
 }
 
 
@@ -261,32 +256,29 @@ std::string Translator::internetTld(const std::string& code) __tegra_noexcept
     auto items = *jsonParser;
     for(const auto& root : items) {
         if(root["language-spec"]["code"] == code)
-            for(const auto& l : root["language-spec"]["internet_tld"])
-            {
-                m_translatorStruct->internetTld = l.get<std::string>();
+            for(const auto& l : root["language-spec"]["internet_tld"]) {
+                m_translatorData->internetTld = l.get<std::string>();
             }
     }
-    return m_translatorStruct->internetTld;
+    return m_translatorData->internetTld;
 }
 
 LanguageList Translator::listByCode() noexcept
 {
     auto items = *jsonParser;
     for(const auto& root : items) {
-        for(const auto& l : root["language-spec"]["code"])
-        {
-            m_translatorStruct->language.push_back(l.get<std::string>());
+        for(const auto& l : root["language-spec"]["code"]) {
+            m_translatorData->language.push_back(l.get<std::string>());
         }
     }
-    return m_translatorStruct->language;
+    return m_translatorData->language;
 }
 
 LanguageList Translator::listByTitle() noexcept
 {
     auto items = *jsonParser;
     for(const auto& root : items) {
-        for(const auto& l : root["language-spec"]["native_name"])
-        {
+        for(const auto& l : root["language-spec"]["native_name"]) {
             m_list.push_back(l.get<std::string>());
         }
     }
@@ -295,13 +287,13 @@ LanguageList Translator::listByTitle() noexcept
 
 LanguageFile Translator::getFile() __tegra_const_noexcept
 {
-    return m_translatorStruct->file;
+    return m_translatorData->file;
 }
 
-void Translator::setFile(const LanguageFile &file) __tegra_noexcept
+void Translator::setFile(const LanguageFile& file) __tegra_noexcept
 {
     if(!file.empty()) {
-        m_translatorStruct->file = file;
+        m_translatorData->file = file;
     }
 }
 
@@ -311,20 +303,19 @@ void Translator::wordProcess() __tegra_noexcept
         auto items = jsonParser->items();
         for (const auto& it : items) {
             LanguageSheet langSheet;
-            for (const auto& [key, value] : it.value()["data"].items())
-            {
+            for (const auto& [key, value] : it.value()["data"].items()) {
                 //! key values are: exceptions, global, languages, ...
                 LanguageTemp temp;
                 for (auto i : value) {
-                    LanguageStruct ls;
-                    ls.m_wordKey = i["word_key"].get<std::string>(),
-                        ls.m_module = i["module"].get<std::string>(),
-                        ls.m_defaultValue = i["default_value"].get<std::string>(),
-                        ls.m_customValue = i["custom_value"].get<std::string>();
-                    LanguageTemplate words(ls) ;
+                    LanguageTemplate words = {
+                        i["word_key"].get<std::string>(),
+                        i["module"].get<std::string>(),
+                        i["default_value"].get<std::string>(),
+                        i["custom_value"].get<std::string>()
+                    };
                     temp.insert(LanguagePair(i["word_key"].get<std::string>(), words));
                 }
-                langSheet[key] = temp;
+                langSheet[key] = std::move(temp);
             }
             wordMap[it.value()["language-spec"]["code"]] = langSheet;
         }
@@ -343,11 +334,11 @@ bool Translator::parse() noexcept
     if (init()) {
         wordProcess();
         res = true;
-        m_translatorStruct->parseMessage = "Parsing initialized!";
+        m_translatorData->parseMessage = "Parsing initialized!";
         Log("Parsing initialized!", LoggerType::Success);
     } else {
         res = false;
-        m_translatorStruct->parseMessage = "Parse error!";
+        m_translatorData->parseMessage = "Parse error!";
         Log("Parse error!", LoggerType::Critical);
     }
     return res;
@@ -359,11 +350,11 @@ bool Translator::parseExternal(const std::vector<std::string> &data) __tegra_noe
     if (initExternal(data)) {
         wordProcess();
         res = true;
-        m_translatorStruct->parseMessage = "Parsing initialized!";
+        m_translatorData->parseMessage = "Parsing initialized!";
         Log("Parsing initialized!", LoggerType::Success);
     } else {
         res = false;
-        m_translatorStruct->parseMessage = "Parse error!";
+        m_translatorData->parseMessage = "Parse error!";
         Log("Parse error!", LoggerType::Critical);
     }
     return res;
@@ -371,15 +362,14 @@ bool Translator::parseExternal(const std::vector<std::string> &data) __tegra_noe
 
 void Translator::parseMessage() noexcept
 {
-    Log(m_translatorStruct->parseMessage, LoggerType::Info);
+    Log(m_translatorData->parseMessage, LoggerType::Info);
 }
 
-std::string Translator::defaultLanguage() __tegra_const_noexcept
-{
-    if (m_defaultLanguage.empty()) {
-        return basicLang.data();
+std::string Translator::defaultLanguage() __tegra_const_noexcept {
+    if (m_default_language.empty()) {
+        return basic_lang.data();
     } else {
-        return m_defaultLanguage;
+        return m_default_language;
     }
 }
 
@@ -390,17 +380,18 @@ LanguageTemplate Translator::translate(const std::string& lang, const std::strin
             return wordMap.at(defaultLanguage()).at(sheet).at(key);
             m_hasError = false;
         } catch (const std::out_of_range& e) {
-            Log("Error Message: " + std::string(e.what()), LoggerType::Warning);
+            Log("Error Message: [" + key + "]\t" + std::string(e.what()), LoggerType::Warning);
             m_errorMessage = std::string(e.what());
             m_hasError = true;
             return m_template;
         }
     } else {
         try {
+
             return wordMap.at(lang).at(sheet).at(key);
             m_hasError = false;
         } catch (const std::out_of_range& e) {
-            Log("Error Message: " + std::string(e.what()), LoggerType::Warning);
+            Log("Error Message: [" + key + "]\t" + std::string(e.what()), LoggerType::Warning);
             m_errorMessage = std::string(e.what());
             m_hasError = true;
             return m_template;
@@ -415,11 +406,10 @@ DictonaryType Translator::data(const std::string& sheet) __tegra_noexcept
     for(const auto& root : items) {
         for(const auto& i : root["data"][sheet]) {
             if (i.is_object()) {
-                d.insert(
-                    std::pair(root["language-spec"]["code"],
-                        std::pair(i["word_key"].get<std::string>(),
-                        i["default_value"].get<std::string>()
-                    )));
+                d.insert(std::pair(root["language-spec"]["code"],
+                std::pair(i["word_key"].get<std::string>(),
+                i["default_value"].get<std::string>()
+              )));
             }
         }
     }

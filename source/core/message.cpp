@@ -17,7 +17,7 @@ Message::Message()
 }
 
 /*!
- * \brief Destroys the Message class.
+ * \brief Destroys the message class.
  */
 Message::~Message()
 {

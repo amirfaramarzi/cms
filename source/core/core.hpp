@@ -27,6 +27,8 @@
 #define TEGRA_CORE_HPP
 
 #include "common.hpp"
+#include "translator/language.hpp"
+#include "translator/translator.hpp"
 #include "prestructure.hpp"
 
 TEGRA_USING_NAMESPACE Tegra::Types;
@@ -364,12 +366,13 @@ private:
 class Engine : public EngineInterface
 {
 public:
-    Engine() = default;
+    Engine()=default;
+    Engine(const Multilangual::Language& language);
     Engine(const Engine& rhsEngine) = delete;
     Engine(Engine&& rhsEngine) noexcept = delete;
     Engine& operator=(const Engine& rhsEngine) = delete;
     Engine& operator=(Engine&& rhsEngine) noexcept = delete;
-    ~Engine()=default;
+    ~Engine();
 
     /*!
      * @brief initialize starter!
@@ -563,6 +566,11 @@ public:
     void setLanguage(const std::string& l);
 
     /*!
+     * \brief Lanuage translator engine.
+     */
+    Translation::Translator* translator;
+    //std::unique_ptr<Translation::Translator> translator;
+    /*!
      * @brief getLanguage function will returns language name as string.
      * @returns string.
      */
@@ -596,7 +604,7 @@ public:
      * @brief Language list as a member.
      * @returns unique pointer of languages list.
      */
-    std::unique_ptr<MapString> langList;
+    MapString* langList;
 
     /*!
      * @brief Services name.
@@ -609,6 +617,8 @@ public:
      * @returns array of modules.
      */
     std::vector <std::string> module;
+
+    std::string m_languageStr {""};
 
 };
 

@@ -94,7 +94,7 @@ using PairString        = std::pair<std::string, std::string>;
 using SettingType       = std::map<int, std::string>;
 using VectorString      = std::vector<std::string>;
 using VectorSection     = std::vector<std::string>;
-using CodeType          = std::vector<std::string>;
+using LanguageCodes     = std::vector<std::string>;
 using OptionalString    = std::optional<std::string>;
 
 using OptionalNumeric   = std::optional<int>;

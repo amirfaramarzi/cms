@@ -131,7 +131,7 @@ Setting::~Setting()
 
 std::string Setting::getOption(const std::string& var)
 {
-  //ToDo...
+    return "empty-todo"; ///ToDo...
 }
 
 SettingType Setting::getList() __tegra_const_noexcept

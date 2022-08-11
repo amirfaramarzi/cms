@@ -1,9 +1,7 @@
 /*!
  * MIT License
  *
- * Copyright (c) 2022 The Genyleap. All rights reserved.
- * Copyright (c) 2022 Kambiz Asadzadeh.
- *
+ * Copyright (c) 2022 Kambiz Asadzadeh
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -27,36 +25,53 @@
 #define LANGUAGE_HPP
 
 #include "common.hpp"
-#include "core/core.hpp"
-#include "core/config.hpp"
+#include "translator.hpp"
 #include "core/url.hpp"
 
 TEGRA_NAMESPACE_BEGIN(Tegra::Multilangual)
 
-class LanguagePath
+/*!
+ * \brief The LanguageStruct class
+ */
+struct LanguageStruct final
 {
-public:
-    LanguagePath() = default;
-    ~LanguagePath() = default;
+    Types::LanguageType   get               {}; ///< LanguageType
+    Types::LanguageCodes  languageSupport   {}; ///< Language support.
+    Types::VectorSection  sections          {}; ///< Sections.
+    Url                   url               {}; ///< Url{en-us, fa-ir}.
+};
 
-    /*!
-     * \brief getExecutablePath
-     * \return current executable file path.
-     */
-    __tegra_no_discard static std::string getExecutablePath();
-
-    /*!
-     * \brief exists
-     * \return true if file is exist in the path.
-     */
-    __tegra_no_discard static bool exists(const std::string& file);
+struct SectionsConstants final
+{
+    __tegra_inline_static_const VectorString defaultSections
+        {
+            "global",
+            "menu",
+            "sideblock",
+            "statics",
+            "slogan",
+            "account",
+            "products",
+            "modules",
+            "themes",
+            "database",
+            "exceptions",
+            "translation",
+            "forms",
+            "header",
+            "footer",
+            "messages",
+            "multimedia",
+            "setup",
+            "dialog",
+            "extra",
+            "development"
+        };
 
 };
 
 /*! Declaration of language support */
-
-class Language
-{
+class Language {
 public:
     Language();
     Language(const std::string& uri);
@@ -68,23 +83,15 @@ public:
      */
     void registerAll(const Types::LanguageType& data);
 
-    /*!
-     * \brief registerLanguage function will sets new language to language datasheets.
-     * \param code is language standard code.
-     */
-    void registerLanguage(const Types::CodeType& code);
+    void registerLanguage(const Types::LanguageCodes& code);
 
-    /*!
-     * \brief registerSections
-     * \param sec
-     */
     void registerSections(const Types::VectorSection& sec);
 
     /*!
      * \brief languageSupport
      * \returns
      */
-    Types::CodeType languageSupport() __tegra_const_noexcept;
+    Types::LanguageCodes languageSupport() __tegra_const_noexcept;
 
     /*!
      * \brief sections
@@ -111,10 +118,7 @@ public:
     __tegra_no_discard Types::LanguageType get() __tegra_const_noexcept;
 
 private:
-    Types::LanguageType       m_get;
-    Types::CodeType           m_languageSupport;
-    Types::VectorSection      m_sections;
-    Url*                      m_url;
+    LanguageStruct* m_languageStruct{};
 };
 
 TEGRA_NAMESPACE_END

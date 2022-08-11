@@ -1,5 +1,7 @@
 #include "core.hpp"
 #include "logger.hpp"
+#include "config.hpp"
+#include "translator/language.hpp"
 
 TEGRA_USING_NAMESPACE Tegra::eLogger;
 
@@ -324,6 +326,45 @@ std::string convertStream(std::stringstream const& data) __tegra_noexcept
   //ToDo...
 }
 
+Engine::Engine(const Multilangual::Language& language)
+{
+    ///< New instances.
+    __tegra_safe_instance(translator, Translation::Translator);
+    __tegra_safe_instance(langList, Types::LanguageType);
+    ///< Set options.
+    setLanguage(language.getLanguage());    ///< Set language
+    translator->setFile(language.languageSupport());
+    ///< Parsing
+    if(translator->parse()) {
+        if(CMS::DeveloperMode::IsEnable)
+            Log("Language data has been parsed!", LoggerType::Done); ///< Parsing Done!
+    } else {
+        if(CMS::DeveloperMode::IsEnable)
+            Log("No parsing...!", LoggerType::Failed);  ///< Parsing Failed!
+    }
+    for(auto c : Configuration::GET[_LANGS_])
+    {
+        ///< Getting default language code
+        if(c["code"] == Configuration::GET[_DEFAULT_LANG_]) {
+            setLanguage(c["l"].asString().substr(0,5)); //!Set default value into the language engine.
+        }
+    }
+    ///< Inserting all section.
+    for (const auto& c : language.sections())
+    {
+        for (const auto& i : translator->data(c))
+        {
+            langList->insert(std::pair(i.second.first.c_str(), translator->translate(language.getLanguageCode(), c, i.second.first).defaultValue()));
+        }
+    }
+}
+
+Engine::~Engine()
+{
+    __tegra_safe_delete(translator);
+    __tegra_safe_delete(langList);
+}
+
 std::string Engine::htmlEntityDecode(const std::string& content)
 {
   //ToDo...
@@ -400,12 +441,12 @@ std::string Engine::fullReplacer(const std::string& content, const MapString& ma
 
 void Engine::setLanguage(const std::string& l)
 {
-  //ToDo...
+    m_languageStr = l;
 }
 
 std::string Engine::getLanguage()
 {
-  //ToDo...
+    return m_languageStr;
 }
 
 std::map <std::string, std::string> Engine::langs()
@@ -415,7 +456,16 @@ std::map <std::string, std::string> Engine::langs()
 
 std::map <std::string, std::string> Engine::langsByPath(const std::string& path)
 {
-  //ToDo...
+    std::map<std::string, std::string> l = {};
+    //!Getting language from configuration file
+    for(auto &var : Configuration::GET["langs"]) {
+        l.insert(Types::PairString(var["uri"].asString(),var["code"].asString()));
+        this->langUri.push_back("/" + std::string(var["uri"].asString()));
+        this->langUri.push_back("/" + std::string(var["uri"].asString()) + "/");
+        this->langUri.push_back("/" + std::string(var["uri"].asString()) + "/" + std::string(path.empty() ? "" : path));
+        this->langUri.push_back("/" + std::string(var["uri"].asString()) + "/" + std::string(path.empty() ? "" : path + "/"));
+    }
+    return l;
 }
 
 std::string Engine::reducePath(const std::string& path)
