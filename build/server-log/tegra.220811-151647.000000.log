@@ -1,3 +1,0 @@
-20220811 15:16:47.979314 UTC 204836 ERROR filter FilterClassName not found - FiltersFunction.cc:75
-20220811 15:16:47.979449 UTC 204836 ERROR filter FilterClassName not found - FiltersFunction.cc:75
-20220811 15:16:59.820934 UTC 204836 WARN  SIGINT signal received. - HttpAppFrameworkImpl.cc:191
