@@ -71,6 +71,29 @@
 
 namespace Tegra {
 
+struct AppFramework : public Framework::HttpAppFramework
+{
+    AppFramework();
+    ~AppFramework();
+    /// A wrapper of the instance() method
+    inline static HttpAppFramework& application()
+    {
+        return HttpAppFramework::instance();
+    }
+};
+
+/*!
+ * \brief The HttpBase class
+ */
+class HttpBase
+{
+public:
+    HttpBase(){};
+    ~HttpBase(){};
+
+    Framework::HttpRequestPtr requestPtr;
+};
+
 namespace CMS {
 
 struct LANGUAGE_SHEET final {
@@ -86,7 +109,9 @@ struct CONFIG final {
   static constexpr std::string_view DEVELOPER = "Kambiz Asadzadeh";
   static constexpr std::string_view FRAMEWORK_CONFIG_FILE = "config.json";
   static constexpr std::string_view CMS_CONFIG_FILE = "config/system-config.json";
-  static constexpr std::string_view CMS_TABLES_FILE = "config/system-tables.json";
+  static constexpr std::string_view CMS_CUSTOM_FILE = "config/custom-setting.json";
+  static constexpr std::string_view CMS_DATABASE_FILE = "config/system-database.json";
+  static constexpr std::string_view CMS_INTERFACE_FILE = "config/system-interface.json";
   static constexpr std::string_view CMS_TABLES_PREFIX = "teg_";
   static constexpr std::string_view CMS_TABLES_VALUE_STRUCT = "_l";
   static constexpr std::string_view CMS_TABLES_TABLE_UNICODE = "utf-8";
@@ -186,6 +211,9 @@ typedef object* (*name)();
 #define __tegra_safe_instance(object, Class) \
 object = new Class();\
 
+#define __tegra_safe_instance_rhs(object, Class, rhs) \
+object = new Class(rhs);\
+
 #define __tegra_safe_delete(object) \
 if(object!=nullptr)                 \
 { delete object;}                   \
@@ -241,7 +269,7 @@ object = nullptr;                   \
 #define FROM_TEGRA_STRING(x) std::string(x)
 #define TO_TEGRA_STRING(x) std::to_string(x)
 
-#define TEGRA_TRANSLATOR(key, value) engine->translator->translate(engine->getLanguage(), key, value).defaultValue()
+#define TEGRA_TRANSLATOR(key, value) engine->translator->translate(language->getLanguageCode(), key, value).defaultValue()
 
 #define TEGRA_RUNTIME_FORMAT(content, ...) fmt::format(fmt::runtime(content), __VA_ARGS__)
 

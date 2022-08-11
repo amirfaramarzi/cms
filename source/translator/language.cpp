@@ -1,147 +1,141 @@
 #include "language.hpp"
 #include "core/core.hpp"
-
-#if defined(PLATFORM_MAC) && !defined(PLATFORM_MOBILE)
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string>
-#include <fstream>
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
-#include <mach-o/dyld.h>
-#include <IOKit/IOKitLib.h>
-#include <ApplicationServices/ApplicationServices.h>
-#include <ImageIO/ImageIO.h>
-#elif defined(PLATFORM_MAC) && defined(PLATFORM_MOBILE)
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
-#include <mach-o/dyld.h>
-#include <IOKit/IOKitLib.h>
-#include <ApplicationServices/ApplicationServices.h>
-#include <ImageIO/ImageIO.h>
-#elif defined(PLATFORM_LINUX)
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
-#elif defined(PLATFORM_FREEBSD)
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
-#elif defined(PLATFORM_WINDOWS)
-#include <Windows.h>
-#include <Iphlpapi.h>
-#pragma comment(lib, "iphlpapi.lib")
-#elif defined (PLATFORM_ANDROID)
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string>
-#include <fstream>
-#endif
+#include "core/config.hpp"
 
 TEGRA_USING_NAMESPACE Tegra;
 TEGRA_USING_NAMESPACE Tegra::CMS;
 
 TEGRA_NAMESPACE_BEGIN(Tegra::Multilangual)
 
-std::string LanguagePath::getExecutablePath() {
-#if defined(PLATFORM_MOBILE) && defined(PLATFORM_ANDROID)
-    std::string res = {"assets:/"};
-#elif defined(PLATFORM_MOBILE) && defined(PLATFORM_IOS)
-    std::string res = {"/"};
-#elif defined(PLATFORM_MAC)
-    std::string res = {"/"};
-    char path[1024];
-    uint32_t size = sizeof(path);
-    if (_NSGetExecutablePath(path, &size) == 0) {
-        std::string v = path;
-        res = v.substr(0, v.find_last_of("\\/")) + "/";
-    }
-#elif defined(PLATFORM_LINUX)
-    std::string res = {"/"};
-    char path[1024];
-    uint32_t size = sizeof(path);
-    if (readlink(path, &size) == 0) {
-        std::string v = path;
-        res = v.substr(0, v.find_last_of("\\/")) + "/";
-    }
-#elif defined(PLATFORM_WINDOWS)
-    std::string res = {"/"};
-    char buffer[MAX_PATH];
-    GetModuleFileNameA(NULL, buffer, MAX_PATH);
-    std::string::size_type pos = std::string(buffer).find_last_of("\\/");
-    res = std::string(buffer).substr(0, pos);
-#elif defined(PLATFORM_FREEBSD)
-    std::string res = {"/"};
-    res = "FreeBSD does not support yet!"
-#elif defined(PLATFORM_SOLARIS)
-    std::string res = {"/"};
-    res = "Solaris does not support yet!"
-#endif
-    return res;
-}
+Language::Language()
+{
+    __tegra_safe_instance(m_languageStruct, LanguageStruct);
 
-bool LanguagePath::exists(const std::string& file) {
-    struct stat buffer;
-    return (stat (file.c_str(), &buffer) == 0);
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+
+    config->init(SectionType::SystemCore); //!System core for language.
+
+    auto lcodes = LanguageCodes{}; //!Language codes.
+
+    for(auto c : Configuration::GET[_LANGS_])
+    {
+        if(c["status"].asBool()) {
+            lcodes.push_back(c["l"].asString().substr(0, 5));
+        }
+    }
+    //!Register language code.
+    registerLanguage(lcodes); //!Language register method.
+    //!List of sections.
+    VectorString lsection;
+    for(const auto& s : SectionsConstants::defaultSections)
+    {
+        lsection.push_back(s);
+    }
+
+    registerSections(lsection); //!Section register method.
+
 }
 
 /*! Implementation of language support */
-Language::Language()
+Language::Language(const std::string& uri)
 {
-    ///TODO... this section is under development :) this is a simple concept.
-    ///Everything must be dynamic from db and configs file.
+    __tegra_safe_instance(m_languageStruct, LanguageStruct);
+
+    m_languageStruct->url.setLanguageUri(uri);
+
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+
+    config->init(SectionType::SystemCore); //!System core for language.
+
+    auto lcodes = LanguageCodes{}; //!Language codes.
+
+    for(auto c : Configuration::GET[_LANGS_])
+    {
+        if(c["status"].asBool()) {
+            lcodes.push_back(c["l"].asString().substr(0, 5));
+        }
+    }
+    //!Register language code.
+    registerLanguage(lcodes); //!Language register method.
+    //!List of sections.
+    VectorString lsection;
+    for(const auto& s : SectionsConstants::defaultSections)
+    {
+        lsection.push_back(s);
+    }
+    registerSections(lsection); //!Section register method.
 }
 
 Language::~Language()
 {
-    
+    __tegra_safe_delete(m_languageStruct);
 }
 
 
 void Language::registerAll(const LanguageType& data)
 {
-    m_get = data;
+    m_languageStruct->get = data;
 }
 
-LanguageType Language::get() const noexcept
+LanguageType Language::get() __tegra_const_noexcept
 {
-    return m_get;
+    return m_languageStruct->get;
 }
 
-void Language::registerLanguage(const Types::CodeType& code)
+void Language::registerLanguage(const Types::LanguageCodes& code)
 {
-    m_languageSupport = code;
+    m_languageStruct->languageSupport = code;
 }
 
-CodeType Language::languageSupport()
+LanguageCodes Language::languageSupport() __tegra_const_noexcept
 {
-    return m_languageSupport;
+    return m_languageStruct->languageSupport;
 }
 
 void Language::registerSections(const Types::VectorSection& sec)
 {
-    m_sections = sec;
+    m_languageStruct->sections = sec;
 }
 
-CodeType Language::sections()
+LanguageCodes Language::sections() __tegra_const_noexcept
 {
-    return m_sections;
+    return m_languageStruct->sections;
 }
 
-std::string Language::getLanguageCode()
+std::string Language::getLanguageCode() __tegra_const_noexcept
 {
-
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+    config->init(SectionType::SystemCore);
+    String path = { m_languageStruct->url.getLanguageUri().value() }; //!->/{language}/uri/
+    std::string lcode{};
+    for(auto c : Configuration::GET[_LANGS_]) {
+        if(c["uri"] == path.substr(1, 5)) {
+            lcode = c["l"].asString().substr(0,5);
+        } else {
+            if(c["code"].asString() == Configuration::GET[_DEFAULT_LANG_]) {
+                lcode = c["l"].asString().substr(0,5);
+            }
+        }
+    }
+    return lcode;
 }
 
-std::string Language::getLanguage()
+std::string Language::getLanguage() __tegra_const_noexcept
 {
-
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+    config->init(SectionType::SystemCore);
+    String path = { m_languageStruct->url.getLanguageUri().value() }; //!->/{language}/uri/
+    std::string lcode{};
+    for(auto c : Configuration::GET[_LANGS_]) {
+        if(c["uri"] == path.substr(1, 5)) {
+            lcode = c["code"].asString();
+        } else {
+            if(c["code"].asString() == Configuration::GET[_DEFAULT_LANG_]) {
+                lcode = c["code"].asString();
+            }
+        }
+    }
+    return lcode;
 }
 
 TEGRA_NAMESPACE_END

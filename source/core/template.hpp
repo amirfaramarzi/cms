@@ -49,7 +49,7 @@ enum class UserType : u8
     Extra
 };
 
-enum class FileType : u8
+enum class TemplateFileType : u8
 {
     HTML,
     XHTML,

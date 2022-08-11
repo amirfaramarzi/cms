@@ -1,52 +1,62 @@
 #include "dictionary.hpp"
-#include "core/core.hpp"
 #include "core/logger.hpp"
 
-TEGRA_USING_NAMESPACE Tegra::CMS;
-TEGRA_USING_NAMESPACE Tegra::eLogger;
+#include <algorithm>
+#include <iostream>
 
 TEGRA_NAMESPACE_BEGIN(Tegra::Translation)
+TEGRA_USING_NAMESPACE Tegra::eLogger;
 
-LanguageTemplate::LanguageTemplate(const LanguageStruct& rhs)
+LanguageTemplate::LanguageTemplate()
 {
-    m_languageStruct = new LanguageStruct(rhs);
+
+}
+
+LanguageTemplate::LanguageTemplate(
+        const std::string& word_key,
+        const std::string& module,
+        const std::string& default_value,
+        const std::string& custom_value
+        )
+    : m_wordKey(word_key),
+      m_module(module),
+      m_defaultValue(default_value),
+      m_customValue(custom_value)
+{
+
 }
 
 LanguageTemplate::~LanguageTemplate()
 {
-    __tegra_safe_delete(m_languageStruct);
 }
 
-std::string LanguageTemplate::wordKey() __tegra_const_noexcept
-{
-    if(!m_languageStruct->m_wordKey.empty()) {
-        return m_languageStruct->m_wordKey;
+std::string LanguageTemplate::wordKey() __tegra_const_noexcept {
+    if(!m_wordKey.empty()) {
+        return m_wordKey;
     } else {
         return "unknown key";
     }
 }
 
-std::string LanguageTemplate::module() __tegra_const_noexcept
-{
-    return m_languageStruct->m_module;
+std::string LanguageTemplate::module() __tegra_const_noexcept {
+    return m_module;
 }
 
-std::string LanguageTemplate::defaultValue() __tegra_const_noexcept
-{
-    if(!m_languageStruct->m_defaultValue.empty()) {
-        return m_languageStruct->m_defaultValue;
+std::string LanguageTemplate::defaultValue() __tegra_const_noexcept {
+    if(!m_defaultValue.empty()) {
+        return m_defaultValue;
     } else {
-        Log("there is no default value of key [" + wordKey() + "]", LoggerType::Warning);
         return "there is no default value of key [" + wordKey() + "]";
+        Log("there is no default value of key [" + wordKey() + "]", LoggerType::Warning);
     }
 }
 
 std::string LanguageTemplate::customValue() __tegra_const_noexcept {
-    if(!m_languageStruct->m_customValue.empty()) {
-        return m_languageStruct->m_customValue;
+    if(!m_customValue.empty()) {
+        return m_customValue;
     } else {
-        return "there is no custom value of key [" + wordKey() + "]";
         Log("here is no custom value of key [" + wordKey() + "]", LoggerType::Warning);
+        return "there is no custom value of key [" + wordKey() + "]";
     }
 }
 

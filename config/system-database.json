@@ -577,7 +577,7 @@
             {"titles": [
             "config", "config_l","apikey","resource","resource_l",
             "drafts", "services","services_l", "templates","templates_l","groups", "groups_l",
-            "menu","menu_l","modules","modules_l","plugins", "plugins_l",
+            "menu","menu_l","modules","modules_l","social", "social_l",,"plugins", "plugins_l",
             "config_groups","config_groups_l", "tasks","cache", "provinces", "cities",
             "tags", "globalization","translation", "members", "members_account",
             "members_contact", "members_extra", "members_job", "members_known_devices",
@@ -595,6 +595,8 @@
                 {"key":"services_l"},
                 {"key":"templates"},
                 {"key":"templates_l"},
+                {"key":"social"},
+                {"key":"social_l"},
                 {"key":"groups"},
                 {"key":"groups_l"},
                 {"key":"menu"},

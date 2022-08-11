@@ -1,32 +1,17 @@
-/*!
- * MIT License
- *
- * Copyright (c) 2022 The Genyleap. All rights reserved.
- * Copyright (c) 2022 Kambiz Asadzadeh.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 #ifndef TEGRA_DICTIONARY_HPP
 #define TEGRA_DICTIONARY_HPP
 
 #include "common.hpp"
+
+//! STL
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <vector>
 
 TEGRA_USING_NAMESPACE Tegra::Types;
 
@@ -36,17 +21,6 @@ using DicType       = MultiMap<std::string, Map<std::string, std::string>>;
 using Alphabet      = VectorString;
 using DicTypePair   = PairString;
 using DictonaryType = MultiMap<std::string, DicTypePair>;
-
-/*!
- * \brief The LanguageStruct struct
- */
-struct LanguageStruct final
-{
-    std::string m_wordKey       {};         //Key
-    std::string m_module        {};         //Module
-    std::string m_defaultValue  {};         //Default Value
-    std::string m_customValue   {};         //Custom Value
-};
 
 /*!
  * \brief The LanguageType enum
@@ -63,8 +37,12 @@ enum class LanguageType : u8
  */
 class LanguageTemplate {
 public:
-    LanguageTemplate() = default;
-    explicit LanguageTemplate(const LanguageStruct& rhs);
+    LanguageTemplate();
+    LanguageTemplate(const std::string& word_key,
+                     const std::string& module,
+                     const std::string& default_value,
+                     const std::string& custom_value);
+
     ~LanguageTemplate();
 
     /*!
@@ -92,7 +70,10 @@ public:
     __tegra_no_discard std::string customValue () __tegra_const_noexcept;
 
 private:
-    LanguageStruct* m_languageStruct;
+    std::string m_wordKey;
+    std::string m_module;
+    std::string m_defaultValue;
+    std::string m_customValue;
 };
 
 TEGRA_NAMESPACE_END

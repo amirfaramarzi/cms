@@ -73,6 +73,7 @@ struct PluginInfo __tegra_final
     PluginType                  pluginType      {}; ///< The type of plugin.
     Optional<SemanticVersion>   version         {}; ///< Version of plugin.
     OptionalString              author          {}; ///< Author of plugin.
+    OptionalString              url             {}; ///< Url of plugin.
 };
 
 /*!
@@ -132,6 +133,12 @@ public:
     __tegra_no_discard_virtual OptionalString getAuthor()  __tegra_const_noexcept = __tegra_zero;
 
     /*!
+     * \brief getUrl function returns url of plugin.
+     * \returns a url as string.
+     */
+    __tegra_no_discard_virtual OptionalString getUrl()  __tegra_const_noexcept = __tegra_zero;
+
+    /*!
      * \brief run is action function for plugins.
      */
     __tegra_virtual void run()  __tegra_const_noexcept = __tegra_zero;
@@ -157,6 +164,7 @@ protected:
     void setPluginType(const PluginType pluginType);
     void setVersion(const Optional<SemanticVersion>& version);
     void setAuthor(const OptionalString& author);
+    void setUrl(const OptionalString& url);
 
 private:
     TEGRA_DISABLE_COPY(AbstractPlugin)

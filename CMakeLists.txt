@@ -444,7 +444,6 @@ endif()
 file(GLOB_RECURSE SCP_LIST ${CMAKE_CURRENT_SOURCE_DIR}/templates/user/*.csp)
 file(GLOB_RECURSE SCP_LIST ${CMAKE_CURRENT_SOURCE_DIR}/templates/admin/*.csp)
 
-if(!ENABLE_DROGON_MODULE)
 foreach(cspFile ${SCP_LIST})
     message(STATUS "cspFile:" ${cspFile})
     get_filename_component(classname ${cspFile} NAME_WE)
@@ -459,7 +458,6 @@ endforeach()
 
 drogon_create_views(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/templates
                      ${CMAKE_CURRENT_BINARY_DIR}/templates/ TRUE)
-endif()
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS ${LIB_TARGET_PROPERTIES})
 #This command generates installation rules for a project.
