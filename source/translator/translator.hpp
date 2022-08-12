@@ -61,6 +61,9 @@ struct TranslatorData final
     std::string       internetTld      {};  ///< Internal TLD.
 };
 
+/*!
+ * \brief The Translator class
+ */
 class __tegra_export Translator
 {
 public:
@@ -114,6 +117,10 @@ public:
    */
     __tegra_no_discard bool hasError() __tegra_const_noexcept;
 
+    /*!
+     * \brief defaultLanguage
+     * \return
+     */
     std::string defaultLanguage() __tegra_const_noexcept;
 
     /*!

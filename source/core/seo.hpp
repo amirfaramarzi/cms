@@ -27,7 +27,10 @@
 #define SEO_HPP
 
 #include "common.hpp"
+#include "core/core.hpp"
 
+TEGRA_USING_NAMESPACE Tegra;
+TEGRA_USING_NAMESPACE Tegra::CMS;
 TEGRA_USING_NAMESPACE Tegra::Types;
 
 TEGRA_NAMESPACE_BEGIN(Tegra::SEO)
@@ -93,7 +96,7 @@ class StaticMeta
 {
 public:
   StaticMeta();
-  StaticMeta(const std::string& module);
+  StaticMeta(const Application& app);
   ~StaticMeta();
 
   /*!

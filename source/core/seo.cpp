@@ -58,10 +58,10 @@ StaticMeta::StaticMeta()
     m_staticStruct = new StaticStruct();
 }
 
-StaticMeta::StaticMeta(const std::string& module)
+StaticMeta::StaticMeta(const Application& app)
 {
-    if(!module.empty()) {
-        registerModule(module);
+    if(app.module().has_value()) {
+        registerModule(app.module().value());
     } else {
         registerModule(__tegra_null_str);
     }

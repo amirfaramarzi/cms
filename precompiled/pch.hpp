@@ -358,6 +358,8 @@ using JSonException = nlohmann::detail::exception;
 #include <trantor/utils/Date.h>
 namespace Framework = drogon;
 namespace Orm = drogon::orm;
+using SqlResult = drogon::orm::Result;
+using SqlException = drogon::orm::DrogonDbException;
 //!jsoncpp for framework
 using JSonData = Json::Value;
 #endif
