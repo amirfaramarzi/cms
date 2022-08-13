@@ -29,9 +29,19 @@ Database::DriverTypes Manager::types()
     return m_structManager->types;
 }
 
-std::string getRdbmsType()
+std::string Manager::getRdbmsType()
 {
-  //ToDo...
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+    config->init(SectionType::SystemCore);
+    std::string res{};
+    for(auto c : Configuration::GET["database"]) {
+        for(const auto& d: Constants::drivers) {
+            if(c["rdbms"] == d && c["status"] == true) {
+                res = c["rdbms"].asString();
+            }
+        }
+    }
+    return res;
 }
 
 DatabaseList Manager::db() const
@@ -147,6 +157,7 @@ void Connection::connect()
     unsigned int dbPort{__tegra_zero};
 
     Scope<Configuration> config(new Configuration(ConfigType::File));
+
     config->init(SectionType::SystemCore);
 
     auto getConf = Configuration::GET["database"];

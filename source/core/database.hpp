@@ -199,6 +199,7 @@ struct StructManager
 class Manager
 {
 public:
+    Manager() = default;
     Manager(const StructManager& structManager);
     Manager(const Manager& rhsManager) = delete;
     Manager(Manager&& rhsManager) noexcept = delete;
