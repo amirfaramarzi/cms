@@ -75,7 +75,11 @@ void Url::setLanguageUri(const std::string& uri) __tegra_const_noexcept
 
 OptionalString Url::getLanguageUri() __tegra_const_noexcept
 {
-    return m_languageUrl->uri.value();
+    if (isset(m_languageUrl->uri.value())) {
+        return m_languageUrl->uri.value();
+    } else {
+        return std::nullopt;
+    }
 }
 
 TEGRA_NAMESPACE_END

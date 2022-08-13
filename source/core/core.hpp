@@ -27,6 +27,7 @@
 #define TEGRA_CORE_HPP
 
 #include "common.hpp"
+#include "logger.hpp"
 #include "translator/language.hpp"
 #include "translator/translator.hpp"
 #include "prestructure.hpp"
@@ -274,7 +275,7 @@ public:
      * @brief initialize starter!
      * @returns true if the system starts successfully.
      */
-    virtual bool initialize() = __tegra_zero;
+    virtual bool initialize(const Multilangual::Language& language) = __tegra_zero;
 
     /*!
      * @brief Getting current fast boot status.
@@ -378,7 +379,7 @@ public:
      * @brief initialize starter!
      * @returns true if the system starts successfully.
      */
-    __tegra_no_discard bool initialize() override;
+    __tegra_no_discard bool initialize(const Multilangual::Language& language) override;
 
     /*!
      * System copyrights.
@@ -601,12 +602,6 @@ public:
     std::string reducePath(const std::string& path);
 
     /*!
-     * @brief Language list as a member.
-     * @returns unique pointer of languages list.
-     */
-    MapString* langList;
-
-    /*!
      * @brief Services name.
      * @returns string services name.
      */
@@ -618,10 +613,59 @@ public:
      */
     std::vector <std::string> module;
 
-    std::string m_languageStr {""};
+    /*!
+     * \brief setIsMultilanguage function will sets bool value into the member.
+     */
+    void setIsMultilanguage(const bool value);
 
+    /*!
+     * \brief isMultilanguage function will returns true if the page url is based on multi-language method such as [en-us, fa-ir].
+     * \return bool [true if it's true.]
+     */
+    bool isMultilanguage() __tegra_const_noexcept;
+
+    bool m_multilang {};
+
+    std::string m_languageStr {__tegra_null_str};
 };
 
+/*!
+ * \brief The ApplicationData class
+ */
+struct ApplicationData final
+{
+    Multilangual::LanguageStruct languageStruct{};
+    OptionalString path    {__tegra_unknown};
+    OptionalString module  {__tegra_unknown};
+    ///ToDo... We need to add user info and extra data...
+};
+
+/*!
+ * \brief The Application class
+ */
+class Application
+{
+public:
+    Application() = delete;
+    Application(const ApplicationData& appData);
+    ~Application();
+
+    /*!
+     * \brief path as string.
+     * \returns string.
+     */
+    OptionalString path() __tegra_const_noexcept;
+
+    /*!
+     * \brief module as module name.
+     * \returns string.
+     */
+    OptionalString module() __tegra_const_noexcept;
+    Engine* engine{};
+    Multilangual::Language* language{};
+private:
+    ApplicationData m_appData{};
+};
 
 TEGRA_NAMESPACE_END
 

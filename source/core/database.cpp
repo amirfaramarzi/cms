@@ -1,4 +1,6 @@
 #include "database.hpp"
+#include "core/core.hpp"
+#include "core/config.hpp"
 
 TEGRA_USING_NAMESPACE Tegra;
 TEGRA_USING_NAMESPACE Tegra::CMS;
@@ -135,5 +137,65 @@ void Manager::setTables(const TableList& newTables)
 {
     m_structManager->tables = newTables;
 }
+
+void Connection::connect()
+{
+    std::string rdbms{}, dbName{}, dbUsername{}, dbPassword{}, dbCharset{}, dbHost{}, tablePrefix{};
+
+    std::vector<std::string> driverType{};
+
+    unsigned int dbPort{__tegra_zero};
+
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+    config->init(SectionType::SystemCore);
+
+    auto getConf = Configuration::GET["database"];
+
+    for(const auto& c : getConf) {
+
+        if(isset(BOOLCOMBINER(c,"status"))) {
+
+            driverType.push_back(STRCOMBINER(c, "rdbms"));
+
+            for(const auto& d : driverType) {
+                rdbms = d;
+            }
+
+            dbHost          =   STRCOMBINER(c, "host");
+            dbName          =   STRCOMBINER(c, "name");
+            dbUsername      =   STRCOMBINER(c, "username");
+            dbPassword      =   STRCOMBINER(c, "password");
+            dbPort          =   INTCOMBINER(c, "port");
+        }
+    }
+
+    try {
+        APPLICATION_DB_RUN(rdbms, dbHost, dbPort, dbName, dbUsername, dbPassword);
+    }
+    catch (const SqlException& e)
+    {
+        if(DeveloperMode::IsEnable) {
+            eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+        }
+    }
+}
+
+bool Connection::isConnected() __tegra_noexcept
+{
+    bool res {false};
+    auto dbc = AppFramework::application().getDbClient();
+    if (isset(dbc->hasAvailableConnections()) && true)
+    {
+        if(DeveloperMode::IsEnable)
+            eLogger::Log("Database Connected!", eLogger::LoggerType::Info);
+        res = true;
+    } else {
+        if(DeveloperMode::IsEnable)
+            eLogger::Log("Database Connection Error: " + FROM_TEGRA_STRING("There is a problem connecting to the database, please check your settings!"), eLogger::LoggerType::Critical);
+        res = false;
+    }
+    return res;
+}
+
 
 TEGRA_NAMESPACE_END

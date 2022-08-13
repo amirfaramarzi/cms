@@ -233,7 +233,8 @@ std::string Configuration::getBaseUrl() __tegra_noexcept
     } else {
         eLogger::Log("Error config parsing: ", eLogger::LoggerType::Critical);
     }
-    url.append(m_dataConfig->setting->getOption("trusted_domains"));
+    //url.append(m_dataConfig->setting->getOption("trusted_domains"));
+    url.append("localhost");
     return url;
 }
 

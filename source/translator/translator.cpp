@@ -52,8 +52,8 @@ bool Translator::init() __tegra_noexcept
     for(const auto& f : getFile()) {
         try {
             std::string file = {
-            std::string(fs::Path::getExecutablePath()) +
-                translations + "/" + std::string(f) + ".json"};
+                                std::string(fs::Path::getExecutablePath()) +
+                                translations + "/" + std::string(f) + ".json"};
             if(fs::Path::exists(file)) {
                 std::ifstream i(file);
                 jsonParser->push_back(JSon::parse(i));
@@ -80,7 +80,8 @@ bool Translator::existFile(const std::string& file) __tegra_const_noexcept
 bool Translator::isMultiLanguage() __tegra_const_noexcept
 {
     bool ml = {false};
-    if (m_multi_language) {
+    if (m_multi_language)
+    {
         ml = true;
     } else {
         ml = false;
@@ -407,9 +408,8 @@ DictonaryType Translator::data(const std::string& sheet) __tegra_noexcept
         for(const auto& i : root["data"][sheet]) {
             if (i.is_object()) {
                 d.insert(std::pair(root["language-spec"]["code"],
-                std::pair(i["word_key"].get<std::string>(),
-                i["default_value"].get<std::string>()
-              )));
+                         std::pair(i["word_key"].get<std::string>(),
+                         i["default_value"].get<std::string>())));
             }
         }
     }

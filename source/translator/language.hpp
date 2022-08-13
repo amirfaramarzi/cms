@@ -25,8 +25,8 @@
 #define LANGUAGE_HPP
 
 #include "common.hpp"
-#include "translator.hpp"
 #include "core/url.hpp"
+#include "translator.hpp"
 
 TEGRA_NAMESPACE_BEGIN(Tegra::Multilangual)
 
@@ -37,37 +37,7 @@ struct LanguageStruct final
 {
     Types::LanguageType   get               {}; ///< LanguageType
     Types::LanguageCodes  languageSupport   {}; ///< Language support.
-    Types::VectorSection  sections          {}; ///< Sections.
     Url                   url               {}; ///< Url{en-us, fa-ir}.
-};
-
-struct SectionsConstants final
-{
-    __tegra_inline_static_const VectorString defaultSections
-        {
-            "global",
-            "menu",
-            "sideblock",
-            "statics",
-            "slogan",
-            "account",
-            "products",
-            "modules",
-            "themes",
-            "database",
-            "exceptions",
-            "translation",
-            "forms",
-            "header",
-            "footer",
-            "messages",
-            "multimedia",
-            "setup",
-            "dialog",
-            "extra",
-            "development"
-        };
-
 };
 
 /*! Declaration of language support */
@@ -83,9 +53,11 @@ public:
      */
     void registerAll(const Types::LanguageType& data);
 
+    /*!
+     * \brief registerLanguage
+     * \param code
+     */
     void registerLanguage(const Types::LanguageCodes& code);
-
-    void registerSections(const Types::VectorSection& sec);
 
     /*!
      * \brief languageSupport
@@ -119,6 +91,7 @@ public:
 
 private:
     LanguageStruct* m_languageStruct{};
+    Translation::Translator* translator{};
 };
 
 TEGRA_NAMESPACE_END

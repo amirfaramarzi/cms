@@ -350,6 +350,22 @@ struct SqlHelper final
     unsigned int lastInsertedId(const std::string& table) __tegra_noexcept;
 };
 
+#define IsConnected Connection::isConnected()
+struct Connection
+{
+    /*!
+     * \brief connect function will connect via rdbms.
+     */
+    void connect();
+
+    /*!
+     * \brief checks if there is a connection successfully established.
+     */
+    static bool isConnected() __tegra_noexcept;
+private:
+    bool m_connected;
+};
+
 TEGRA_NAMESPACE_END
 
 #endif  // DATABASE_HPP

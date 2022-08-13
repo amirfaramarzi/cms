@@ -1,9 +1,11 @@
 #include "language.hpp"
 #include "core/core.hpp"
 #include "core/config.hpp"
+#include "core/logger.hpp"
 
 TEGRA_USING_NAMESPACE Tegra;
 TEGRA_USING_NAMESPACE Tegra::CMS;
+TEGRA_USING_NAMESPACE Tegra::eLogger;
 
 TEGRA_NAMESPACE_BEGIN(Tegra::Multilangual)
 
@@ -25,15 +27,6 @@ Language::Language()
     }
     //!Register language code.
     registerLanguage(lcodes); //!Language register method.
-    //!List of sections.
-    VectorString lsection;
-    for(const auto& s : SectionsConstants::defaultSections)
-    {
-        lsection.push_back(s);
-    }
-
-    registerSections(lsection); //!Section register method.
-
 }
 
 /*! Implementation of language support */
@@ -57,17 +50,11 @@ Language::Language(const std::string& uri)
     }
     //!Register language code.
     registerLanguage(lcodes); //!Language register method.
-    //!List of sections.
-    VectorString lsection;
-    for(const auto& s : SectionsConstants::defaultSections)
-    {
-        lsection.push_back(s);
-    }
-    registerSections(lsection); //!Section register method.
 }
 
 Language::~Language()
 {
+    __tegra_safe_delete(translator);
     __tegra_safe_delete(m_languageStruct);
 }
 
@@ -92,21 +79,11 @@ LanguageCodes Language::languageSupport() __tegra_const_noexcept
     return m_languageStruct->languageSupport;
 }
 
-void Language::registerSections(const Types::VectorSection& sec)
-{
-    m_languageStruct->sections = sec;
-}
-
-LanguageCodes Language::sections() __tegra_const_noexcept
-{
-    return m_languageStruct->sections;
-}
-
 std::string Language::getLanguageCode() __tegra_const_noexcept
 {
     Scope<Configuration> config(new Configuration(ConfigType::File));
     config->init(SectionType::SystemCore);
-    String path = { m_languageStruct->url.getLanguageUri().value() }; //!->/{language}/uri/
+    String path = { m_languageStruct->url.getLanguageUri().value_or("en-us") }; //!->/{language}/uri/
     std::string lcode{};
     for(auto c : Configuration::GET[_LANGS_]) {
         if(c["uri"] == path.substr(1, 5)) {
@@ -124,7 +101,7 @@ std::string Language::getLanguage() __tegra_const_noexcept
 {
     Scope<Configuration> config(new Configuration(ConfigType::File));
     config->init(SectionType::SystemCore);
-    String path = { m_languageStruct->url.getLanguageUri().value() }; //!->/{language}/uri/
+    String path = { m_languageStruct->url.getLanguageUri().value_or("en-us") }; //!->/{language}/uri/
     std::string lcode{};
     for(auto c : Configuration::GET[_LANGS_]) {
         if(c["uri"] == path.substr(1, 5)) {

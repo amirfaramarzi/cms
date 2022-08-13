@@ -177,7 +177,7 @@ std::time_t EngineInterface::getInitTime()
 
 }
 
-std::optional<std::string> EngineInterface::getSaveState()
+Optional<std::string> EngineInterface::getSaveState()
 {
     if (isset(m_bootParameter->saveState)) {
         return m_bootParameter->saveState;
@@ -186,7 +186,7 @@ std::optional<std::string> EngineInterface::getSaveState()
     }
 }
 
-std::optional<u32> EngineInterface::getPageSize()
+Optional<u32> EngineInterface::getPageSize()
 {
     if (isset(m_bootParameter->pageSize)) {
         return m_bootParameter->pageSize;
@@ -200,7 +200,7 @@ std::time_t EngineInterface::getPageInitTime()
   //ToDo...
 }
 
-std::optional<u32> EngineInterface::getPageSpeed()
+Optional<u32> EngineInterface::getPageSpeed()
 {
     if (isset(m_bootParameter->pageSpeed)) {
         return m_bootParameter->pageSpeed;
@@ -209,7 +209,7 @@ std::optional<u32> EngineInterface::getPageSpeed()
     }
 }
 
-std::optional<s32> EngineInterface::getStateIndex()
+Optional<s32> EngineInterface::getStateIndex()
 {
     if (isset(m_bootParameter->stateIndex)) {
         return m_bootParameter->stateIndex;
@@ -223,7 +223,7 @@ bool EngineInterface::getFastBoot()
     return m_bootParameter->fastBoot;
 }
 
-std::optional<HostType> EngineInterface::getHostType()
+Optional<HostType> EngineInterface::getHostType()
 {
     if (isset(m_bootParameter->hostType)) {
         return m_bootParameter->hostType;
@@ -232,7 +232,7 @@ std::optional<HostType> EngineInterface::getHostType()
     }
 }
 
-std::optional<UserMode> EngineInterface::getUserMode()
+Optional<UserMode> EngineInterface::getUserMode()
 {
     if (isset(m_bootParameter->userMode)) {
         return m_bootParameter->userMode;
@@ -241,7 +241,7 @@ std::optional<UserMode> EngineInterface::getUserMode()
     }
 }
 
-std::optional<SyncDevice> EngineInterface::getSyncMode()
+Optional<SyncDevice> EngineInterface::getSyncMode()
 {
     if (isset(m_bootParameter->syncDevice)) {
         return m_bootParameter->syncDevice;
@@ -250,7 +250,7 @@ std::optional<SyncDevice> EngineInterface::getSyncMode()
     }
 }
 
-std::optional<SystemType> EngineInterface::getSystemType()
+Optional<SystemType> EngineInterface::getSystemType()
 {
     if (isset(m_bootParameter->systemType)) {
         return m_bootParameter->systemType;
@@ -259,7 +259,7 @@ std::optional<SystemType> EngineInterface::getSystemType()
     }
 }
 
-std::optional<SystemLicense> EngineInterface::getSystemLicense()
+Optional<SystemLicense> EngineInterface::getSystemLicense()
 {
     if (isset(m_bootParameter->systemLicense)) {
         return m_bootParameter->systemLicense;
@@ -268,7 +268,7 @@ std::optional<SystemLicense> EngineInterface::getSystemLicense()
     }
 }
 
-std::optional<SystemStatus> EngineInterface::getSystemStatus()
+Optional<SystemStatus> EngineInterface::getSystemStatus()
 {
     if (isset(m_bootParameter->systemStatus)) {
         return m_bootParameter->systemStatus;
@@ -277,9 +277,38 @@ std::optional<SystemStatus> EngineInterface::getSystemStatus()
     }
 }
 
-bool Engine::initialize()
+Engine::Engine(const Multilangual::Language& language)
 {
-  //ToDo...
+    ///< New instances.
+    __tegra_safe_instance(translator, Translation::Translator);
+    ///< Set options.
+    setLanguage(language.getLanguage());    ///< Set language
+    translator->setFile(language.languageSupport());
+    ///< Parsing
+    if(translator->parse()) {
+        if(CMS::DeveloperMode::IsEnable)
+            Log("Language data has been parsed!", LoggerType::Done); ///< Parsing Done!
+    } else {
+        if(CMS::DeveloperMode::IsEnable)
+            Log("No parsing...!", LoggerType::Failed);  ///< Parsing Failed!
+    }
+    for(auto c : Configuration::GET[_LANGS_])
+    {
+        ///< Getting default language code
+        if(c["code"] == Configuration::GET[_DEFAULT_LANG_]) {
+            setLanguage(c["l"].asString().substr(0,5)); //!Set default value into the language engine.
+        }
+    }
+}
+
+Engine::~Engine()
+{
+    __tegra_safe_delete(translator);
+}
+
+bool Engine::initialize(const Multilangual::Language& language)
+{
+  ///!ToDo...
 }
 
 
@@ -326,45 +355,6 @@ std::string convertStream(std::stringstream const& data) __tegra_noexcept
   //ToDo...
 }
 
-Engine::Engine(const Multilangual::Language& language)
-{
-    ///< New instances.
-    __tegra_safe_instance(translator, Translation::Translator);
-    __tegra_safe_instance(langList, Types::LanguageType);
-    ///< Set options.
-    setLanguage(language.getLanguage());    ///< Set language
-    translator->setFile(language.languageSupport());
-    ///< Parsing
-    if(translator->parse()) {
-        if(CMS::DeveloperMode::IsEnable)
-            Log("Language data has been parsed!", LoggerType::Done); ///< Parsing Done!
-    } else {
-        if(CMS::DeveloperMode::IsEnable)
-            Log("No parsing...!", LoggerType::Failed);  ///< Parsing Failed!
-    }
-    for(auto c : Configuration::GET[_LANGS_])
-    {
-        ///< Getting default language code
-        if(c["code"] == Configuration::GET[_DEFAULT_LANG_]) {
-            setLanguage(c["l"].asString().substr(0,5)); //!Set default value into the language engine.
-        }
-    }
-    ///< Inserting all section.
-    for (const auto& c : language.sections())
-    {
-        for (const auto& i : translator->data(c))
-        {
-            langList->insert(std::pair(i.second.first.c_str(), translator->translate(language.getLanguageCode(), c, i.second.first).defaultValue()));
-        }
-    }
-}
-
-Engine::~Engine()
-{
-    __tegra_safe_delete(translator);
-    __tegra_safe_delete(langList);
-}
-
 std::string Engine::htmlEntityDecode(const std::string& content)
 {
   //ToDo...
@@ -397,7 +387,9 @@ std::vector<std::string> Engine::filteredQueryFields(VectorString& fields)
 
 std::string Engine::tablePrefix()
 {
-  //ToDo...
+    //Table prefix
+    std::string prefix = Configuration::GET["table_prefix"].asString();
+    return prefix;
 }
 
 std::string Engine::tableUnicode()
@@ -653,5 +645,47 @@ std::string Engine::whiteSpaceLeading(std::string& input) noexcept
     return input;
 }
 
+void Engine::setIsMultilanguage(const bool value)
+{
+    m_multilang = value;
+}
+
+bool Engine::isMultilanguage() const noexcept
+{
+    bool ret = {false};
+    isset(m_multilang) ? ret = true : false;
+    return ret;
+}
+
+Application::Application(const ApplicationData& appData)
+{
+    __tegra_safe_instance_rhs(language, Multilangual::Language, appData.path.value_or(__tegra_unknown));
+    __tegra_safe_instance_rhs(engine, Engine, *language);
+    {
+        m_appData.path = appData.path.value_or(__tegra_unknown);
+        m_appData.module = appData.module;
+    }
+}
+
+Application::~Application()
+{
+    __tegra_safe_delete(engine);
+    __tegra_safe_delete(language);
+}
+
+OptionalString Application::path() __tegra_const_noexcept
+{
+    if(m_appData.path.value() == __tegra_unknown) {
+        if(DeveloperMode::IsEnable)
+            Log("No valid uri![Application::path()]", LoggerType::Critical);
+        Log("[Application::path() == 'unknown' as ApplicationData]", LoggerType::Critical);
+    }
+    return m_appData.path.value_or(__tegra_unknown);
+}
+
+OptionalString Application::module() __tegra_const_noexcept
+{
+    return m_appData.module.value_or(__tegra_unknown);
+}
 
 TEGRA_NAMESPACE_END
