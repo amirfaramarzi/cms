@@ -81,7 +81,8 @@ public:
      * \param usertype is for template model such as Admin, User and etc.
      * \param p is path as string that is taken from the input.
      */
-    Template();
+    Template() = delete;
+    Template(const UserType& usertype, const Application& app, const ApplicationData& appData);
     ~Template();
     /*!
      * \brief The Requirments struct
@@ -134,12 +135,12 @@ public:
 
     bool fileExist(const std::string& file);
 
-    Tegra::SEO::StaticMeta staticMeta;
+    SEO::StaticMeta* staticMeta;
+
+    Framework::HttpViewData viewData;
 
 private:
     UserType utype;
-    Scope<Engine> engine;
-    Framework::HttpRequestPtr req;
 };
 
 class LoadListTemplate;

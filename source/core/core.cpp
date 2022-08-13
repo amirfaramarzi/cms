@@ -387,7 +387,9 @@ std::vector<std::string> Engine::filteredQueryFields(VectorString& fields)
 
 std::string Engine::tablePrefix()
 {
-  //ToDo...
+    //Table prefix
+    std::string prefix = Configuration::GET["table_prefix"].asString();
+    return prefix;
 }
 
 std::string Engine::tableUnicode()
@@ -674,8 +676,8 @@ Application::~Application()
 OptionalString Application::path() __tegra_const_noexcept
 {
     if(m_appData.path.value() == __tegra_unknown) {
-    if(DeveloperMode::IsEnable)
-        Log("No valid uri![Application::path()]", LoggerType::Critical);
+        if(DeveloperMode::IsEnable)
+            Log("No valid uri![Application::path()]", LoggerType::Critical);
         Log("[Application::path() == 'unknown' as ApplicationData]", LoggerType::Critical);
     }
     return m_appData.path.value_or(__tegra_unknown);

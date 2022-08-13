@@ -50,10 +50,10 @@ enum MetaType : u8
  */
 struct MetaStruct final
 {
-    MetaType type;
-    std::vector<std::string> tags;
-    std::map<std::string, std::string> items;
-    std::string stream;
+    MetaType        type    {};
+    VectorString    tags    {};
+    MapString       items   {};
+    String          stream  {};
 };
 
 /*!
@@ -87,23 +87,43 @@ private:
  */
 struct StaticStruct final
 {
-    std::vector<std::string> data;
-    std::vector<std::string> items;
-    std::string module;
+    VectorString    data    {};
+    VectorString    items   {};
+    String          module  {};
+};
+
+/*!
+ * \brief The StaticPrivateMembers class
+ */
+struct StaticPrivateMembers final
+{
+    MapString config       {};
+    MapString baseTags     {};
+    MapString metaTag      {};
+    MapString openGraph    {};
+    MapString extra        {};
+    MapString staticExtra  {};
+
+    std::string_view developer      {};
+    std::string_view generator      {};
+    std::string_view version        {};
+    std::string_view releaseMode    {};
+    std::string_view releaseNumber  {};
+    std::string_view copyright      {};
 };
 
 class StaticMeta
 {
 public:
-  StaticMeta();
-  StaticMeta(const Application& app);
+  StaticMeta() = delete;
+  StaticMeta(const ApplicationData& appData);
   ~StaticMeta();
 
   /*!
    * \brief setDefault
    * \param lng
    */
-  void setDefault(const std::string& lng);
+  void setDefault(const std::string& path);
 
   /*!
    * \brief metaData
@@ -115,9 +135,8 @@ public:
    * \brief setData
    * \param type
    * \param data
-   * \param lng
    */
-  void setData(const MetaType& type, const MapString & data, const std::string& lng);
+  void setData(const MetaType& type, const MapString& data);
 
   /*!
    * \brief registerModule
@@ -132,7 +151,9 @@ public:
   std::string module() const;
 
 private:
-  StaticStruct* m_staticStruct;
+  Application* app{};
+  StaticStruct* m_staticStruct{};
+  StaticPrivateMembers* m_staticPrivateMembers{};
 };
 
 TEGRA_NAMESPACE_END
