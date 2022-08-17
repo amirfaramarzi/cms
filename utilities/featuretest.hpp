@@ -64,7 +64,7 @@ static struct PrintOptions {
   constexpr static bool cxx17                = 1;
   constexpr static bool cxx20                = 1;
   constexpr static bool cxx23                = 1;
-} print;
+} printOpt;
 
 struct CompilerFeature {
     CompilerFeature(const char* name = nullptr, const char* value = nullptr)
@@ -341,8 +341,8 @@ inline void print_compiler_feature(const CompilerFeature& x) {
     std::string value{ is_feature_supported(x) ? x.value : "------" };
     if (value.back() == 'L') value.pop_back(); //~ 201603L -> 201603
     // value.insert(4, 1, '-'); //~ 201603 -> 2016-03
-    if ( (print.supported_features && is_feature_supported(x))
-        or (print.unsupported_features && !is_feature_supported(x))) {
+    if ( (printOpt.supported_features && is_feature_supported(x))
+        or (printOpt.unsupported_features && !is_feature_supported(x))) {
             std::cout << std::left << std::setw(max_name_length)
                       << x.name << " " << value << '\n';
     }
@@ -350,10 +350,10 @@ inline void print_compiler_feature(const CompilerFeature& x) {
 
 template<size_t N>
 inline void show(char const* title, CompilerFeature (&features)[N]) {
-    if (print.titles) {
+    if (printOpt.titles) {
         std::cout << '\n' << std::left << title << '\n';
     }
-    if (print.sorted_by_value) {
+    if (printOpt.sorted_by_value) {
         std::sort(std::begin(features), std::end(features),
             [](CompilerFeature const& lhs, CompilerFeature const& rhs) {
                 return std::strcmp(lhs.value, rhs.value) < 0;

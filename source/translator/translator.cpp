@@ -1,4 +1,6 @@
 #include "translator.hpp"
+#include "core/core.hpp"
+#include "core/config.hpp"
 #include "core/logger.hpp"
 #include "core/filesystem.hpp"
 
@@ -49,6 +51,11 @@ bool Translator::initExternal(const std::vector<std::string>& file) __tegra_noex
 bool Translator::init() __tegra_noexcept
 {
     bool res = false;
+    std::cout << getFile().size() << std::endl;
+    for(const auto &c : getFile())
+    {
+        std::cout << c << "\n";
+    }
     for(const auto& f : getFile()) {
         try {
             std::string file = {
@@ -293,9 +300,7 @@ LanguageFile Translator::getFile() __tegra_const_noexcept
 
 void Translator::setFile(const LanguageFile& file) __tegra_noexcept
 {
-    if(!file.empty()) {
-        m_translatorData->file = file;
-    }
+    m_translatorData->file = file;
 }
 
 void Translator::wordProcess() __tegra_noexcept
@@ -408,8 +413,8 @@ DictonaryType Translator::data(const std::string& sheet) __tegra_noexcept
         for(const auto& i : root["data"][sheet]) {
             if (i.is_object()) {
                 d.insert(std::pair(root["language-spec"]["code"],
-                         std::pair(i["word_key"].get<std::string>(),
-                         i["default_value"].get<std::string>())));
+                                   std::pair(i["word_key"].get<std::string>(),
+                                             i["default_value"].get<std::string>())));
             }
         }
     }

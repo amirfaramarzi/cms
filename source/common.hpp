@@ -214,6 +214,12 @@ object = new Class();\
 #define __tegra_safe_instance_rhs(object, Class, rhs) \
 object = new Class(rhs);\
 
+#define __tegra_smart_instance(object, Class) \
+object = CreateScope<Class>();\
+
+#define __tegra_smart_instance_rhs(object, Class, rhs) \
+object = CreateScope<Class>(rhs);\
+
 #define __tegra_safe_delete(object) \
 if(object!=nullptr)                 \
 { delete object;}                   \
@@ -269,7 +275,7 @@ object = nullptr;                   \
 #define FROM_TEGRA_STRING(x) std::string(x)
 #define TO_TEGRA_STRING(x) std::to_string(x)
 
-#define TEGRA_TRANSLATOR(key, value) app.engine->translator->translate(app.language->getLanguageCode(), key, value).defaultValue()
+#define TEGRA_TRANSLATOR(key, value) Application::get(*appDataPtr)->translator->translate(lang.getLanguageCode(), key, value).defaultValue()
 
 #define TEGRA_RUNTIME_FORMAT(content, ...) fmt::format(fmt::runtime(content), __VA_ARGS__)
 

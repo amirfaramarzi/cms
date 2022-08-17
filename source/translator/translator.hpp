@@ -15,6 +15,7 @@
 #include "translator/dictionary.hpp"
 
 TEGRA_USING_NAMESPACE Tegra;
+TEGRA_USING_NAMESPACE Tegra::CMS;
 TEGRA_USING_NAMESPACE Tegra::Types;
 
 namespace FileSystem = std::filesystem;
@@ -275,10 +276,10 @@ protected:
     DicType           m_data{};
     LanguageTemplate  m_template{};
     std::string       m_default_language{};
+    std::string       m_current_language{};
 
 private:
-    TranslatorData* m_translatorData{};
-
+    TranslatorData* m_translatorData{__tegra_nullptr};
 };
 
 TEGRA_NAMESPACE_END

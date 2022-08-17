@@ -54,7 +54,6 @@ Language::Language(const std::string& uri)
 
 Language::~Language()
 {
-    __tegra_safe_delete(translator);
     __tegra_safe_delete(m_languageStruct);
 }
 

@@ -26,7 +26,6 @@
 
 #include "common.hpp"
 #include "core/url.hpp"
-#include "translator.hpp"
 
 TEGRA_NAMESPACE_BEGIN(Tegra::Multilangual)
 
@@ -91,7 +90,6 @@ public:
 
 private:
     LanguageStruct* m_languageStruct{};
-    Translation::Translator* translator{};
 };
 
 TEGRA_NAMESPACE_END

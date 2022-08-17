@@ -28,9 +28,10 @@
 
 #include "common.hpp"
 #include "logger.hpp"
+#include "version.hpp"
+#include "prestructure.hpp"
 #include "translator/language.hpp"
 #include "translator/translator.hpp"
-#include "prestructure.hpp"
 
 TEGRA_USING_NAMESPACE Tegra::Types;
 
@@ -200,6 +201,13 @@ enum class TerminateType : u8
     UnexpectedError
 };
 
+enum class TableType : u8
+{
+    MixedStruct, ///<Key and Value table
+    KeyStruct,   ///<Only key table
+    ValueSturct  ///<Only value table [with suffix "l"]
+};
+
 struct Termination
 {
     /*!
@@ -275,7 +283,7 @@ public:
      * @brief initialize starter!
      * @returns true if the system starts successfully.
      */
-    virtual bool initialize(const Multilangual::Language& language) = __tegra_zero;
+    virtual bool initialize() = __tegra_zero;
 
     /*!
      * @brief Getting current fast boot status.
@@ -367,8 +375,7 @@ private:
 class Engine : public EngineInterface
 {
 public:
-    Engine()=default;
-    Engine(const Multilangual::Language& language);
+    Engine();
     Engine(const Engine& rhsEngine) = delete;
     Engine(Engine&& rhsEngine) noexcept = delete;
     Engine& operator=(const Engine& rhsEngine) = delete;
@@ -379,7 +386,7 @@ public:
      * @brief initialize starter!
      * @returns true if the system starts successfully.
      */
-    __tegra_no_discard bool initialize(const Multilangual::Language& language) override;
+    __tegra_no_discard bool initialize() override;
 
     /*!
      * System copyrights.
@@ -505,9 +512,6 @@ public:
      */
     __tegra_no_discard std::string whiteSpaceLeading(std::string& input) __tegra_noexcept;
 
-         // Declared and defined in database section.
-    enum class TableType : u8;
-
     /*!
      * @brief  It may help to distinguish between tables and views depending on what your naming convention is.
      * @returns string name of prefix.
@@ -567,11 +571,6 @@ public:
     void setLanguage(const std::string& l);
 
     /*!
-     * \brief Lanuage translator engine.
-     */
-    Translation::Translator* translator;
-    //std::unique_ptr<Translation::Translator> translator;
-    /*!
      * @brief getLanguage function will returns language name as string.
      * @returns string.
      */
@@ -624,9 +623,18 @@ public:
      */
     bool isMultilanguage() __tegra_const_noexcept;
 
+    /*!
+     * \brief Lanuage translator engine.
+     */
+    Translation::Translator* translator{__tegra_nullptr};
+
     bool m_multilang {};
 
     std::string m_languageStr {__tegra_null_str};
+
+    void setPath(const std::string& p);
+
+    mutable std::string currentPath{};
 };
 
 /*!
@@ -634,9 +642,12 @@ public:
  */
 struct ApplicationData final
 {
+    SystemInfo systemInfo{};
     Multilangual::LanguageStruct languageStruct{};
     OptionalString path    {__tegra_unknown};
     OptionalString module  {__tegra_unknown};
+    SemanticVersion semanticVersion{};
+    Version::ReleaseType releaseType{};
     ///ToDo... We need to add user info and extra data...
 };
 
@@ -646,9 +657,26 @@ struct ApplicationData final
 class Application
 {
 public:
-    Application() = delete;
+    Application() = default;
     Application(const ApplicationData& appData);
     ~Application();
+
+    static Application* get(const ApplicationData& appData);
+
+    /*!
+     * \brief start
+     */
+    void start();
+
+    OptionalString name() __tegra_const_noexcept;
+
+    OptionalString codeName() __tegra_const_noexcept;
+
+    OptionalString type() __tegra_const_noexcept;
+
+    OptionalString license() __tegra_const_noexcept;
+
+    OptionalString model() __tegra_const_noexcept;
 
     /*!
      * \brief path as string.
@@ -661,10 +689,17 @@ public:
      * \returns string.
      */
     OptionalString module() __tegra_const_noexcept;
-    Engine* engine{};
-    Multilangual::Language* language{};
+
+    Scope<Engine>   engine  {};
+    Scope<Version>  version {};
+    Scope<SystemInfo>  systemInfo {};
+
+    Translation::Translator* translator{__tegra_nullptr}; //alternative translator for engine.
+    Multilangual::Language* language{__tegra_nullptr};
+
 private:
-    ApplicationData m_appData{};
+    static Application* appPtr;
+    static ApplicationData* appDataPtr;
 };
 
 TEGRA_NAMESPACE_END
