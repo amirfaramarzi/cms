@@ -27,6 +27,8 @@
 #define DATABASE_HPP
 
 #include "common.hpp"
+#include "core.hpp"
+#include "core/config.hpp"
 
 TEGRA_USING_NAMESPACE Tegra;
 TEGRA_USING_NAMESPACE Tegra::CMS;
@@ -67,6 +69,7 @@ TEGRA_NAMESPACE_BEGIN(Tegra::Database)
 #define BACKUP_TO_DISK          "TO DISK"
 #define INNER_JOIN              "INNER JOIN"
 #define FROM                    "FROM"
+#define INTO                    "INTO"
 #define WHERE                   "WHERE"
 #define AND                     "AND"
 #define OR                      "OR"
@@ -185,10 +188,10 @@ enum class DriverTypes : u8
 using DatabaseList = std::vector<std::string>;
 using TableList    = std::vector<std::string>;
 
-struct StructManager
+struct StructManager final
 {
     std::string     username    {};
-    std::string     passworod   {};
+    std::string     password    {};
     std::string     path        {};
 
     TableList       tables      {};
@@ -199,8 +202,8 @@ struct StructManager
 class Manager
 {
 public:
-    Manager() = default;
-    Manager(const StructManager& structManager);
+    Manager() = delete;
+    Manager(const ApplicationData& appData, const StructManager& structManager);
     Manager(const Manager& rhsManager) = delete;
     Manager(Manager&& rhsManager) noexcept = delete;
     Manager& operator=(const Manager& rhsManager) = delete;
@@ -340,7 +343,8 @@ public:
     void setPath(const std::string& path);
 
 private:
-    StructManager* m_structManager;
+    StructManager* structManagerPtr;
+    ApplicationData* appDataPtr{};
 };
 
 /*!

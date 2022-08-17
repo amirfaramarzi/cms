@@ -1,32 +1,51 @@
 #include "database.hpp"
-#include "core/core.hpp"
-#include "core/config.hpp"
+#include "core.hpp"
+#include "translator/translator.hpp"
 
 TEGRA_USING_NAMESPACE Tegra;
 TEGRA_USING_NAMESPACE Tegra::CMS;
 
 TEGRA_NAMESPACE_BEGIN(Tegra::Database)
 
-Manager::Manager(const StructManager& structManager)
+Manager::Manager(const ApplicationData& appData, const StructManager& structManager)
 {
-    m_structManager = new StructManager(structManager);
-    setTypes(m_structManager->types);
-    setDb(m_structManager->database);
+    auto app = Application(appData);
+    __tegra_safe_instance(appDataPtr, ApplicationData);
+    __tegra_safe_instance_rhs(structManagerPtr, StructManager, structManager);
+    {
+        structManagerPtr->database   = structManager.database;
+        structManagerPtr->path       = structManager.path;
+        structManagerPtr->types      = structManager.types;
+        structManagerPtr->tables     = structManager.tables;
+        structManagerPtr->username   = structManager.username;
+        structManagerPtr->password   = structManager.password;
+
+        setPath(structManagerPtr->path);
+        setDb(structManagerPtr->database);
+        setTypes(structManagerPtr->types);
+        setTables(structManagerPtr->tables);
+        setUsername(structManagerPtr->username);
+        setPassword(structManagerPtr->password);
+    }
+
+    appDataPtr->path = appData.path;
+
 }
 
 Manager::~Manager()
 {
-    __tegra_safe_delete(m_structManager);
+    __tegra_safe_delete(appDataPtr);
+    __tegra_safe_delete(structManagerPtr);
 }
 
 void Manager::setTypes(Database::DriverTypes type)
 {
-    m_structManager->types = type;
+    structManagerPtr->types = type;
 }
 
 Database::DriverTypes Manager::types()
 {
-    return m_structManager->types;
+    return structManagerPtr->types;
 }
 
 std::string Manager::getRdbmsType()
@@ -46,18 +65,18 @@ std::string Manager::getRdbmsType()
 
 DatabaseList Manager::db() const
 {
-    return m_structManager->database;
+    return structManagerPtr->database;
 }
 
 void Manager::setUsername(const std::string& username)
 {
-    if(!username.empty()) m_structManager->username = username;
+    if(!username.empty()) structManagerPtr->username = username;
 }
 
 std::optional<std::string> Manager::username() const
 {
-    if (!m_structManager->username.empty()) {
-        return m_structManager->username;
+    if (!structManagerPtr->username.empty()) {
+        return structManagerPtr->username;
     } else {
         return std::nullopt;
     }
@@ -65,32 +84,32 @@ std::optional<std::string> Manager::username() const
 
 void Manager::setPassword(const std::string& pass)
 {
-    if(!m_structManager->passworod.empty()) m_structManager->passworod = pass;
+    if(!structManagerPtr->password.empty()) structManagerPtr->password = pass;
 }
 
 std::optional<std::string> Manager::password() const
 {
-    if (!m_structManager->passworod.empty()) {
-        return m_structManager->passworod;
+    if (!structManagerPtr->password.empty()) {
+        return structManagerPtr->password;
     } else {
         return std::nullopt;
     }
 }
 
-void Manager::setDb(const std::vector<std::string>& db)
+void Manager::setDb(const DatabaseList& db)
 {
-    if(!m_structManager->database.empty()) m_structManager->database = db;
+    if(!structManagerPtr->database.empty()) structManagerPtr->database = db;
 }
 
 void Manager::setPath(const std::string& path)
 {
-    if(!m_structManager->path.empty()) m_structManager->path = path;
+    if(!structManagerPtr->path.empty()) structManagerPtr->path = path;
 }
 
 std::optional<std::string> Manager::path() const
 {
-    if (!m_structManager->path.empty()) {
-        return m_structManager->path;
+    if (!structManagerPtr->path.empty()) {
+        return structManagerPtr->path;
     } else {
         return std::nullopt;
     }
@@ -98,55 +117,588 @@ std::optional<std::string> Manager::path() const
 
 void Manager::createDatabase()
 {
-
-
+    auto clientPtr = AppFramework::application().getDbClient();
+    VectorString database{};
+    switch (types()) {
+    case Database::DriverTypes::MySQL:
+        for(const auto& t : db()) {
+            database.push_back(FROM_TEGRA_STRING(DROP_DATABASE_IF_EXIST) + __tegra_space + "`" + t + "`");
+            database.push_back(FROM_TEGRA_STRING(CREATE_DATABASE) + __tegra_space + t);
+        }
+        try
+        {
+            for(const auto& i : database) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    case Database::DriverTypes::PostgreSQL:
+        for(const auto& t : db()) {
+            database.push_back(FROM_TEGRA_STRING(DROP_DATABASE_IF_EXIST) + __tegra_space + t);
+            database.push_back(FROM_TEGRA_STRING(CREATE_DATABASE) + __tegra_space + t);
+        }
+        try
+        {
+            for(const auto& i : database) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    default:
+        if(DeveloperMode::IsEnable) {
+            eLogger::Log("Please select a database driver!", eLogger::LoggerType::Critical);
+        }
+        break;
+    }
 }
 
 void Manager::removeDatabase()
-{
+{    
+    auto clientPtr = AppFramework::application().getDbClient();
+    VectorString database{};
+    switch (types()) {
+    case Database::DriverTypes::MySQL:
+        for(const auto& t : db()) {
+            database.push_back(FROM_TEGRA_STRING(DROP_DATABASE) + __tegra_space + t);
+        }
+        try
+        {
+            for(const auto& i : database) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    case Database::DriverTypes::PostgreSQL:
+        for(const auto& t : db()) {
+            database.push_back(FROM_TEGRA_STRING(DROP_DATABASE) + __tegra_space + t);
+        }
+        clientPtr->execSqlAsync(database.data()->c_str(),
+            [&](const Framework::orm::Result &result) {
 
+                if(DeveloperMode::IsEnable) {
+                    eLogger::Log("Database Removed!", eLogger::LoggerType::Success);
+                }
+            },
+            [&](const SqlException &e) {
+                if(DeveloperMode::IsEnable) {
+                    eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+                }
+            });
+        break;
+    default:
+        if(DeveloperMode::IsEnable) {
+            eLogger::Log("Please select a database driver!", eLogger::LoggerType::Critical);
+        }
+        break;
+    }
 }
 
 void Manager::backupDatabase(Database::DriverTypes type, const DatabaseList& db, const std::string& path, const std::string& u)
-{
+{    
+    auto clientPtr = AppFramework::application().getDbClient();
 
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+
+    config->init(SectionType::SystemCore);
+
+    std::string p{Configuration::GET["maintenance"]["backup_path"].asString()};
+
+    std::vector<std::string> database{};
+
+    switch (type) {
+    case Database::DriverTypes::MySQL:
+#ifdef ENABLE_TODO_MODE
+        eLogger::Log("This part of the code is not yet complete and using it may cause the program to crash." , eLogger::LoggerType::Critical);
+#else
+        for(const auto& t : db) {
+            database.push_back(FROM_TEGRA_STRING(BACKUP_DATABASE) + __tegra_space + t);
+            database.push_back(FROM_TEGRA_STRING(BACKUP_TO_DISK) + "='" + p + "'" + t);
+        }
+        try
+        {
+            for(const auto& i : database) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+#endif
+        break;
+    case Database::DriverTypes::PostgreSQL:
+        for(const auto& t : db) {
+            for(const auto& c : Configuration::GET["programs"]) {
+                std::stringstream commandStream { c["pg_dump"]["path"].asString() + " -U " + u + " "+ t +" > " + p.append("backup.sql") };
+                if(!system(commandStream.str().c_str())) {
+                    if(DeveloperMode::IsEnable) {
+                        eLogger::Log("Database backup has been created!", eLogger::LoggerType::Success);
+                    }
+                } else {
+                    if(DeveloperMode::IsEnable) {
+                        eLogger::Log("Database Backup Error on program pg_dump!", eLogger::LoggerType::Critical);
+                    }
+                }
+            }
+        }
+        try
+        {
+            for(const auto& i : database) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    default:
+        if(DeveloperMode::IsEnable) {
+            eLogger::Log("Please select a database driver!", eLogger::LoggerType::Critical);
+        }
+        break;
+    }
 }
 
 void Manager::createTables(Database::DriverTypes type)
-{
+{    
+    auto clientPtr = AppFramework::application().getDbClient();
 
+    std::unique_ptr<Engine> engine(new Engine());
+
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+
+    config->init(SectionType::Database);
+
+    std::vector<std::string> tables{};
+
+    auto configTable = Configuration::GET["tables"];
+
+    TableNames tableNames;
+
+    for(const auto& ns : Database::Constants::defaultTables)
+    {
+        tableNames.push_back(ns);
+    }
+    switch (type) {
+    case Database::DriverTypes::MySQL:
+        for(const auto& t : tableNames) {
+            tables.push_back(FROM_TEGRA_STRING(DROP_TABLE_IF_EXIST) + __tegra_space + "`" + t + "`");
+        }
+        for(const auto& var : configTable) {
+            for(const auto& array : var["create"]) {
+                if(array["name"] == FROM_TEGRA_STRING(TEGRA_RDBMS::PostgreSQL)) {
+                    for(const auto& d : array["data"]) {
+                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::KeyStruct)) {
+                            if(d["name"]==t)
+                                tables.push_back(CREATE_TABLE __tegra_space + engine->table(t, CMS::TableType::KeyStruct) +
+                                                 __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
+                        }
+                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::ValueSturct)) {
+                            if(d["name"]==t)
+                                tables.push_back(CREATE_TABLE __tegra_space + engine->table(t, CMS::TableType::ValueSturct) +
+                                                 __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
+                        }
+                    }
+                }
+            }
+        }
+        try
+        {
+            for(const auto& i : tables) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    case Database::DriverTypes::PostgreSQL:
+        for(const auto& t : tableNames) {
+            tables.push_back(FROM_TEGRA_STRING(DROP_TABLE_IF_EXIST) + __tegra_space + engine->table(t, CMS::TableType::MixedStruct));
+        }
+        for(const auto& var : configTable) {
+            for(const auto& array : var["create"]) {
+                if(array["name"] == FROM_TEGRA_STRING(TEGRA_RDBMS::PostgreSQL)) {
+                    for(const auto& d : array["data"]) {
+                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::KeyStruct)) {
+                            if(d["name"]==t)
+                                tables.push_back(CREATE_TABLE __tegra_space + engine->table(t, CMS::TableType::KeyStruct) +
+                                                 __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
+                        }
+                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::ValueSturct)) {
+                            if(d["name"]==t)
+                                tables.push_back(CREATE_TABLE __tegra_space + engine->table(t, CMS::TableType::ValueSturct) +
+                                                 __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
+                        }
+                    }
+                }
+            }
+        }
+        try
+        {
+            for(const auto& i : tables) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    default:
+        if(DeveloperMode::IsEnable) {
+            eLogger::Log("Please select a database driver!", eLogger::LoggerType::Critical);
+        }
+        break;
+    }
 }
 
 void Manager::removeTables(Database::DriverTypes type)
 {
+    std::unique_ptr<Engine> engine(new Engine());
+
+    auto clientPtr = AppFramework::application().getDbClient();
+
+    std::vector<std::string> tables{};
+
+    TableNames tableNames;
+
+    for(const auto& ns : Database::Constants::defaultTables) {
+        tableNames.push_back(engine->table(ns, CMS::TableType::MixedStruct));
+    }
+    switch (type) {
+    case Database::DriverTypes::MySQL:
+        for(const auto& t : tableNames) {
+            tables.push_back(FROM_TEGRA_STRING(DROP_TABLE_IF_EXIST) + __tegra_space + "`" + t + "`");
+        }
+        try
+        {
+            for(const auto& i : tables) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Info);
+        }
+        break;
+    case Database::DriverTypes::PostgreSQL:
+        for(const auto& t : tableNames) {
+            tables.push_back(FROM_TEGRA_STRING(DROP_TABLE_IF_EXIST) + __tegra_space + t);
+        }
+        try
+        {
+            for(const auto& i : tables) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Info);
+        }
+        break;
+    default:
+        if(DeveloperMode::IsEnable) {
+            eLogger::Log("Please select a database driver!", eLogger::LoggerType::Critical);
+        }
+        break;
+    }
 
 }
 
 void Manager::insertTables(Database::DriverTypes type)
 {
+    auto lang = Multilangual::Language(appDataPtr->path.value());
 
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+
+    config->init(SectionType::Database);
+
+    std::unique_ptr<Engine> engine(new Engine());
+
+    auto clientPtr = AppFramework::application().getDbClient();
+
+    std::string charset {engine->tableUnicode()};
+
+    auto configTable = Configuration::GET["tables"];
+
+    std::vector<std::string> tables{};
+
+    TableNames tableNames;
+
+    std::map<std::string, std::string> filterContent;
+
+    for(const auto& ns : Database::Constants::defaultTables) {
+        tableNames.push_back(ns);
+    }
+
+    switch (type) {
+    case Database::DriverTypes::MySQL:
+        //Reset All tables first.
+        resetAllTables(DriverTypes::MySQL);
+        filterContent.insert(std::pair<std::string, std::string>("{{cms_name}}", TEGRA_TRANSLATOR("global", "name")));
+        filterContent.insert(std::pair<std::string, std::string>("{{website_address}}", CONFIG::OFFICIAL_EMAIL));
+        filterContent.insert(std::pair<std::string, std::string>("{{email}}", CONFIG::OFFICIAL_EMAIL));
+        for(const auto& var : configTable) {
+            for(const auto& array : var["insert"]) {
+                if(array["name"] == FROM_TEGRA_STRING(TEGRA_RDBMS::MySQL)) {
+                    for(const auto& d : array["data"]) {
+                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::KeyStruct)) {
+                            if(d["name"]==t)
+                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine->table(t, CMS::TableType::KeyStruct)
+                                                 + __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
+                        }
+                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::ValueSturct)) {
+                            if(d["name"]==t)
+                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine->table(t, CMS::TableType::ValueSturct)
+                                                 + __tegra_space + FROM_TEGRA_STRING(engine->fullReplacer(FROM_TEGRA_STRING(d["content"].asString()), filterContent)));
+                        }
+                    }
+                }
+            }
+        }
+        try
+        {
+            for(const auto& i : tables) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    case Database::DriverTypes::PostgreSQL:
+        //Reset All tables first.
+        resetAllTables(DriverTypes::PostgreSQL);
+        filterContent.insert(std::pair<std::string, std::string>("{{cms_name}}", TEGRA_TRANSLATOR("global", "name")));
+        filterContent.insert(std::pair<std::string, std::string>("{{website_address}}", CONFIG::OFFICIAL_EMAIL));
+        filterContent.insert(std::pair<std::string, std::string>("{{email}}", CONFIG::OFFICIAL_EMAIL));
+        for(const auto& var : configTable) {
+            for(const auto& array : var["insert"]) {
+                if(array["name"] == FROM_TEGRA_STRING(TEGRA_RDBMS::PostgreSQL)) {
+                    for(const auto& d : array["data"]) {
+                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::KeyStruct)) {
+                            if(d["name"]==t)
+                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine->table(t, CMS::TableType::KeyStruct)
+                                                 + __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
+                        }
+                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::ValueSturct)) {
+                            if(d["name"]==t) {
+                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine->table(t, CMS::TableType::ValueSturct)
+                                                 + __tegra_space + FROM_TEGRA_STRING(engine->fullReplacer(FROM_TEGRA_STRING(d["content"].asString()), filterContent)));
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+        try
+        {
+            for(const auto& i : tables) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    default:
+        if(DeveloperMode::IsEnable) {
+            eLogger::Log("Please select a database driver!", eLogger::LoggerType::Critical);
+        }
+        break;
+    }
 }
 
 void Manager::resetAllTables(Database::DriverTypes type)
 {
+    std::unique_ptr<Engine> engine(new Engine());
 
+    Scope<Configuration> config(new Configuration(ConfigType::File));
 
+    config->init(SectionType::Database);
+
+    auto clientPtr = AppFramework::application().getDbClient();
+
+    std::vector<std::string> tables{};
+
+    TableNames tableNames;
+
+    for(const auto& ns : Database::Constants::defaultTables) {
+        tableNames.push_back(ns);
+    }
+    switch (type) {
+    case Database::DriverTypes::MySQL:
+        for(const auto& t : tableNames) {
+            tables.push_back(FROM_TEGRA_STRING(TRUNCATE_TABLE) + __tegra_space + engine->table(t, CMS::TableType::MixedStruct));
+        }
+        try
+        {
+            for(const auto& i : tables) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    case Database::DriverTypes::PostgreSQL:
+        for(const auto& t : tableNames) {
+            tables.push_back(FROM_TEGRA_STRING(TRUNCATE_TABLE) + __tegra_space + engine->table(t, CMS::TableType::MixedStruct));
+        }
+        try
+        {
+            for(const auto& i : tables) {
+                clientPtr->execSqlSync(i);
+            }
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    default:
+        if(DeveloperMode::IsEnable) {
+            eLogger::Log("Please select a database driver!", eLogger::LoggerType::Critical);
+        }
+        break;
+    }
 }
 
 void Manager::resetTable(Database::DriverTypes type, const std::string& tableName)
 {
+    std::unique_ptr<Engine> engine(new Engine());
 
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+
+    config->init(SectionType::Database);
+
+    auto clientPtr = AppFramework::application().getDbClient();
+
+    TableNames tableNames;
+
+    for(const auto& ns : Database::Constants::defaultTables) {
+        tableNames.push_back(ns);
+    }
+    switch (type) {
+    case Database::DriverTypes::MySQL:
+        try
+        {
+            clientPtr->execSqlSync(FROM_TEGRA_STRING(TRUNCATE_TABLE) + __tegra_space + engine->table(tableName, CMS::TableType::MixedStruct));
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    case Database::DriverTypes::PostgreSQL:
+        try
+        {
+            clientPtr->execSqlSync(FROM_TEGRA_STRING(TRUNCATE_TABLE) + __tegra_space + engine->table(tableName, CMS::TableType::MixedStruct));
+        }
+        catch (const SqlException& e)
+        {
+            if(DeveloperMode::IsEnable) {
+                eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+            }
+        }
+        break;
+    default:
+        if(DeveloperMode::IsEnable) {
+            eLogger::Log("Please select a database driver!", eLogger::LoggerType::Critical);
+        }
+        break;
+    }
 }
 
 const TableList& Manager::tables() const
 {
-    return m_structManager->tables;
+    return structManagerPtr->tables;
 }
 
 void Manager::setTables(const TableList& newTables)
 {
-    m_structManager->tables = newTables;
+    structManagerPtr->tables = newTables;
 }
+
+unsigned int SqlHelper::lastInsertedId(const std::string& table) noexcept
+{
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+
+    config->init(SectionType::Database);
+
+    std::unique_ptr<Engine> engine(new Engine());
+
+    auto clientPtr = AppFramework::application().getDbClient();
+
+    unsigned int maxIndex{};
+
+    try
+    {
+        if(config->currentRdbms() == Database::TEGRA_RDBMS::PostgreSQL) {
+            for (auto &row : clientPtr->execSqlSync("select setval('"+engine->tablePrefix()+table+"_id_seq', max(id)+1) from "+engine->tablePrefix()+table+";"))
+            {
+                maxIndex = row["setval"].as<int>() == __tegra_zero ? 1 : row["setval"].as<int>();
+            }
+        }
+        if(config->currentRdbms() == Database::TEGRA_RDBMS::MySQL) {
+            for (auto &row : clientPtr->execSqlSync("select max(id)+1 from "+engine->tablePrefix()+table+";"))
+            {
+                maxIndex = row["setval"].as<int>() == __tegra_zero ? 1 : row["setval"].as<int>();
+            }
+        }
+    }
+    catch (const SqlException& e)
+    {
+        eLogger::Log("Database Error: " + FROM_TEGRA_STRING(e.base().what()), eLogger::LoggerType::Critical);
+    }
+    return maxIndex;
+}
+
 
 void Connection::connect()
 {
@@ -197,8 +749,6 @@ bool Connection::isConnected() __tegra_noexcept
     auto dbc = AppFramework::application().getDbClient();
     if (isset(dbc->hasAvailableConnections()) && true)
     {
-        if(DeveloperMode::IsEnable)
-            eLogger::Log("Database Connected!", eLogger::LoggerType::Info);
         res = true;
     } else {
         if(DeveloperMode::IsEnable)

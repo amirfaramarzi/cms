@@ -219,6 +219,11 @@ public:
     std::vector<std::string> getLanguageUris() __tegra_noexcept;
 
     /*!
+     * \brief currentRdbms function will gets current used rdbms name.
+     * \return string name of rdbms.
+     */
+    std::string currentRdbms();
+    /*!
      * \brief getDefaultUri
      * \returns string.
      */

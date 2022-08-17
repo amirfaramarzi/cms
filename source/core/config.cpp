@@ -456,6 +456,21 @@ std::string Configuration::getPrefix() __tegra_noexcept
     return pr;
 }
 
+std::string Configuration::currentRdbms()
+{
+    std::string rdbms{};
+    if(!m_dataConfig->json["database"].is_null()) {
+        for(const auto& db : m_dataConfig->json.at("database")) {
+            if(db["status"]==true) {
+                rdbms = db["rdbms"];
+            }
+        }
+    } else {
+        eLogger::Log("Error config parsing: ", eLogger::LoggerType::Critical);
+    }
+    return rdbms;
+}
+
 std::string Configuration::getDefaultUri() __tegra_noexcept
 {
     std::string var{__tegra_null_str};

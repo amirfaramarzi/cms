@@ -368,32 +368,126 @@ std::string convertStream(std::stringstream const& data) __tegra_noexcept
 
 std::string Engine::htmlEntityDecode(const std::string& content)
 {
-  //ToDo...
+    const std::string subs[] = {
+        "& #34;",
+        "&quot;",
+        "& #39;",
+        "&apos;",
+        "& #38;",
+        "&amp;",
+        "& #60;",
+        "&lt;",
+        "& #62;",
+        "&gt;",
+        "&34;",
+        "&39;",
+        "&38;",
+        "&60;",
+        "&62;"
+    };
+
+    const std::string reps[] = {
+        "\"",
+        "\"",
+        "'",
+        "'",
+        "&",
+        "&",
+        "<",
+        "<",
+        ">",
+        ">",
+        "\"",
+        "'",
+        "&",
+        "<",
+        ">"
+    };
+
+    std::string process = content;
+    size_t found;
+
+    for (int j = 0; j < 15; j++) {
+        do {
+            found = process.find(subs[j]);
+            if (found != std::string::npos)
+                process.replace(found, subs[j].length(), reps[j]);
+        } while (found != std::string::npos);
+    }
+
+    return process;
 }
 
 bool Engine::findSubString(const std::vector<std::string>& list, const std::string& search)
 {
-  //ToDo...
+    for (const std::string& str : list) {
+        if (str.find(search) != std::string::npos) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void Engine::findAndReplaceContent(std::string& data, std::string toSearch, std::string replaceStr)
 {
-  //ToDo...
+    //! Get the first occurrence
+    size_t pos = data.find(toSearch);
+    //! Repeat till end is reached
+    while (pos != std::string::npos) {
+        // Replace this occurrence of Sub String
+        data.replace(pos, toSearch.size(), replaceStr);
+        // Get the next occurrence from the current position
+        pos = data.find(toSearch, pos + replaceStr.size());
+    }
 }
 
 void Engine::findAndReplaceLink(std::string& data, std::string toSearch, std::string replaceUrl)
 {
-  //ToDo...
+    //! Get the first occurrence
+    size_t pos = data.find(toSearch);
+    //! Repeat till end is reached
+    while (pos != std::string::npos) {
+        // Replace this occurrence of Sub String
+        data.replace(pos, toSearch.size(), replaceUrl);
+        // Get the next occurrence from the current position
+        pos = data.find(toSearch, pos + replaceUrl.size());
+    }
 }
 
 std::string Engine::linkConvertor(const std::string& uri)
 {
-  //ToDo...
+    //! Get the String
+    std::string str = uri;
+    // Traverse the string character by character.
+    for (int i = 0; i < str.length(); ++i) {
+        // Changing the ith character
+        // to '-' if it's a space.
+        if (str[i] == ' ' || str[i] == '_' || str[i] == ',') {
+            str[i] = '-';
+        } else if (str[i] == '.') {
+            str[i] = '_';
+        } else if (str[i] == '+') {
+            str[i] = 'plus';
+        }
+    }
+    std::for_each(str.begin(), str.end(), [](char& c) { c = std::tolower(c); });
+    return str;
 }
 
 std::vector<std::string> Engine::filteredQueryFields(VectorString& fields)
 {
-  //ToDo...
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+    if(config->currentRdbms() == Database::TEGRA_RDBMS::PostgreSQL)
+        ///!Nothing...
+        if(config->currentRdbms() == Database::TEGRA_RDBMS::MySQL)
+        {
+            std::for_each(fields.begin(), fields.end(), [](auto& s){ s.insert(0, "`");});
+            for(auto& s : fields)
+            {
+                s+="`";
+            }
+        }
+    return fields;
 }
 
 std::string Engine::tablePrefix()
@@ -405,17 +499,23 @@ std::string Engine::tablePrefix()
 
 std::string Engine::tableUnicode()
 {
-  //ToDo...
+    //Table prefix
+    std::string prefix = Configuration::GET["table_unicode"].asString();
+    return prefix;
 }
 
 std::string Engine::mixedTablePrefix(const std::string& p, const std::string& t)
 {
-  //ToDo...
+    std::string res;
+    res = FROM_TEGRA_STRING(p) + FROM_TEGRA_STRING(t);
+    return res;
 }
 
 std::string Engine::table(std::string_view tableName, TableType tableType)
 {
-  //ToDo...
+    std::string res{};
+    res = FROM_TEGRA_STRING(mixedTablePrefix(tablePrefix(), tableName.data()));
+    return res;
 }
 
 VectorString Engine::tableFilter(const std::vector<std::string>& tables, TableType tableType)
@@ -767,21 +867,20 @@ void Application::start()
                        << systemInfo->compiledDate.value() + " ]" << newline;
         Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
                        << " code name : "
-                       << systemInfo->codeName.value() + " ]"
-                       << " ⇙" << newline;
-        Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
+                       << systemInfo->codeName.value() + " ]"<< " ⇙" << newline;
+                                      Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
                        << " version : "
                        << version->getAsString() + " ]"
                        << " ⇙" << newline;
-        Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
+                                      Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
                        << " license type : "
                        << this->license().value() + " ]"
                        << " ⇙" << newline;
-        Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
+                                      Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
                        << " system type : "
                        << this->type().value() + " ]"
                        << " ⇙" << newline;
-        Console::print << newline;
+                                      Console::print << newline;
         Console::print << Terminal::NativeTerminal::Default;
         Console::print << "================[--------------]================\n";
         Console::print << newline;
