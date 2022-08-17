@@ -99,7 +99,7 @@ struct SemanticVersion final
 struct SystemInfo final
 {
     //!Basic Information
-    Optional<u8>                codeName        {};
+    OptionalString              codeName        {};
     OptionalString              name            {};
     Optional<SemanticVersion>   version         {};
     OptionalString              model           {};

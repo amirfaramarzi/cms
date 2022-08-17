@@ -214,6 +214,12 @@ object = new Class();\
 #define __tegra_safe_instance_rhs(object, Class, rhs) \
 object = new Class(rhs);\
 
+#define __tegra_smart_instance(object, Class) \
+object = CreateScope<Class>();\
+
+#define __tegra_smart_instance_rhs(object, Class, rhs) \
+object = CreateScope<Class>(rhs);\
+
 #define __tegra_safe_delete(object) \
 if(object!=nullptr)                 \
 { delete object;}                   \

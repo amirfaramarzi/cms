@@ -1,6 +1,9 @@
 #include "core.hpp"
 #include "logger.hpp"
 #include "config.hpp"
+#include "database.hpp"
+#include "console.hpp"
+#include "terminal.hpp"
 #include "translator/language.hpp"
 
 TEGRA_USING_NAMESPACE Tegra::eLogger;
@@ -277,28 +280,10 @@ Optional<SystemStatus> EngineInterface::getSystemStatus()
     }
 }
 
-Engine::Engine(const Multilangual::Language& language)
+Engine::Engine()
 {
     ///< New instances.
     __tegra_safe_instance(translator, Translation::Translator);
-    ///< Set options.
-    setLanguage(language.getLanguage());    ///< Set language
-    translator->setFile(language.languageSupport());
-    ///< Parsing
-    if(translator->parse()) {
-        if(CMS::DeveloperMode::IsEnable)
-            Log("Language data has been parsed!", LoggerType::Done); ///< Parsing Done!
-    } else {
-        if(CMS::DeveloperMode::IsEnable)
-            Log("No parsing...!", LoggerType::Failed);  ///< Parsing Failed!
-    }
-    for(auto c : Configuration::GET[_LANGS_])
-    {
-        ///< Getting default language code
-        if(c["code"] == Configuration::GET[_DEFAULT_LANG_]) {
-            setLanguage(c["l"].asString().substr(0,5)); //!Set default value into the language engine.
-        }
-    }
 }
 
 Engine::~Engine()
@@ -306,9 +291,35 @@ Engine::~Engine()
     __tegra_safe_delete(translator);
 }
 
-bool Engine::initialize(const Multilangual::Language& language)
+bool Engine::initialize()
 {
-  ///!ToDo...
+    bool res{false};
+    auto config = Configuration(ConfigType::File);
+    config.init(SectionType::SystemCore);
+    //! Database Connection
+    Scope<Database::Connection>con(new Database::Connection());
+    ApplicationData appData;
+    {
+        appData.path    = "";
+        appData.module  = "starter";
+    }
+    auto lang = Multilangual::Language(appData.path.value());
+    {
+        Application::get(appData)->engine->setLanguage(lang.getLanguage());
+        Application::get(appData)->translator->setFile(lang.languageSupport());
+    }
+    ///< Parsing
+    if(Application::get(appData)->translator->parse()) {
+        res = true;
+        if(CMS::DeveloperMode::IsEnable)
+            Log("Language data has been parsed!", LoggerType::Done); ///< Parsing Done!
+    } else {
+        res = false;
+        if(CMS::DeveloperMode::IsEnable)
+            Log("No parsing...!", LoggerType::Failed);  ///< Parsing Failed!
+    }
+
+    return res;
 }
 
 
@@ -409,7 +420,35 @@ std::string Engine::table(std::string_view tableName, TableType tableType)
 
 VectorString Engine::tableFilter(const std::vector<std::string>& tables, TableType tableType)
 {
-  //ToDo...
+    std::string valueStruct = Configuration::GET["table_value_struct"].asString();
+    std::vector<std::string> res{};
+    switch (tableType)
+    {
+    case TableType::MixedStruct:
+        res=tables;
+        break;
+    case TableType::KeyStruct:
+        res=tables;
+        for(const auto& t : tables) {
+            if(t.ends_with(valueStruct)) {
+                res.erase(std::remove(res.begin(), res.end(), t), res.end());
+            }
+        }
+        break;
+    case TableType::ValueSturct:
+        res=tables;
+        for(const auto& t : tables) {
+            if(!t.ends_with(valueStruct)) {
+                res.erase(std::remove(res.begin(), res.end(), t), res.end());
+            }
+        }
+        break;
+    default:
+        res=tables;
+        break;
+    }
+
+    return res;
 }
 
 std::string Engine::fullReplacer(const std::string& content, const MapString& map)
@@ -657,35 +696,168 @@ bool Engine::isMultilanguage() const noexcept
     return ret;
 }
 
+void Engine::setPath(const std::string &p)
+{
+    currentPath = p;
+}
+
 Application::Application(const ApplicationData& appData)
 {
     __tegra_safe_instance_rhs(language, Multilangual::Language, appData.path.value_or(__tegra_unknown));
-    __tegra_safe_instance_rhs(engine, Engine, *language);
+    __tegra_safe_instance(translator, Translation::Translator);
+    __tegra_safe_instance(appDataPtr, ApplicationData);
+    ///!Smart Scopes
     {
-        m_appData.path = appData.path.value_or(__tegra_unknown);
-        m_appData.module = appData.module;
+        __tegra_smart_instance(engine, Engine);
+        __tegra_smart_instance(version, Version);
+        __tegra_smart_instance(systemInfo, SystemInfo);
+    }
+    ///!Inits
+    {
+        version->setVersion(appData.semanticVersion, appData.releaseType);
+        appDataPtr->path = appData.path.value_or(__tegra_unknown);
+        {
+            systemInfo->name = appData.systemInfo.name;
+            systemInfo->codeName = appData.systemInfo.codeName;
+            systemInfo->compiledDate = appData.systemInfo.compiledDate;
+            systemInfo->license = appData.systemInfo.license;
+            systemInfo->type = appData.systemInfo.type;
+            systemInfo->version = appData.systemInfo.version;
+        }
     }
 }
 
 Application::~Application()
 {
-    __tegra_safe_delete(engine);
+    __tegra_safe_delete(translator);
+    __tegra_safe_delete(appDataPtr);
     __tegra_safe_delete(language);
+}
+
+Application* Application::appPtr;
+
+ApplicationData* Application::appDataPtr;
+
+Application* Application::get(const ApplicationData& appData)
+{
+    if (!appPtr)
+    {
+        __tegra_safe_instance_rhs(appPtr, Application, appData);
+        {
+            appPtr->path() = appData.path.value_or(__tegra_unknown);
+            appDataPtr->path = appData.path.value_or(__tegra_unknown);
+            appDataPtr->semanticVersion = appData.semanticVersion;
+            appDataPtr->releaseType = appData.releaseType;
+        }
+    }
+    return appPtr;
+}
+
+void Application::start()
+{
+    if(CMS::DeveloperMode::IsEnable)
+        Log("Engine started!", LoggerType::Info); ///< Engine Start...
+    {
+        Console::print << "Starting..." << newline;
+        Console::print << "=================[Tegra CMS Info]=================\n";
+        Console::print << newline;
+        Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
+                       << __tegra_space << systemInfo->name.value() << ""
+                       << " - compiled date on : "
+                       << systemInfo->compiledDate.value() + " ]" << newline;
+        Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
+                       << " code name : "
+                       << systemInfo->codeName.value() + " ]"
+                       << " ⇙" << newline;
+        Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
+                       << " version : "
+                       << version->getAsString() + " ]"
+                       << " ⇙" << newline;
+        Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
+                       << " license type : "
+                       << this->license().value() + " ]"
+                       << " ⇙" << newline;
+        Console::print << Terminal::NativeTerminal::Primary << " ⇨ ["
+                       << " system type : "
+                       << this->type().value() + " ]"
+                       << " ⇙" << newline;
+        Console::print << newline;
+        Console::print << Terminal::NativeTerminal::Default;
+        Console::print << "================[--------------]================\n";
+        Console::print << newline;
+    }
 }
 
 OptionalString Application::path() __tegra_const_noexcept
 {
-    if(m_appData.path.value() == __tegra_unknown) {
+    if(appDataPtr->path == __tegra_unknown) {
         if(DeveloperMode::IsEnable)
             Log("No valid uri![Application::path()]", LoggerType::Critical);
         Log("[Application::path() == 'unknown' as ApplicationData]", LoggerType::Critical);
     }
-    return m_appData.path.value_or(__tegra_unknown);
+    return appDataPtr->path.value_or(__tegra_unknown);
 }
 
+OptionalString Application::name() __tegra_const_noexcept
+{
+    return appDataPtr->systemInfo.name.value_or(__tegra_unknown);
+}
+
+OptionalString Application::codeName() __tegra_const_noexcept
+{
+    return appDataPtr->systemInfo.codeName.value_or(__tegra_unknown);
+}
+
+OptionalString Application::type() __tegra_const_noexcept
+{
+    std::string res{};
+    switch (systemInfo->type.value()) {
+    case SystemType::Private:
+        res = "Private";
+        break;
+    case SystemType::General:
+        res = "General";
+        break;
+    case SystemType::Professional:
+        res = "Professional";
+        break;
+    case SystemType::Premium:
+        res = "Premium";
+        break;
+    case SystemType::Default:
+        res = "Default";
+        break;
+    default:
+        res = "Default";
+        break;
+    }
+    return res;
+}
+
+OptionalString Application::license() __tegra_const_noexcept
+{
+    std::string res{};
+    switch (systemInfo->license.value()) {
+    case SystemLicense::Commercial:
+        res = "Commercial";
+        break;
+    case SystemLicense::Free:
+        res = "Free";
+        break;
+    default:
+        res = "Free";
+        break;
+    }
+    return res;
+}
+
+OptionalString Application::model() __tegra_const_noexcept
+{
+    return appDataPtr->systemInfo.codeName.value_or(__tegra_unknown);
+}
 OptionalString Application::module() __tegra_const_noexcept
 {
-    return m_appData.module.value_or(__tegra_unknown);
+    return appDataPtr->module.value_or(__tegra_unknown);
 }
 
 TEGRA_NAMESPACE_END
