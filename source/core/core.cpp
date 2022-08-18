@@ -284,6 +284,8 @@ Engine::Engine()
 {
     ///< New instances.
     __tegra_safe_instance(translator, Translation::Translator);
+    Scope<Configuration> config(new Configuration(ConfigType::File));
+    config->init(SectionType::SystemCore);
 }
 
 Engine::~Engine()
@@ -494,14 +496,22 @@ std::string Engine::tablePrefix()
 {
     //Table prefix
     std::string prefix = Configuration::GET["table_prefix"].asString();
+    if(!isset(prefix)) {
+        if(CMS::DeveloperMode::IsEnable)
+            Log("Table prefix not found!", LoggerType::Warning);
+    }
     return prefix;
 }
 
 std::string Engine::tableUnicode()
 {
-    //Table prefix
-    std::string prefix = Configuration::GET["table_unicode"].asString();
-    return prefix;
+    //Table unicode
+    std::string unicode = Configuration::GET["table_unicode"].asString();
+    if(!isset(unicode)) {
+        if(CMS::DeveloperMode::IsEnable)
+            Log("Table unicode not found!", LoggerType::Warning);
+    }
+    return unicode;
 }
 
 std::string Engine::mixedTablePrefix(const std::string& p, const std::string& t)
@@ -582,7 +592,14 @@ std::string Engine::getLanguage()
 
 std::map <std::string, std::string> Engine::langs()
 {
-  //ToDo...
+    std::map<std::string, std::string> l = {};
+    //!Getting language from configuration file
+    for(auto &var : Configuration::GET["langs"]) {
+        l.insert(Types::PairString(var["uri"].asString(),var["code"].asString()));
+        this->langUri.push_back("/" + std::string(var["uri"].asString()));
+        this->langUri.push_back("/" + std::string(var["uri"].asString()) + "/");
+    }
+    return l;
 }
 
 std::map <std::string, std::string> Engine::langsByPath(const std::string& path)
@@ -601,7 +618,25 @@ std::map <std::string, std::string> Engine::langsByPath(const std::string& path)
 
 std::string Engine::reducePath(const std::string& path)
 {
-  //ToDo...
+    std::string pathEnd{};
+    std::string cl = defaultLanguage();
+    for (const auto& l: langsByPath(path))
+    {
+        if (path.ends_with("/"))
+        {
+            pathEnd = {
+                "/" + l.first + "/"
+            };
+        } else {
+            pathEnd = {
+                "/" + l.first + ""
+            };
+        }
+        if (path == pathEnd) {
+            cl = l.second;
+        }
+    }
+    return cl;
 }
 
 std::string Engine::removeDashes(const std::string& src) __tegra_const_noexcept
@@ -613,7 +648,9 @@ std::string Engine::removeDashes(const std::string& src) __tegra_const_noexcept
 
 std::string Engine::defaultLanguage()
 {
-  //ToDo...
+    //Default language
+    std::string def = Configuration::GET["default_lang"].asString();
+    return def;
 }
 
 std::string Engine::join(const std::vector<std::string>& strings,  const SepratorType& sep, const SepratorStyle& sepStyle) __tegra_noexcept
@@ -882,7 +919,7 @@ void Application::start()
                        << " ⇙" << newline;
                                       Console::print << newline;
         Console::print << Terminal::NativeTerminal::Default;
-        Console::print << "================[--------------]================\n";
+        Console::print << "=================[--------------]=================\n";
         Console::print << newline;
     }
 }

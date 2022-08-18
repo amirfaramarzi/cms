@@ -286,7 +286,7 @@ void Manager::createTables(Database::DriverTypes type)
 {    
     auto clientPtr = AppFramework::application().getDbClient();
 
-    std::unique_ptr<Engine> engine(new Engine());
+    Scope<Engine> engine(new Engine());
 
     Scope<Configuration> config(new Configuration(ConfigType::File));
 
@@ -383,7 +383,7 @@ void Manager::createTables(Database::DriverTypes type)
 
 void Manager::removeTables(Database::DriverTypes type)
 {
-    std::unique_ptr<Engine> engine(new Engine());
+    Scope<Engine> engine(new Engine());
 
     auto clientPtr = AppFramework::application().getDbClient();
 
@@ -436,13 +436,13 @@ void Manager::removeTables(Database::DriverTypes type)
 
 void Manager::insertTables(Database::DriverTypes type)
 {
-    auto lang = Multilangual::Language(appDataPtr->path.value());
+    Scope<Multilangual::Language> languagePtr(new Multilangual::Language(appDataPtr->path.value()));
 
     Scope<Configuration> config(new Configuration(ConfigType::File));
 
     config->init(SectionType::Database);
 
-    std::unique_ptr<Engine> engine(new Engine());
+    Scope<Engine> engine(new Engine());
 
     auto clientPtr = AppFramework::application().getDbClient();
 
@@ -549,7 +549,7 @@ void Manager::insertTables(Database::DriverTypes type)
 
 void Manager::resetAllTables(Database::DriverTypes type)
 {
-    std::unique_ptr<Engine> engine(new Engine());
+    Scope<Engine> engine(new Engine());
 
     Scope<Configuration> config(new Configuration(ConfigType::File));
 
@@ -609,7 +609,7 @@ void Manager::resetAllTables(Database::DriverTypes type)
 
 void Manager::resetTable(Database::DriverTypes type, const std::string& tableName)
 {
-    std::unique_ptr<Engine> engine(new Engine());
+    Scope<Engine> engine(new Engine());
 
     Scope<Configuration> config(new Configuration(ConfigType::File));
 
@@ -671,7 +671,7 @@ unsigned int SqlHelper::lastInsertedId(const std::string& table) noexcept
 
     config->init(SectionType::Database);
 
-    std::unique_ptr<Engine> engine(new Engine());
+    Scope<Engine> engine(new Engine());
 
     auto clientPtr = AppFramework::application().getDbClient();
 
