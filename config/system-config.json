@@ -12,7 +12,7 @@
         "langs":[
                 { "code":"english",  "direction": "ltr", "name": "English",  "uri":"en-us",  "d":"en",  "l":"en_US.utf-8",  "status": true  },
                 { "code":"persian",  "direction": "rtl", "name": "Persian",  "uri":"fa-ir",  "d":"fa",  "l":"fa_IR.utf-8",  "status": true  },
-                { "code":"turkish",  "direction": "ltr", "name": "Türkçe",   "uri":"tr-tr",  "d":"tr",  "l":"tr_TR.utf-8",  "status": false },
+                { "code":"turkish",  "direction": "ltr", "name": "Türkçe",   "uri":"tr-tr",  "d":"tr",  "l":"tr_TR.utf-8",  "status": false }
         ],
         "database":[
                 {"rdbms":"postgresql", "host": "127.0.0.1", "name": "tegradb", "username":"root", "password":"", "port": 5432, "status": true},

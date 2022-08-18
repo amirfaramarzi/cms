@@ -209,6 +209,13 @@
 	    "status":true
 	 },
          {
+            "word_key":"greeting",
+            "module":"system",
+            "default_value":"سلام، من {} هستم!",
+            "custom_value":"",
+            "status":true
+         },
+         {
             "word_key":"slogan",
             "module":"system",
             "default_value":"نسل جدید سیستم‌های مدیریت محتوای وب",
