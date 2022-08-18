@@ -919,7 +919,7 @@ void Application::start()
                        << " ⇙" << newline;
                                       Console::print << newline;
         Console::print << Terminal::NativeTerminal::Default;
-        Console::print << "================[--------------]================\n";
+        Console::print << "=================[--------------]=================\n";
         Console::print << newline;
     }
 }

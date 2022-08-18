@@ -436,7 +436,7 @@ void Manager::removeTables(Database::DriverTypes type)
 
 void Manager::insertTables(Database::DriverTypes type)
 {
-    auto lang = Multilangual::Language(appDataPtr->path.value());
+    Scope<Multilangual::Language> languagePtr(new Multilangual::Language(appDataPtr->path.value()));
 
     Scope<Configuration> config(new Configuration(ConfigType::File));
 
