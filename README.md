@@ -1,6 +1,6 @@
 # Tegra CMS
 
-![tegra-git-header-01](https://user-images.githubusercontent.com/4066299/185660154-cb494656-6b62-4ac2-ade1-ca578b100fd7.png)
+![tegra-git-header-01](https://user-images.githubusercontent.com/4066299/185661182-7f7885ca-9858-444e-9fb3-8a2066f6fac6.svg)
 
 Welcome to the Tegra development repository!
 Tegra is an open source super-high end performance, user-friendly, multi-lingual and multi-purpose modern CMS based on **C++20** which enables you to build websites and powerful online applications.
