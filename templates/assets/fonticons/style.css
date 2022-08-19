@@ -1,0 +1,92 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?2ugc19');
+  src:  url('fonts/icomoon.eot?2ugc19#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?2ugc19') format('truetype'),
+    url('fonts/icomoon.woff?2ugc19') format('woff'),
+    url('fonts/icomoon.svg?2ugc19#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  font-size: 16px;
+  line-height: 1;
+  color: #646c9a;
+
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-aparat:before {
+  content: "\e901";
+}
+.icon-Tegra:before {
+  content: "\e900";
+}
+.icon-share2:before {
+  content: "\ea82";
+}
+.icon-google-drive:before {
+  content: "\ea8f";
+}
+.icon-rss:before {
+  content: "\ea9b";
+}
+.icon-steam:before {
+  content: "\eaac";
+}
+.icon-dropbox:before {
+  content: "\eaae";
+}
+.icon-github:before {
+  content: "\eab0";
+}
+.icon-appleinc:before {
+  content: "\eabe";
+}
+.icon-android:before {
+  content: "\eac0";
+}
+.icon-windows8:before {
+  content: "\eac2";
+}
+.icon-skype:before {
+  content: "\eac5";
+}
+.icon-stackoverflow:before {
+  content: "\ead0";
+}
+.icon-chrome:before {
+  content: "\ead9";
+}
+.icon-firefox:before {
+  content: "\eada";
+}
+.icon-edge:before {
+  content: "\eadc";
+}
+.icon-safari:before {
+  content: "\eadd";
+}
+.icon-opera:before {
+  content: "\eade";
+}
+.icon-html-five:before {
+  content: "\eae4";
+}
+.icon-css3:before {
+  content: "\eae6";
+}
+.icon-git:before {
+  content: "\eae7";
+}
