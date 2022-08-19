@@ -251,7 +251,6 @@ public:
      */
     void insertTables(Database::DriverTypes type);
 
-
     /*!
      * @brief resetTables function will reset all table's data inside the database.
      * @param type is database type such as MySQL or PostgreSQL.
@@ -345,6 +344,7 @@ public:
 private:
     StructManager* structManagerPtr;
     ApplicationData* appDataPtr{};
+    Scope<Multilangual::Language> languagePtr{};
 };
 
 /*!
