@@ -649,6 +649,13 @@
 	    "status":true
 	 },
          {
+            "word_key":"greeting",
+            "module":"system",
+            "default_value":"Hello, I am {}!",
+            "custom_value":"",
+            "status":true
+         },
+         {
             "word_key":"slogan",
             "module":"system",
             "default_value":"New Generation of Web Content Management System",

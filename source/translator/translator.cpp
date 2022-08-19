@@ -51,11 +51,6 @@ bool Translator::initExternal(const std::vector<std::string>& file) __tegra_noex
 bool Translator::init() __tegra_noexcept
 {
     bool res = false;
-    std::cout << getFile().size() << std::endl;
-    for(const auto &c : getFile())
-    {
-        std::cout << c << "\n";
-    }
     for(const auto& f : getFile()) {
         try {
             std::string file = {
