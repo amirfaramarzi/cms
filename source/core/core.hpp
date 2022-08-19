@@ -645,6 +645,8 @@ struct ApplicationData final
     SystemInfo systemInfo{};
     Multilangual::LanguageStruct languageStruct{};
     OptionalString path    {__tegra_unknown};
+    OptionalString templateId  {__tegra_unknown};
+    OptionalString templateErrorId  {__tegra_unknown};
     OptionalString module  {__tegra_unknown};
     SemanticVersion semanticVersion{};
     Version::ReleaseType releaseType{};
@@ -689,6 +691,18 @@ public:
      * \returns string.
      */
     OptionalString module() __tegra_const_noexcept;
+
+    /*!
+     * \brief templateId will gets error template id.
+     * \returns string.
+     */
+    OptionalString templateErrorId() __tegra_const_noexcept;
+
+    /*!
+     * \brief templateId will gets template id.
+     * \returns string.
+     */
+    OptionalString templateId() __tegra_const_noexcept;
 
     Scope<Engine>   engine  {};
     Scope<Version>  version {};

@@ -82,7 +82,7 @@ public:
      * \param p is path as string that is taken from the input.
      */
     Template() = delete;
-    Template(const UserType& usertype, const Application& app, const ApplicationData& appData);
+    Template(const UserType& usertype, const ApplicationData& appData);
     ~Template();
     /*!
      * \brief The Requirments struct
