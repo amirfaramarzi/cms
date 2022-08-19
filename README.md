@@ -5,6 +5,15 @@
 Welcome to the Tegra development repository!
 Tegra is an open source super-high end performance, user-friendly, multi-lingual and multi-purpose modern CMS based on **C++20** which enables you to build websites and powerful online applications.
 
+[![GitHub issues](https://img.shields.io/github/issues/genyleap/cms)](https://github.com/genyleap/cms/issues)
+[![GitHub forks](https://img.shields.io/github/forks/genyleap/cms)](https://github.com/genyleap/cms/network)
+[![GitHub stars](https://img.shields.io/github/stars/genyleap/cms)](https://github.com/genyleap/cms/stargazers)
+[![GitHub license](https://img.shields.io/github/license/genyleap/cms)](https://github.com/genyleap/cms/blob/main/LICENSE)
+![Version](https://img.shields.io/badge/Version-0.2.300--alpha-lightgrey)
+![Language iso: C++](https://img.shields.io/badge/C%2B%2B-20-blue)
+![Platforms](https://img.shields.io/badge/Platform%20Support-macOS%2C%20Linux%2C%20Windows-lightgrey)
+![Status](https://img.shields.io/badge/Status-Under%20Development-red)
+
 [![forthebadge](https://forthebadge.com/images/badges/open-source.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-c-plus-plus.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
