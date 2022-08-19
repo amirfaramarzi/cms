@@ -13,7 +13,7 @@ TEGRA_NAMESPACE_BEGIN(Pages)
 
 void Home::index(const Framework::HttpRequestPtr& req, std::function<void(const HttpResponsePtr &)>&& callback) const
 {
-    Scope<Engine> engine(new Engine());
+    auto engine = Engine();
 
     Scope<ApplicationData> appDataPtr(new ApplicationData());
     {
@@ -30,13 +30,13 @@ void Home::index(const Framework::HttpRequestPtr& req, std::function<void(const 
     Scope<LoadListTemplate>templateList(new LoadListTemplate(languagePtr->getLanguage(), appDataPtr->path.value()));
 
     //!Set the current path to language based on path.
-    engine->langsByPath(__tegra_null_str);
+    engine.langsByPath(__tegra_null_str);
 
     //!Check the page path for find by language.
-    auto page = std::find(std::begin(engine->langUri), std::end(engine->langUri), appDataPtr->path.value());
-    if (page != std::end(engine->langUri))
+    auto page = std::find(std::begin(engine.langUri), std::end(engine.langUri), appDataPtr->path.value());
+    if (page != std::end(engine.langUri))
     {
-        engine->setIsMultilanguage(true);
+        engine.setIsMultilanguage(true);
     }
 
     theme->staticMeta->setDefault(languagePtr->getLanguage()); //Getting default meta data for home page!
@@ -54,14 +54,14 @@ void Home::index(const Framework::HttpRequestPtr& req, std::function<void(const 
     /* Dynamic Translate Section */
     SheetType sheets {"global", "dialog", "account"};
     for(const auto& key : sheets) {
-        for(const auto& s : engine->translator->data(key)) {
-            if(s.first == engine->getLanguage()) {
+        for(const auto& s : engine.translator->data(key)) {
+            if(s.first == engine.getLanguage()) {
                 theme->viewData.insert(s.second.first, s.second.second);
             }
         }
     }
 
-    if (engine->isMultilanguage() && IsConnected)
+    if (engine.isMultilanguage() && IsConnected)
     {
         //Multi-Language logic code here...
         auto resp = HttpResponse::newHttpViewResponse(appDataPtr->templateId.value(), theme->viewData);
