@@ -991,9 +991,20 @@ OptionalString Application::model() __tegra_const_noexcept
 {
     return appDataPtr->systemInfo.codeName.value_or(__tegra_unknown);
 }
+
 OptionalString Application::module() __tegra_const_noexcept
 {
     return appDataPtr->module.value_or(__tegra_unknown);
+}
+
+OptionalString Application::templateErrorId() __tegra_const_noexcept
+{
+    return appDataPtr->templateErrorId.value_or(__tegra_unknown);
+}
+
+OptionalString Application::templateId() __tegra_const_noexcept
+{
+    return appDataPtr->templateId.value_or(__tegra_unknown);
 }
 
 TEGRA_NAMESPACE_END

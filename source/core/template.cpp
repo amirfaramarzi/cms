@@ -10,30 +10,33 @@ TEGRA_USING_NAMESPACE Tegra;
 TEGRA_USING_NAMESPACE Tegra::SEO;
 TEGRA_NAMESPACE_BEGIN(Tegra::CMS)
 
-Template::Template(const UserType& usertype, const Application& app, const ApplicationData& appData) : utype(usertype)
+Template::Template(const UserType& usertype, const ApplicationData& appData) : utype(usertype)
 {
     __tegra_safe_instance_rhs(staticMeta, StaticMeta, appData); //SEO
     //!Getting system language by redirecting url.
-    Scope<Multilangual::Language> language(new Multilangual::Language(app.path().value()));
+    Scope<Multilangual::Language> language(new Multilangual::Language(appData.path.value()));
     //! Create a new instance of the class Configuration
     Scope<Configuration>config(new Configuration(ConfigType::File));
     {
         config->init(SectionType::SystemCore);
     }
+
+    Scope<Engine> engine(new Engine());
+
     auto baseUrl = config->getBaseUrl();
     //!Check the direction of template.
     std::string direction{};
-    for(auto c : Configuration::GET[_LANGS_]) {
-        if(STRCOMBINER(c, "uri") == app.path().value().substr(1, 5)) {
+    for(auto c : Configuration::GET[TEGRA_LANGS]) {
+        if(STRCOMBINER(c, "uri") == appData.path.value().substr(1, 5)) {
             direction = STRCOMBINER(c, "direction");
         } else {
-            if(STRCOMBINER(c, "code") == Configuration::GET[_DEFAULT_LANG_]) {
+            if(STRCOMBINER(c, "code") == Configuration::GET[TEGRA_DEFAULT_LANG]) {
                 direction = STRCOMBINER(c, "direction");
             }
         }
     }
     for(auto c : Configuration::GET["langs"]) {
-        if(STRCOMBINER(c, "uri") == app.path().value().substr(1, 5)) {
+        if(STRCOMBINER(c, "uri") == appData.path.value().substr(1, 5)) {
             direction = STRCOMBINER(c, "direction");
             if(direction == "rtl") {
                 systemSheet.push_back(FROM_TEGRA_STRING("body {font-family: Samim, sans-serif; direction: rtl; }"));
@@ -63,7 +66,7 @@ Template::Template(const UserType& usertype, const Application& app, const Appli
         //!Engine
         for(const auto& var : Configuration::GET["templates"]["engine"]) {
             for(const auto& array : var["css"]) {
-                if(app.engine->isMultilanguage()) {
+                if(engine->isMultilanguage()) {
                     if(array["type"] == "cdn" && array["direction"] == direction && array["status"] == true)
                         styleSheet.push_back(FROM_TEGRA_STRING(array["value"].asString()));
                 } else {
@@ -80,7 +83,7 @@ Template::Template(const UserType& usertype, const Application& app, const Appli
         //!Third-Party
         for(const auto& var : Configuration::GET["templates"]["thirdparty"]) {
             for(const auto& array : var["css"]) {
-                if(app.engine->isMultilanguage()) {
+                if(engine->isMultilanguage()) {
                     if(array["type"] == "cdn" && array["direction"] == direction && array["status"] == true)
                         styleSheet.push_back(FROM_TEGRA_STRING(array["value"].asString()));
                 } else {
@@ -99,7 +102,7 @@ Template::Template(const UserType& usertype, const Application& app, const Appli
         //!Engine
         for(const auto& var : Configuration::GET["templates"]["engine"]) {
             for(const auto& array : var["css"]) {
-                if(app.engine->isMultilanguage()) {
+                if(engine->isMultilanguage()) {
                     if(array["type"] == "local" && array["direction"] == direction && array["status"] == true)
                         styleSheet.push_back(baseUrl + "/templates/" + FROM_TEGRA_STRING(array["value"].asString()));
                 } else {
@@ -116,7 +119,7 @@ Template::Template(const UserType& usertype, const Application& app, const Appli
         //!Third-Party
         for(const auto& var : Configuration::GET["templates"]["thirdparty"]) {
             for(const auto& array : var["css"]) {
-                if(app.engine->isMultilanguage()) {
+                if(engine->isMultilanguage()) {
                     if(array["type"] == "local" && array["direction"] == direction && array["status"] == true) {
                         styleSheet.push_back(baseUrl + "/templates/" + FROM_TEGRA_STRING(array["value"].asString()));
                     }
@@ -134,9 +137,9 @@ Template::Template(const UserType& usertype, const Application& app, const Appli
         }
     }
     //!Static Data
-    viewData.insert("cms-title", TEGRA_TRANSLATOR("global", "name"));
-    viewData.insert("cms-slogen", TEGRA_TRANSLATOR("global", "slogan"));
-    viewData.insert("cms-slogen-desc", TEGRA_TRANSLATOR("global", "slogan_desc"));
+//    viewData.insert("cms-title", TEGRA_TRANSLATOR("global", "name"));
+//    viewData.insert("cms-slogen", TEGRA_TRANSLATOR("global", "slogan"));
+//    viewData.insert("cms-slogen-desc", TEGRA_TRANSLATOR("global", "slogan_desc"));
     //!Static Files
     viewData.insert("logo-user", baseUrl + "/templates/assets/images/logo/logo-user.svg");
     viewData.insert("logo-admin", baseUrl + "/templates/assets/images/logo/logo-admin.svg");

@@ -225,10 +225,11 @@
          {
             "word_key":"slogan_desc",
             "module":"system",
-            "default_value":"سیستمی برای ساخت یک وب سایت بسیار کارآمد بر اساس ++C نوین.",
+            "default_value":"تگرا یک سیستم مدیریت محتوای متن باز با کارایی فوق‌العاده بالا، کاربر پسند، چند زبانه و چند منظورهٔ مدرن مبتنی بر C++20 است که به شما امکان می‌دهد وب‌سایت‌ها و برنامه‌های آنلاین قدرتمند بسازید.",
             "custom_value":"",
             "status":true
          },
+
 	 {
 	    "word_key":"version",
 	    "module":"system",
@@ -388,6 +389,13 @@
             "status":true
          },
          {
+            "word_key":"source",
+            "module":"system",
+            "default_value":"در گیت‌هاب",
+            "custom_value":"",
+            "status":true
+         },
+         {
             "word_key":"pricing",
             "module":"system",
             "default_value":"قیمت‌ها",
@@ -539,7 +547,7 @@
 	 {
 	    "word_key":"copyright",
 	    "module":"system",
-            "default_value":"© تمامی حقوق محفوظ است. قدرت گرفته از <a class=\"nav-link d-inline-block p-0\" href=\"https://kambizasadzadeh.com\" rel=\"noopener\" target=\"_blank\">سیستم مدیریت محتوای تِگرا</a>",
+            "default_value":"© تمامی حقوق چاپ برای سیستم تِگرا محفوظ است. <br>قدرت گرفته شده از <a class=\"nav-link d-inline-block p-0\" href=\"https://genyleap.com\" rel=\"noopener\" target=\"_blank\">جنی‌لیپ ™</a>",
             "custom_value":"",
 	    "status":true
 	 }
