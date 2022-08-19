@@ -215,9 +215,9 @@ void Manager::backupDatabase(Database::DriverTypes type, const DatabaseList& db,
 {    
     auto clientPtr = AppFramework::application().getDbClient();
 
-    Scope<Configuration> config(new Configuration(ConfigType::File));
+    auto config = Configuration(ConfigType::File);
 
-    config->init(SectionType::SystemCore);
+    config.init(SectionType::SystemCore);
 
     std::string p{Configuration::GET["maintenance"]["backup_path"].asString()};
 
@@ -283,14 +283,14 @@ void Manager::backupDatabase(Database::DriverTypes type, const DatabaseList& db,
 }
 
 void Manager::createTables(Database::DriverTypes type)
-{    
+{
+    auto engine = Engine();
+
     auto clientPtr = AppFramework::application().getDbClient();
 
-    Scope<Engine> engine(new Engine());
+    auto config = Configuration(ConfigType::File);
 
-    Scope<Configuration> config(new Configuration(ConfigType::File));
-
-    config->init(SectionType::Database);
+    config.init(SectionType::Database);
 
     std::vector<std::string> tables{};
 
@@ -311,14 +311,14 @@ void Manager::createTables(Database::DriverTypes type)
             for(const auto& array : var["create"]) {
                 if(array["name"] == FROM_TEGRA_STRING(TEGRA_RDBMS::PostgreSQL)) {
                     for(const auto& d : array["data"]) {
-                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::KeyStruct)) {
+                        for(const auto& t : engine.tableFilter(tableNames, CMS::TableType::KeyStruct)) {
                             if(d["name"]==t)
-                                tables.push_back(CREATE_TABLE __tegra_space + engine->table(t, CMS::TableType::KeyStruct) +
+                                tables.push_back(CREATE_TABLE __tegra_space + engine.table(t, CMS::TableType::KeyStruct) +
                                                  __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
                         }
-                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::ValueSturct)) {
+                        for(const auto& t : engine.tableFilter(tableNames, CMS::TableType::ValueSturct)) {
                             if(d["name"]==t)
-                                tables.push_back(CREATE_TABLE __tegra_space + engine->table(t, CMS::TableType::ValueSturct) +
+                                tables.push_back(CREATE_TABLE __tegra_space + engine.table(t, CMS::TableType::ValueSturct) +
                                                  __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
                         }
                     }
@@ -340,20 +340,20 @@ void Manager::createTables(Database::DriverTypes type)
         break;
     case Database::DriverTypes::PostgreSQL:
         for(const auto& t : tableNames) {
-            tables.push_back(FROM_TEGRA_STRING(DROP_TABLE_IF_EXIST) + __tegra_space + engine->table(t, CMS::TableType::MixedStruct));
+            tables.push_back(FROM_TEGRA_STRING(DROP_TABLE_IF_EXIST) + __tegra_space + engine.table(t, CMS::TableType::MixedStruct));
         }
         for(const auto& var : configTable) {
             for(const auto& array : var["create"]) {
                 if(array["name"] == FROM_TEGRA_STRING(TEGRA_RDBMS::PostgreSQL)) {
                     for(const auto& d : array["data"]) {
-                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::KeyStruct)) {
+                        for(const auto& t : engine.tableFilter(tableNames, CMS::TableType::KeyStruct)) {
                             if(d["name"]==t)
-                                tables.push_back(CREATE_TABLE __tegra_space + engine->table(t, CMS::TableType::KeyStruct) +
+                                tables.push_back(CREATE_TABLE __tegra_space + engine.table(t, CMS::TableType::KeyStruct) +
                                                  __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
                         }
-                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::ValueSturct)) {
+                        for(const auto& t : engine.tableFilter(tableNames, CMS::TableType::ValueSturct)) {
                             if(d["name"]==t)
-                                tables.push_back(CREATE_TABLE __tegra_space + engine->table(t, CMS::TableType::ValueSturct) +
+                                tables.push_back(CREATE_TABLE __tegra_space + engine.table(t, CMS::TableType::ValueSturct) +
                                                  __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
                         }
                     }
@@ -383,7 +383,7 @@ void Manager::createTables(Database::DriverTypes type)
 
 void Manager::removeTables(Database::DriverTypes type)
 {
-    Scope<Engine> engine(new Engine());
+    auto engine = Engine();
 
     auto clientPtr = AppFramework::application().getDbClient();
 
@@ -392,7 +392,7 @@ void Manager::removeTables(Database::DriverTypes type)
     TableNames tableNames;
 
     for(const auto& ns : Database::Constants::defaultTables) {
-        tableNames.push_back(engine->table(ns, CMS::TableType::MixedStruct));
+        tableNames.push_back(engine.table(ns, CMS::TableType::MixedStruct));
     }
     switch (type) {
     case Database::DriverTypes::MySQL:
@@ -436,17 +436,17 @@ void Manager::removeTables(Database::DriverTypes type)
 
 void Manager::insertTables(Database::DriverTypes type)
 {
-    Scope<Multilangual::Language> languagePtr(new Multilangual::Language(appDataPtr->path.value()));
+    auto engine = Engine();
 
-    Scope<Configuration> config(new Configuration(ConfigType::File));
+    languagePtr = CreateScope<Multilangual::Language>(appDataPtr->path.value());
 
-    config->init(SectionType::Database);
+    auto config = Configuration(ConfigType::File);
 
-    Scope<Engine> engine(new Engine());
+    config.init(SectionType::Database);
 
     auto clientPtr = AppFramework::application().getDbClient();
 
-    std::string charset {engine->tableUnicode()};
+    std::string charset {engine.tableUnicode()};
 
     auto configTable = Configuration::GET["tables"];
 
@@ -471,15 +471,15 @@ void Manager::insertTables(Database::DriverTypes type)
             for(const auto& array : var["insert"]) {
                 if(array["name"] == FROM_TEGRA_STRING(TEGRA_RDBMS::MySQL)) {
                     for(const auto& d : array["data"]) {
-                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::KeyStruct)) {
+                        for(const auto& t : engine.tableFilter(tableNames, CMS::TableType::KeyStruct)) {
                             if(d["name"]==t)
-                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine->table(t, CMS::TableType::KeyStruct)
+                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine.table(t, CMS::TableType::KeyStruct)
                                                  + __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
                         }
-                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::ValueSturct)) {
+                        for(const auto& t : engine.tableFilter(tableNames, CMS::TableType::ValueSturct)) {
                             if(d["name"]==t)
-                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine->table(t, CMS::TableType::ValueSturct)
-                                                 + __tegra_space + FROM_TEGRA_STRING(engine->fullReplacer(FROM_TEGRA_STRING(d["content"].asString()), filterContent)));
+                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine.table(t, CMS::TableType::ValueSturct)
+                                                 + __tegra_space + FROM_TEGRA_STRING(engine.fullReplacer(FROM_TEGRA_STRING(d["content"].asString()), filterContent)));
                         }
                     }
                 }
@@ -508,15 +508,15 @@ void Manager::insertTables(Database::DriverTypes type)
             for(const auto& array : var["insert"]) {
                 if(array["name"] == FROM_TEGRA_STRING(TEGRA_RDBMS::PostgreSQL)) {
                     for(const auto& d : array["data"]) {
-                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::KeyStruct)) {
+                        for(const auto& t : engine.tableFilter(tableNames, CMS::TableType::KeyStruct)) {
                             if(d["name"]==t)
-                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine->table(t, CMS::TableType::KeyStruct)
+                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine.table(t, CMS::TableType::KeyStruct)
                                                  + __tegra_space + FROM_TEGRA_STRING(d["content"].asString()));
                         }
-                        for(const auto& t : engine->tableFilter(tableNames, CMS::TableType::ValueSturct)) {
+                        for(const auto& t : engine.tableFilter(tableNames, CMS::TableType::ValueSturct)) {
                             if(d["name"]==t) {
-                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine->table(t, CMS::TableType::ValueSturct)
-                                                 + __tegra_space + FROM_TEGRA_STRING(engine->fullReplacer(FROM_TEGRA_STRING(d["content"].asString()), filterContent)));
+                                tables.push_back(INSERT __tegra_space INTO __tegra_space + engine.table(t, CMS::TableType::ValueSturct)
+                                                 + __tegra_space + FROM_TEGRA_STRING(engine.fullReplacer(FROM_TEGRA_STRING(d["content"].asString()), filterContent)));
                             }
                         }
                     }

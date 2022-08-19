@@ -137,6 +137,8 @@ public:
 
     SEO::StaticMeta* staticMeta;
 
+    Scope<Multilangual::Language> languagePtr{};
+
     Framework::HttpViewData viewData;
 
 private:
