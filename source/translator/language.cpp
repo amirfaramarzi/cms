@@ -19,7 +19,7 @@ Language::Language()
 
     auto lcodes = LanguageCodes{}; //!Language codes.
 
-    for(auto c : Configuration::GET[_LANGS_])
+    for(auto c : Configuration::GET[TEGRA_LANGS])
     {
         if(c["status"].asBool()) {
             lcodes.push_back(c["l"].asString().substr(0, 5));
@@ -42,7 +42,7 @@ Language::Language(const std::string& uri)
 
     auto lcodes = LanguageCodes{}; //!Language codes.
 
-    for(auto c : Configuration::GET[_LANGS_])
+    for(auto c : Configuration::GET[TEGRA_LANGS])
     {
         if(c["status"].asBool()) {
             lcodes.push_back(c["l"].asString().substr(0, 5));
@@ -84,11 +84,11 @@ std::string Language::getLanguageCode() __tegra_const_noexcept
     config->init(SectionType::SystemCore);
     String path = { m_languageStruct->url.getLanguageUri().value_or("en-us") }; //!->/{language}/uri/
     std::string lcode{};
-    for(auto c : Configuration::GET[_LANGS_]) {
+    for(auto c : Configuration::GET[TEGRA_LANGS]) {
         if(c["uri"] == path.substr(1, 5)) {
             lcode = c["l"].asString().substr(0,5);
         } else {
-            if(c["code"].asString() == Configuration::GET[_DEFAULT_LANG_]) {
+            if(c["code"].asString() == Configuration::GET[TEGRA_DEFAULT_LANG]) {
                 lcode = c["l"].asString().substr(0,5);
             }
         }
@@ -102,11 +102,11 @@ std::string Language::getLanguage() __tegra_const_noexcept
     config->init(SectionType::SystemCore);
     String path = { m_languageStruct->url.getLanguageUri().value_or("en-us") }; //!->/{language}/uri/
     std::string lcode{};
-    for(auto c : Configuration::GET[_LANGS_]) {
+    for(auto c : Configuration::GET[TEGRA_LANGS]) {
         if(c["uri"] == path.substr(1, 5)) {
             lcode = c["code"].asString();
         } else {
-            if(c["code"].asString() == Configuration::GET[_DEFAULT_LANG_]) {
+            if(c["code"].asString() == Configuration::GET[TEGRA_DEFAULT_LANG]) {
                 lcode = c["code"].asString();
             }
         }

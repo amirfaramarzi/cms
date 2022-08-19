@@ -36,9 +36,6 @@ TEGRA_USING_NAMESPACE Tegra::Abstracts;
 
 TEGRA_NAMESPACE_BEGIN(Tegra)
 
-#define _LANGS_ "langs"
-#define _DEFAULT_LANG_ "default_lang"
-
 /*!
  * \brief The RdbmsInterface class
  */

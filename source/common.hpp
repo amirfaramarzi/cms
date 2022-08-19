@@ -82,17 +82,8 @@ struct AppFramework : public Framework::HttpAppFramework
     }
 };
 
-/*!
- * \brief The HttpBase class
- */
-class HttpBase
-{
-public:
-    HttpBase(){};
-    ~HttpBase(){};
-
-    Framework::HttpRequestPtr requestPtr;
-};
+#define TEGRA_LANGS "langs"
+#define TEGRA_DEFAULT_LANG "default_lang"
 
 namespace CMS {
 
@@ -118,8 +109,8 @@ struct CONFIG final {
   static constexpr std::string_view CMS_TABLES_COOKIE_PREFIX = "tegra_";
   static constexpr std::string_view TRANSLATION_FILE = "translations/contents.json";
 
-  static constexpr std::string_view OFFICIAL_WEB = "http://kambizasadzadeh.com";
-  static constexpr std::string_view OFFICIAL_EMAIL = "info@kambizasadzadeh.com";
+  static constexpr std::string_view OFFICIAL_WEB = "http://genyleap.com";
+  static constexpr std::string_view OFFICIAL_EMAIL = "info@genyleap.com";
 };
 
 struct STATICS final {
@@ -149,7 +140,7 @@ struct STATICS final {
 
 
 #undef TEGRA_COPYRIGHT
-#define TEGRA_COPYRIGHT "<!-- ]]></script> -->Copyright © 2022 <a class=\"nav-link d-inline-block p-0\" href=\"https://kambizasadzadeh.com\" rel=\"noopener\" target=\"_blank\">Tegra CMS</a> <!-- Tegra CMS Team -->"
+#define TEGRA_COPYRIGHT "<!-- ]]></script> -->Copyright © 2022 <a class=\"nav-link d-inline-block p-0\" href=\"https://genyleap.com\" rel=\"noopener\" target=\"_blank\">Tegra CMS</a> <!-- Tegra CMS Team -->"
 
 #define STLLIB_STANDARD             0x0
 #define STLLIB_TECHNICAL_REPORT     0x1
