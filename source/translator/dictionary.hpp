@@ -1,3 +1,15 @@
+/*!
+ * @file        dictionary.hpp
+ * @brief       This file is part of the Tegra CMS.
+ * @details     Dictionary for translation unit.
+ * @author      <a href='https://www.kambizasadzadeh.com'>Kambiz Asadzadeh</a>
+ * @package     The Genyleap
+ * @since       29 Aug 2022
+ * @copyright   Copyright (c) 2022 The Genyleap. All rights reserved.
+ * @license     https://github.com/genyleap/cms/blob/main/LICENSE.md
+ *
+ */
+
 #ifndef TEGRA_DICTIONARY_HPP
 #define TEGRA_DICTIONARY_HPP
 
