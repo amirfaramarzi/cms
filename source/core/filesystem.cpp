@@ -24,9 +24,9 @@
 #include <ImageIO/ImageIO.h>
 #elif defined(PLATFORM_LINUX)
 #include <sys/socket.h>
-#include <sys/sysctl.h>
+#include <linux/sysctl.h>
 #include <net/if.h>
-#include <net/if_dl.h>
+// #include <net/if_dl.h>
 #elif defined(PLATFORM_FREEBSD)
 #include <sys/socket.h>
 #include <sys/sysctl.h>
